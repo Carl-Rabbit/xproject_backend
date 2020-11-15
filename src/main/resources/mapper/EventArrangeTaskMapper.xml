@@ -19,6 +19,13 @@
     from event_arrange_tasks
     where ea_task_id = #{eaTaskId,jdbcType=INTEGER}
   </select>
+  <select id="selectByProjId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List"/>
+    from event_arrange_tasks
+    where proj_id = #{projId, jdbcType=INTEGER}
+where ;
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from event_arrange_tasks
     where ea_task_id = #{eaTaskId,jdbcType=INTEGER}
