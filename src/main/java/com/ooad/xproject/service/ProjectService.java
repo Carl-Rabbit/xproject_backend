@@ -5,19 +5,21 @@ import com.ooad.xproject.entity.*;
 import java.util.List;
 
 public interface ProjectService {
-    Project getProject();
+    Project getProject(Integer pid);
 
     List<Project> getProjectList();
 
     List<Announcement> getAnnounceList();
 
-    List<EventArrangeTask> getEventList();
+    List<Announcement> getAnnounceList(Integer pid);
 
-    List<Submission> getSubmissionList();
+    List<EventArrangeTask> getEventList(Integer pid);
 
-    List<Record> getRecordList();
+    List<Submission> getSubmissionList(Integer pid);
 
-    TeamFormTask getTeamFormTask();
+    List<Record> getRecordList(Integer pid);
 
-    List<Team> getTeamList();
+    TeamFormTask getTeamFormTask(Integer pid);
+
+    List<Team> getTeamList(Integer pid);
 }

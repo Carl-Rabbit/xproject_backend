@@ -15,22 +15,38 @@ public class ProjectInstServiceImpl implements ProjectInstService {
     }
 
     @Override
-    public List<ProjectInst> getProjectInstList() {
+    public ProjectInst getProjectInst(Integer piid) {
         return null;
     }
 
     @Override
-    public List<Student> getTeammembers() {
+    public List<ProjectInst> getProjectInstList(Integer pid) {
         return null;
     }
 
     @Override
-    public List<RecordInst> getRecordInstList() {
+    public List<Student> getTeammembers(Integer tid) {
         return null;
     }
 
     @Override
-    public List<SubmissionInst> getSubmissionInstList() {
+    public List<RecordInst> getRecordInstList(Integer rid) {
+        return null;
+    }
+
+    @Override
+    public List<RecordInst> getRecordInstList(Integer pid, Integer sid) {
+        return null;
+    }
+
+
+    @Override
+    public List<SubmissionInst> getSubmissionInstList(Integer suid) {
+        return null;
+    }
+
+    @Override
+    public List<SubmissionInst> getSubmissionInstList(Integer pid, Integer sid) {
         return null;
     }
 }

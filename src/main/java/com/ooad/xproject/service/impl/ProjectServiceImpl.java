@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ProjectServiceImpl implements ProjectService {
     @Override
-    public Project getProject() {
+    public Project getProject(Integer pid) {
         return null;
     }
 
@@ -22,27 +22,32 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<EventArrangeTask> getEventList() {
+    public List<Announcement> getAnnounceList(Integer pid) {
         return null;
     }
 
     @Override
-    public List<Submission> getSubmissionList() {
+    public List<EventArrangeTask> getEventList(Integer pid) {
         return null;
     }
 
     @Override
-    public List<Record> getRecordList() {
+    public List<Submission> getSubmissionList(Integer pid) {
         return null;
     }
 
     @Override
-    public TeamFormTask getTeamFormTask() {
+    public List<Record> getRecordList(Integer pid) {
         return null;
     }
 
     @Override
-    public List<Team> getTeamList() {
+    public TeamFormTask getTeamFormTask(Integer pid) {
+        return null;
+    }
+
+    @Override
+    public List<Team> getTeamList(Integer pid) {
         return null;
     }
 }

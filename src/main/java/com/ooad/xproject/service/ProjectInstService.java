@@ -7,11 +7,21 @@ import java.util.List;
 public interface ProjectInstService {
     ProjectInst getProjectInst();
 
-    List<ProjectInst> getProjectInstList();
+    ProjectInst getProjectInst(Integer piid);
 
-    List<Student> getTeammembers();
+    List<ProjectInst> getProjectInstList(Integer pid);
 
-    List<RecordInst> getRecordInstList();
+    List<Student> getTeammembers(Integer tid);
 
-    List<SubmissionInst> getSubmissionInstList();
+    // select by record, return recordinst of the record
+    List<RecordInst> getRecordInstList(Integer rid);
+
+    // select by Project id and student id, return the student's RecordInsts under the project
+    List<RecordInst> getRecordInstList(Integer pid, Integer sid);
+
+    // select by submission, return submissionInst of the submission
+    List<SubmissionInst> getSubmissionInstList(Integer suid);
+
+    // select by Project id and student id, return the student's submissionInsts under the submission
+    List<SubmissionInst> getSubmissionInstList(Integer pid, Integer sid);
 }
