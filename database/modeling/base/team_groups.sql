@@ -1,4 +1,6 @@
-drop table if exists team_groups;
+-- deprecated
+
+drop table if exists team_groups cascade;
 
 create table team_groups
 (

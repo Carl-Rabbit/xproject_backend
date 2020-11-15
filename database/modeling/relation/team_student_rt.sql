@@ -1,7 +1,8 @@
-drop table if exists team_student_rt cascade;
+drop table if exists team_student_rt;
 
 create table team_student_rt
 (
+    team_std_rt_id serial not null,
     team_id int not null
         constraint team_student_rt_team_id_fkey references teams (team_id),
     std_id int not null

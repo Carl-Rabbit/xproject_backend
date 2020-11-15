@@ -1,7 +1,8 @@
-drop table if exists std_group_student_rt cascade;
+drop table if exists std_group_student_rt;
 
 create table std_group_student_rt
 (
+    sgp_std_rt_id serial primary key,
     sgp_id int not null
         constraint std_group_student_rt_sgp_id_fkey references std_groups (sgp_id),
     std_id int not null
