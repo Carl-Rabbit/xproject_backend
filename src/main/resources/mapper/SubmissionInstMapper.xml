@@ -17,6 +17,7 @@
     from submission_insts
     where sbm_inst_id = #{sbmInstId,jdbcType=INTEGER}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from submission_insts
     where sbm_inst_id = #{sbmInstId,jdbcType=INTEGER}
@@ -90,4 +91,10 @@
       submitter_id = #{submitterId,jdbcType=INTEGER}
     where sbm_inst_id = #{sbmInstId,jdbcType=INTEGER}
   </update>
+  <select id="selectBySbmId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from submission_insts
+    where sbm_id = #{sbmId,jdbcType=INTEGER}
+  </select>
 </mapper>

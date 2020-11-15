@@ -13,4 +13,6 @@ public interface StudentService {
 
     List<Student> getStudentList(Integer group);
 
+    List<Student> getTeammembers(Integer tid);
+
 }

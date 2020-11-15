@@ -17,7 +17,8 @@
     from project_insts
     where proj_inst_id = #{projInstId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project_insts
     where proj_inst_id = #{projInstId,jdbcType=INTEGER}
   </delete>
@@ -90,4 +91,11 @@
       description = #{description,jdbcType=VARCHAR}
     where proj_inst_id = #{projInstId,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByProjId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from project_insts
+    where proj_id = #{projId,jdbcType=INTEGER}
+  </select>
 </mapper>

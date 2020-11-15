@@ -14,4 +14,6 @@ public interface ProjectMapper {
     int updateByPrimaryKeySelective(Project record);
 
     int updateByPrimaryKey(Project record);
+
+    void selectByRoleId(Integer rid);
 }

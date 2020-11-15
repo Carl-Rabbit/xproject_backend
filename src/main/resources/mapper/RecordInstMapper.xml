@@ -16,7 +16,8 @@
     from record_insts
     where rcd_inst_id = #{rcdInstId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from record_insts
     where rcd_inst_id = #{rcdInstId,jdbcType=INTEGER}
   </delete>
@@ -79,4 +80,11 @@
       content = #{content,jdbcType=VARCHAR}
     where rcd_inst_id = #{rcdInstId,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByRcdId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from record_insts
+    where rcd_id = #{rcdId,jdbcType=INTEGER}
+  </select>
 </mapper>

@@ -30,7 +30,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     //todo: specify the student or teacher?
     @Override
-    public List<Project> getProjectList() {
+    public List<Project> getProjectByRoleId(Integer rid) {
+        projectMapper.selectByRoleId(rid);
         return null;
     }
 

@@ -18,12 +18,7 @@
         from announcements
         where ann_id = #{annId,jdbcType=INTEGER}
     </select>
-    <select id="selectByProjId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-        select
-        <include refid="Base_Column_List"/>
-        from announcements
-        where proj_id = #{projId, jdbcType=INTEGER}
-    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete
         from announcements
@@ -108,4 +103,10 @@
             modified_date = #{modifiedDate,jdbcType=TIME}
         where ann_id = #{annId,jdbcType=INTEGER}
     </update>
+    <select id="selectByProjId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from announcements
+        where proj_id = #{projId, jdbcType=INTEGER}
+    </select>
 </mapper>
