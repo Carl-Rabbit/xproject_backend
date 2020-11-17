@@ -3,8 +3,9 @@ package com.ooad.xproject.service.impl;
 import com.ooad.xproject.entity.Student;
 import com.ooad.xproject.service.StudentService;
 
-import java.util.List;
+import java.util.ArrayList;
 
+// todo: implement student service
 public class StudentServiceImpl implements StudentService {
     @Override
     public Student getStudent() {
@@ -17,17 +18,17 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Integer> getGroups() {
+    public ArrayList<Integer> getGroups() {
         return null;
     }
 
     @Override
-    public List<Student> getStudentList(Integer group) {
+    public ArrayList<Student> getStudentList(Integer group) {
         return null;
     }
 
     @Override
-    public List<Student> getTeammembers(Integer tid) {
+    public ArrayList<Student> getTeammates(Integer tid) {
         return null;
     }
 }

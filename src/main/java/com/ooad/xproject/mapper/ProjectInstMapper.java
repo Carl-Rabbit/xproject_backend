@@ -2,7 +2,7 @@ package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.ProjectInst;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public interface ProjectInstMapper {
     int deleteByPrimaryKey(Integer projInstId);
@@ -17,5 +17,5 @@ public interface ProjectInstMapper {
 
     int updateByPrimaryKey(ProjectInst record);
 
-    List<ProjectInst> selectByProjId(Integer pid);
+    ArrayList<ProjectInst> selectByProjId(Integer pid);
 }

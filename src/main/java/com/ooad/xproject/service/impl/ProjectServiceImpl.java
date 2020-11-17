@@ -4,7 +4,7 @@ import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.ProjectService;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class ProjectServiceImpl implements ProjectService {
     private final AnnouncementMapper announcementMapper;
@@ -13,14 +13,16 @@ public class ProjectServiceImpl implements ProjectService {
     private final RecordMapper recordMapper;
     private final TeamMapper teamMapper;
     private final ProjectMapper projectMapper;
+    private final ProjectInstMapper projectInstMapper;
 
-    public ProjectServiceImpl(AnnouncementMapper announcementMapper, EventArrangeTaskMapper eventArrangeTaskMapper, SubmissionMapper submissionMapper, RecordMapper recordMapper, TeamMapper teamMapper, ProjectMapper projectMapper) {
+    public ProjectServiceImpl(AnnouncementMapper announcementMapper, EventArrangeTaskMapper eventArrangeTaskMapper, SubmissionMapper submissionMapper, RecordMapper recordMapper, TeamMapper teamMapper, ProjectMapper projectMapper, ProjectInstMapper projectInstMapper) {
         this.announcementMapper = announcementMapper;
         this.eventArrangeTaskMapper = eventArrangeTaskMapper;
         this.submissionMapper = submissionMapper;
         this.recordMapper = recordMapper;
         this.teamMapper = teamMapper;
         this.projectMapper = projectMapper;
+        this.projectInstMapper = projectInstMapper;
     }
 
     @Override
@@ -28,36 +30,28 @@ public class ProjectServiceImpl implements ProjectService {
         return projectMapper.selectByPrimaryKey(pid);
     }
 
-    //todo: specify the student or teacher?
     @Override
-    public List<Project> getProjectByRoleId(Integer rid) {
-        projectMapper.selectByRoleId(rid);
-        return null;
-    }
-
-    //todo: get from all projects?
-    @Override
-    public List<Announcement> getAnnounceList() {
-        return null;
+    public ArrayList<ProjectInst> getProjectInstList(Integer pid) {
+        return projectInstMapper.selectByProjId(pid);
     }
 
     @Override
-    public List<Announcement> getAnnounceList(Integer pid) {
+    public ArrayList<Announcement> getAnnounceList(Integer pid) {
         return announcementMapper.selectByProjId(pid);
     }
 
     @Override
-    public List<EventArrangeTask> getEventList(Integer pid) {
+    public ArrayList<EventArrangeTask> getEventList(Integer pid) {
         return eventArrangeTaskMapper.selectByProjId(pid);
     }
 
     @Override
-    public List<Submission> getSubmissionList(Integer pid) {
+    public ArrayList<Submission> getSubmissionList(Integer pid) {
         return submissionMapper.selectByProjId(pid);
     }
 
     @Override
-    public List<Record> getRecordList(Integer pid) {
+    public ArrayList<Record> getRecordList(Integer pid) {
         return recordMapper.selectByProjId(pid);
     }
 
@@ -68,7 +62,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Team> getTeamList(Integer pid) {
+    public ArrayList<Team> getTeamList(Integer pid) {
         return teamMapper.selectByProjId(pid);
     }
 }

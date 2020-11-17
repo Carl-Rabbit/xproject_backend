@@ -2,17 +2,20 @@ package com.ooad.xproject.service;
 
 import com.ooad.xproject.entity.Student;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public interface StudentService {
     Student getStudent();
 
     Student getStudent(Integer sid);
 
-    List<Integer> getGroups();
+    // list all the groups
+    ArrayList<Integer> getGroups();
 
-    List<Student> getStudentList(Integer group);
+    // select by group id, return all the students of this group
+    ArrayList<Student> getStudentList(Integer group);
 
-    List<Student> getTeammembers(Integer tid);
+    // select by team id, return the teammates
+    ArrayList<Student> getTeammates(Integer tid);
 
 }

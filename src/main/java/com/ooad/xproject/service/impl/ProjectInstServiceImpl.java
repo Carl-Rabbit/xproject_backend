@@ -8,6 +8,7 @@ import com.ooad.xproject.mapper.RecordInstMapper;
 import com.ooad.xproject.mapper.SubmissionInstMapper;
 import com.ooad.xproject.service.ProjectInstService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectInstServiceImpl implements ProjectInstService {
@@ -26,29 +27,27 @@ public class ProjectInstServiceImpl implements ProjectInstService {
         return projectInstMapper.selectByPrimaryKey(piid);
     }
 
-    @Override
-    public List<ProjectInst> getProjectInstList(Integer pid) {
-        return projectInstMapper.selectByProjId(pid);
-    }
 
     @Override
-    public List<RecordInst> getRecordInstList(Integer rid) {
+    public ArrayList<RecordInst> getRecordInstList(Integer rid) {
         return recordInstMapper.selectByRcdId(rid);
     }
 
+    // todo: select Record by project and student
     @Override
-    public List<RecordInst> getRecordInstList(Integer pid, Integer sid) {
+    public ArrayList<RecordInst> getRecordInstList(Integer pid, Integer sid) {
         return null;
     }
 
 
     @Override
-    public List<SubmissionInst> getSubmissionInstList(Integer sbmId) {
+    public ArrayList<SubmissionInst> getSubmissionInstList(Integer sbmId) {
         return submissionInstMapper.selectBySbmId(sbmId);
     }
 
+    // todo: select Submission by project and student
     @Override
-    public List<SubmissionInst> getSubmissionInstList(Integer pid, Integer sid) {
+    public ArrayList<SubmissionInst> getSubmissionInstList(Integer pid, Integer sid) {
         return null;
     }
 }

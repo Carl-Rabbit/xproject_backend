@@ -2,7 +2,7 @@ package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.Submission;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public interface SubmissionMapper {
     int deleteByPrimaryKey(Integer sbmId);
@@ -17,5 +17,5 @@ public interface SubmissionMapper {
 
     int updateByPrimaryKey(Submission record);
 
-    List<Submission> selectByProjId(Integer pid);
+    ArrayList<Submission> selectByProjId(Integer pid);
 }

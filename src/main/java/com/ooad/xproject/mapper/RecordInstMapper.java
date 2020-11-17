@@ -2,7 +2,7 @@ package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.RecordInst;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public interface RecordInstMapper {
     int deleteByPrimaryKey(Integer rcdInstId);
@@ -17,5 +17,5 @@ public interface RecordInstMapper {
 
     int updateByPrimaryKey(RecordInst record);
 
-    List<RecordInst> selectByRcdId(Integer rid);
+    ArrayList<RecordInst> selectByRcdId(Integer rid);
 }

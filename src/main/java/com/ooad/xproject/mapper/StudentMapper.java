@@ -16,4 +16,6 @@ public interface StudentMapper {
     int updateByPrimaryKeySelective(Student record);
 
     int updateByPrimaryKey(Student record);
+
+    Student selectByRoleId(Integer rid);
 }

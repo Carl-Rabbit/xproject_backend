@@ -17,7 +17,7 @@
     from teachers
     where tch_id = #{tchId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from teachers
     where tch_id = #{tchId,jdbcType=INTEGER}
   </delete>
@@ -88,4 +88,10 @@
       sch_id = #{schId,jdbcType=INTEGER}
     where tch_id = #{tchId,jdbcType=INTEGER}
   </update>
+  <select id="selectByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  select
+  <include refid="Base_Column_List" />
+  from teachers
+  where role_id = #{rid,jdbcType=INTEGER}
+</select>
 </mapper>

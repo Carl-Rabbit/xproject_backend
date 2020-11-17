@@ -2,7 +2,7 @@ package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.EventArrangeTask;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public interface EventArrangeTaskMapper {
     int deleteByPrimaryKey(Integer eaTaskId);
@@ -17,5 +17,5 @@ public interface EventArrangeTaskMapper {
 
     int updateByPrimaryKey(EventArrangeTask record);
 
-    List<EventArrangeTask> selectByProjId(Integer pid);
+    ArrayList<EventArrangeTask> selectByProjId(Integer pid);
 }

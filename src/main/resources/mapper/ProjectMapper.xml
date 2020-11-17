@@ -90,6 +90,21 @@
       description = #{description,jdbcType=VARCHAR}
     where proj_id = #{projId,jdbcType=INTEGER}
   </update>
-
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from projects
+  </select>
+  <select id="selectByTchId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from projects
+    where creator_id = #{tchId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByStdId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select p.*
+    from projects p join project_student_rt psr on p.proj_id = psr.proj_id
+    where std_id = #{stdId,jdbcType=INTEGER}
+  </select>
 
 </mapper>
