@@ -14,8 +14,9 @@ public class ProjectServiceImpl implements ProjectService {
     private final TeamMapper teamMapper;
     private final ProjectMapper projectMapper;
     private final ProjectInstMapper projectInstMapper;
+    private final TeamFormTaskMapper teamFormTaskMapper;
 
-    public ProjectServiceImpl(AnnouncementMapper announcementMapper, EventArrangeTaskMapper eventArrangeTaskMapper, SubmissionMapper submissionMapper, RecordMapper recordMapper, TeamMapper teamMapper, ProjectMapper projectMapper, ProjectInstMapper projectInstMapper) {
+    public ProjectServiceImpl(AnnouncementMapper announcementMapper, EventArrangeTaskMapper eventArrangeTaskMapper, SubmissionMapper submissionMapper, RecordMapper recordMapper, TeamMapper teamMapper, ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, TeamFormTaskMapper teamFormTaskMapper) {
         this.announcementMapper = announcementMapper;
         this.eventArrangeTaskMapper = eventArrangeTaskMapper;
         this.submissionMapper = submissionMapper;
@@ -23,6 +24,7 @@ public class ProjectServiceImpl implements ProjectService {
         this.teamMapper = teamMapper;
         this.projectMapper = projectMapper;
         this.projectInstMapper = projectInstMapper;
+        this.teamFormTaskMapper = teamFormTaskMapper;
     }
 
     @Override
@@ -58,7 +60,7 @@ public class ProjectServiceImpl implements ProjectService {
     //todo: Team forming task
     @Override
     public TeamFormTask getTeamFormTask(Integer pid) {
-        return null;
+        return teamFormTaskMapper.selectByPrimaryKey(pid);
     }
 
     @Override
