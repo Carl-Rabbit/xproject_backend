@@ -2,6 +2,8 @@ package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.Team;
 
+import java.util.ArrayList;
+
 public interface TeamMapper {
     int deleteByPrimaryKey(Integer teamId);
 
@@ -14,4 +16,6 @@ public interface TeamMapper {
     int updateByPrimaryKeySelective(Team record);
 
     int updateByPrimaryKey(Team record);
+
+    ArrayList<Team> selectByProjId(Integer pid);
 }

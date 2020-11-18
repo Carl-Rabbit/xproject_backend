@@ -1,5 +1,6 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.bo.SvRoleInfo;
 import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.Student;
@@ -17,6 +18,10 @@ import java.util.List;
 
 @Service
 public class RoleServiceImpl implements RoleService {
+    // role type
+    public static final String ADMIN = "A";
+    public static final String TEACHER = "T";
+    public static final String STUDENT = "S";
 
     // Contain number and letter, at least 8 chars.
     // For username, not start with number
@@ -39,6 +44,26 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Role getByUsername(String username) {
         return roleMapper.selectByUsername(username);
+    }
+
+    @Override
+    public SvRoleInfo getRoleInfo(Integer rid) {
+        Role role = roleMapper.selectByPrimaryKey(rid);
+        SvRoleInfo roleInfo = new SvRoleInfo(role.getRoleId(), role.getRoleType());
+        switch (role.getRoleType()) {
+            case ADMIN:
+                roleInfo.setTypeId(adminMapper.selectByRoleId(rid).getAdminId());
+                break;
+            case TEACHER:
+                roleInfo.setTypeId(teacherMapper.selectByRoleId(rid).getTchId());
+                break;
+            case STUDENT:
+                roleInfo.setTypeId(studentMapper.selectByRoleId(rid).getStdId());
+                break;
+            default:
+                break;
+        }
+        return roleInfo;
     }
 
 //    /**

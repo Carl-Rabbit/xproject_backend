@@ -2,6 +2,9 @@ package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.SubmissionInst;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public interface SubmissionInstMapper {
     int deleteByPrimaryKey(Integer sbmInstId);
 
@@ -14,4 +17,6 @@ public interface SubmissionInstMapper {
     int updateByPrimaryKeySelective(SubmissionInst record);
 
     int updateByPrimaryKey(SubmissionInst record);
+
+    ArrayList<SubmissionInst> selectBySbmId(Integer sbmId);
 }

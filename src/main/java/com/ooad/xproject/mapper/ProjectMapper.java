@@ -2,6 +2,8 @@ package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.Project;
 
+import java.util.ArrayList;
+
 public interface ProjectMapper {
     int deleteByPrimaryKey(Integer projId);
 
@@ -14,4 +16,10 @@ public interface ProjectMapper {
     int updateByPrimaryKeySelective(Project record);
 
     int updateByPrimaryKey(Project record);
+
+    ArrayList<Project> selectByTchId(Integer tchId);
+
+    ArrayList<Project> selectByStdId(Integer stdId);
+
+    ArrayList<Project> selectAll();
 }

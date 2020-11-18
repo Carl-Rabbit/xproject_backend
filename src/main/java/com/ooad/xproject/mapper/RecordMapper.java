@@ -2,6 +2,8 @@ package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.Record;
 
+import java.util.ArrayList;
+
 public interface RecordMapper {
     int deleteByPrimaryKey(Integer rcdId);
 
@@ -14,4 +16,6 @@ public interface RecordMapper {
     int updateByPrimaryKeySelective(Record record);
 
     int updateByPrimaryKey(Record record);
+
+    ArrayList<Record> selectByProjId(Integer pid);
 }
