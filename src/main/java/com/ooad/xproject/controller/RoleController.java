@@ -28,7 +28,6 @@ public class RoleController {
         this.roleService = testService;
     }
 
-    @CrossOrigin
     @ResponseBody
     @RequestMapping(value = "api/login", method = RequestMethod.POST)
     public Result<?> login(@RequestBody RoleVO requestRoleVO, HttpSession session) {
@@ -37,6 +36,7 @@ public class RoleController {
         String password = requestRoleVO.getPassword();
 
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        token.setRememberMe(true);      // can get from front end
 
         Subject subject = SecurityUtils.getSubject();
         try {
@@ -61,7 +61,6 @@ public class RoleController {
         return new Result<>(RespStatus.SUCCESS, msg);
     }
 
-    @CrossOrigin
     @ResponseBody
     @PostMapping("api/register")
     public Result<?> register(@RequestBody RoleVO requestRoleVO) {
@@ -78,14 +77,14 @@ public class RoleController {
         }
 
         if (!roleService.validUsername(username)) {
-            String msg = "The username must have at least 8 characters. " +
+            String msg = "The username must have at least 8 characters and 24 at most. " +
                     "Don't start with a number.";
             logger.info(msg);
             return new Result<Null>(RespStatus.FAIL, msg);
         }
         if (!roleService.validPassword(password)) {
-            String msg = "The username must have at least 8 characters " +
-                    "and must contain letters and numbers.";
+            String msg = "The password must have at least 8 characters and 32 at most." +
+                    "It must contain letters and numbers.";
             logger.info(msg);
             return new Result<Null>(RespStatus.FAIL, msg);
         }
@@ -105,5 +104,14 @@ public class RoleController {
         }
 
         return new Result<Null>(status, msg);
+    }
+
+    @ResponseBody
+    @GetMapping("api/authentication")
+    public Result<Role> authentication(){
+        String username = SecurityUtils.getSubject().getPrincipal().toString();
+        logger.info("Authentication for " + username);
+        Role role = roleService.getByUsername(username);
+        return new Result<>(role);
     }
 }

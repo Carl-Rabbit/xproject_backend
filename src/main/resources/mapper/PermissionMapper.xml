@@ -79,4 +79,22 @@
       url = #{url,jdbcType=VARCHAR}
     where pms_id = #{pmsId,jdbcType=INTEGER}
   </update>
+
+
+    <select id="getAllPmsByUsername" resultType="com.ooad.xproject.entity.Permission">
+      with q as (select role_id from roles where username = #{username})
+      select p.*
+      from q
+             join role_pms_role_rt rprr on q.role_id = rprr.role_id
+             join pms_roles pr on rprr.pms_role_id = pr.pms_role_id
+             join pms_role_pms_rt prpr on pr.pms_role_id = prpr.pms_role_id
+             join permissions p on prpr.pms_id = p.pms_id;
+    </select>
+    <select id="containPmsUrl" resultType="java.lang.Boolean">
+      select count(*) != 0 as exist
+      from (select url
+            from permissions
+            where url = #{requestAPI}) as q
+    </select>
+
 </mapper>

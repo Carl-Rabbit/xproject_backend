@@ -3,6 +3,8 @@ package com.ooad.xproject.mapper;
 import com.ooad.xproject.entity.Role;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface RoleMapper {
     int deleteByPrimaryKey(Integer roleId);
@@ -17,7 +19,10 @@ public interface RoleMapper {
 
     int updateByPrimaryKey(Role record);
 
+
     // extra
 
     Role selectByUsername(String userName);
+
+    List<Role> selectAll(String roleType);
 }

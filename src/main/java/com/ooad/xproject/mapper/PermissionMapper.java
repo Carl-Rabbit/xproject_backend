@@ -1,7 +1,11 @@
 package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.Permission;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Repository
 public interface PermissionMapper {
     int deleteByPrimaryKey(Integer pmsId);
 
@@ -14,4 +18,10 @@ public interface PermissionMapper {
     int updateByPrimaryKeySelective(Permission record);
 
     int updateByPrimaryKey(Permission record);
+
+    // extra
+
+    List<Permission> getAllPmsByUsername(String username);
+
+    boolean containPmsUrl(String requestAPI);
 }

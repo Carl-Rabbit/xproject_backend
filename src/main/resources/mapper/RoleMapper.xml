@@ -106,4 +106,8 @@
         from roles
         where username = #{userName}
     </select>
+    <select id="selectAll" resultType="com.ooad.xproject.entity.Role">
+        select * from roles
+        <where><if test="roleType != null">role_type = #{roles}</if></where>
+    </select>
 </mapper>

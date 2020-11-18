@@ -2,6 +2,8 @@ package com.ooad.xproject.service;
 
 import com.ooad.xproject.entity.Role;
 
+import java.util.List;
+
 public interface RoleService {
     Role getByUsername(String username);
 
@@ -10,4 +12,6 @@ public interface RoleService {
     boolean validUsername(String username);
 
     boolean validPassword(String password);
+
+    List<Role> selectAll(String roleType);
 }
