@@ -5,10 +5,11 @@ import com.ooad.xproject.entity.Announcement;
 import com.ooad.xproject.entity.Project;
 import com.ooad.xproject.mapper.ProjectMapper;
 import com.ooad.xproject.service.HomeService;
-import com.ooad.xproject.service.impl.RoleServiceImpl;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+@Service
 public class HomeServiceImpl implements HomeService {
     private final ProjectMapper projectMapper;
 

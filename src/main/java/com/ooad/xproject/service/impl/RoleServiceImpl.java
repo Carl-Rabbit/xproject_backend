@@ -19,6 +19,7 @@ import java.util.List;
 @Service
 public class RoleServiceImpl implements RoleService {
     // role type
+    // TODO see class constant.RoleType
     public static final String ADMIN = "A";
     public static final String TEACHER = "T";
     public static final String STUDENT = "S";
@@ -47,8 +48,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public SvRoleInfo getRoleInfo(Integer rid) {
-        Role role = roleMapper.selectByPrimaryKey(rid);
+    public SvRoleInfo getRoleInfo(Role role) {      // TODO how about save admin/t/s directly ?
+        int rid = role.getRoleId();
         SvRoleInfo roleInfo = new SvRoleInfo(role.getRoleId(), role.getRoleType());
         switch (role.getRoleType()) {
             case ADMIN:

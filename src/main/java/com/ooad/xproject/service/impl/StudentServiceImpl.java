@@ -2,12 +2,12 @@ package com.ooad.xproject.service.impl;
 
 import com.ooad.xproject.entity.Student;
 import com.ooad.xproject.mapper.StudentMapper;
-import com.ooad.xproject.mapper.TeamMapper;
 import com.ooad.xproject.service.StudentService;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
-
+@Service
 public class StudentServiceImpl implements StudentService {
     private final StudentMapper studentMapper;
 

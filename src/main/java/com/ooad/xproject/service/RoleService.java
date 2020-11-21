@@ -10,7 +10,7 @@ public interface RoleService {
 
     Role getByUsername(String username);
 
-    SvRoleInfo getRoleInfo(Integer rid);
+    SvRoleInfo getRoleInfo(Role role);
 
     void createUser(String type, String username, String password);
 
