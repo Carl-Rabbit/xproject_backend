@@ -7,8 +7,6 @@ public class TeamFormTask {
 
     private Integer projId;
 
-    private Integer tgpId;
-
     private Integer creatorId;
 
     private String title;
@@ -17,7 +15,7 @@ public class TeamFormTask {
 
     private String mode;
 
-    private Date modifiedDate;
+    private Date createdTime;
 
     public Integer getTfTaskId() {
         return tfTaskId;
@@ -33,14 +31,6 @@ public class TeamFormTask {
 
     public void setProjId(Integer projId) {
         this.projId = projId;
-    }
-
-    public Integer getTgpId() {
-        return tgpId;
-    }
-
-    public void setTgpId(Integer tgpId) {
-        this.tgpId = tgpId;
     }
 
     public Integer getCreatorId() {
@@ -75,11 +65,11 @@ public class TeamFormTask {
         this.mode = mode == null ? null : mode.trim();
     }
 
-    public Date getModifiedDate() {
-        return modifiedDate;
+    public Date getCreatedTime() {
+        return createdTime;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
     }
 }

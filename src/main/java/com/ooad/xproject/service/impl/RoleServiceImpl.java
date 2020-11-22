@@ -48,7 +48,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public SvRoleInfo getRoleInfo(Role role) {      // TODO how about save admin/t/s directly ?
+    public SvRoleInfo getRoleInfo(Role role) {      // TODO how about saving admin/t/s directly ?
         int rid = role.getRoleId();
         SvRoleInfo roleInfo = new SvRoleInfo(role.getRoleId(), role.getRoleType());
         switch (role.getRoleType()) {

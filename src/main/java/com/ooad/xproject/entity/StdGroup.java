@@ -1,5 +1,6 @@
 package com.ooad.xproject.entity;
 
+@Deprecated
 public class StdGroup {
     private Integer sgpId;
 

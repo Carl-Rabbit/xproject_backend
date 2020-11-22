@@ -1,13 +1,19 @@
 package com.ooad.xproject.entity;
 
+import java.util.Date;
+
 public class RecordInst {
     private Integer rcdInstId;
 
     private Integer rcdId;
 
-    private Integer stdId;
+    private Integer roleId;
+
+    private Date modifiedTime;
 
     private String content;
+
+    private String comments;
 
     public Integer getRcdInstId() {
         return rcdInstId;
@@ -25,12 +31,20 @@ public class RecordInst {
         this.rcdId = rcdId;
     }
 
-    public Integer getStdId() {
-        return stdId;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setStdId(Integer stdId) {
-        this.stdId = stdId;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
+    public Date getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(Date modifiedTime) {
+        this.modifiedTime = modifiedTime;
     }
 
     public String getContent() {
@@ -39,5 +53,13 @@ public class RecordInst {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments == null ? null : comments.trim();
     }
 }

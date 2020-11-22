@@ -29,7 +29,7 @@ public class HomeServiceImpl implements HomeService {
                 projects = projectMapper.selectByTchId(roleInfo.getTypeId());
                 break;
             case RoleServiceImpl.STUDENT:
-                projects = projectMapper.selectByStdId(roleInfo.getTypeId());
+                projects = projectMapper.selectByStdId(roleInfo.getRoleId());
                 break;
             default:
                 projects = new ArrayList<>();

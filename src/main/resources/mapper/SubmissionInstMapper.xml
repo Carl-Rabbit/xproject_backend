@@ -1,97 +1,122 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ooad.xproject.mapper.SubmissionInstMapper" >
-  <resultMap id="BaseResultMap" type="com.ooad.xproject.entity.SubmissionInst" >
-    <id column="sbm_inst_id" property="sbmInstId" jdbcType="INTEGER" />
-    <result column="sbm_id" property="sbmId" jdbcType="INTEGER" />
-    <result column="team_id" property="teamId" jdbcType="INTEGER" />
-    <result column="submit_time" property="submitTime" jdbcType="TIME" />
-    <result column="submitter_id" property="submitterId" jdbcType="INTEGER" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ooad.xproject.mapper.SubmissionInstMapper">
+  <resultMap id="BaseResultMap" type="com.ooad.xproject.entity.SubmissionInst">
+    <id column="sbm_inst_id" jdbcType="INTEGER" property="sbmInstId" />
+    <result column="sbm_id" jdbcType="INTEGER" property="sbmId" />
+    <result column="proj_inst_id" jdbcType="INTEGER" property="projInstId" />
+    <result column="submit_time" jdbcType="TIME" property="submitTime" />
+    <result column="submitter_id" jdbcType="INTEGER" property="submitterId" />
+    <result column="sbm_left" jdbcType="INTEGER" property="sbmLeft" />
+    <result column="attachments" jdbcType="VARCHAR" property="attachments" />
   </resultMap>
-  <sql id="Base_Column_List" >
-    sbm_inst_id, sbm_id, team_id, submit_time, submitter_id
+  <sql id="Base_Column_List">
+    sbm_inst_id, sbm_id, proj_inst_id, submit_time, submitter_id, sbm_left, attachments
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from submission_insts
     where sbm_inst_id = #{sbmInstId,jdbcType=INTEGER}
   </select>
-
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from submission_insts
     where sbm_inst_id = #{sbmInstId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ooad.xproject.entity.SubmissionInst" >
-    <selectKey resultType="java.lang.Integer" keyProperty="sbmInstId" order="AFTER" >
+  <insert id="insert" parameterType="com.ooad.xproject.entity.SubmissionInst">
+    <selectKey keyProperty="sbmInstId" order="AFTER" resultType="java.lang.Integer">
       Postgres
     </selectKey>
-    insert into submission_insts (sbm_id, team_id, submit_time, 
-      submitter_id)
-    values (#{sbmId,jdbcType=INTEGER}, #{teamId,jdbcType=INTEGER}, #{submitTime,jdbcType=TIME}, 
-      #{submitterId,jdbcType=INTEGER})
+    insert into submission_insts (sbm_id, proj_inst_id, submit_time, 
+      submitter_id, sbm_left, attachments
+      )
+    values (#{sbmId,jdbcType=INTEGER}, #{projInstId,jdbcType=INTEGER}, #{submitTime,jdbcType=TIME}, 
+      #{submitterId,jdbcType=INTEGER}, #{sbmLeft,jdbcType=INTEGER}, #{attachments,jdbcType=VARCHAR}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.SubmissionInst" >
-    <selectKey resultType="java.lang.Integer" keyProperty="sbmInstId" order="AFTER" >
+  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.SubmissionInst">
+    <selectKey keyProperty="sbmInstId" order="AFTER" resultType="java.lang.Integer">
       Postgres
     </selectKey>
     insert into submission_insts
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="sbmId != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sbmId != null">
         sbm_id,
       </if>
-      <if test="teamId != null" >
-        team_id,
+      <if test="projInstId != null">
+        proj_inst_id,
       </if>
-      <if test="submitTime != null" >
+      <if test="submitTime != null">
         submit_time,
       </if>
-      <if test="submitterId != null" >
+      <if test="submitterId != null">
         submitter_id,
       </if>
+      <if test="sbmLeft != null">
+        sbm_left,
+      </if>
+      <if test="attachments != null">
+        attachments,
+      </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="sbmId != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sbmId != null">
         #{sbmId,jdbcType=INTEGER},
       </if>
-      <if test="teamId != null" >
-        #{teamId,jdbcType=INTEGER},
+      <if test="projInstId != null">
+        #{projInstId,jdbcType=INTEGER},
       </if>
-      <if test="submitTime != null" >
+      <if test="submitTime != null">
         #{submitTime,jdbcType=TIME},
       </if>
-      <if test="submitterId != null" >
+      <if test="submitterId != null">
         #{submitterId,jdbcType=INTEGER},
+      </if>
+      <if test="sbmLeft != null">
+        #{sbmLeft,jdbcType=INTEGER},
+      </if>
+      <if test="attachments != null">
+        #{attachments,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.ooad.xproject.entity.SubmissionInst" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.ooad.xproject.entity.SubmissionInst">
     update submission_insts
-    <set >
-      <if test="sbmId != null" >
+    <set>
+      <if test="sbmId != null">
         sbm_id = #{sbmId,jdbcType=INTEGER},
       </if>
-      <if test="teamId != null" >
-        team_id = #{teamId,jdbcType=INTEGER},
+      <if test="projInstId != null">
+        proj_inst_id = #{projInstId,jdbcType=INTEGER},
       </if>
-      <if test="submitTime != null" >
+      <if test="submitTime != null">
         submit_time = #{submitTime,jdbcType=TIME},
       </if>
-      <if test="submitterId != null" >
+      <if test="submitterId != null">
         submitter_id = #{submitterId,jdbcType=INTEGER},
+      </if>
+      <if test="sbmLeft != null">
+        sbm_left = #{sbmLeft,jdbcType=INTEGER},
+      </if>
+      <if test="attachments != null">
+        attachments = #{attachments,jdbcType=VARCHAR},
       </if>
     </set>
     where sbm_inst_id = #{sbmInstId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.ooad.xproject.entity.SubmissionInst" >
+  <update id="updateByPrimaryKey" parameterType="com.ooad.xproject.entity.SubmissionInst">
     update submission_insts
     set sbm_id = #{sbmId,jdbcType=INTEGER},
-      team_id = #{teamId,jdbcType=INTEGER},
+      proj_inst_id = #{projInstId,jdbcType=INTEGER},
       submit_time = #{submitTime,jdbcType=TIME},
-      submitter_id = #{submitterId,jdbcType=INTEGER}
+      submitter_id = #{submitterId,jdbcType=INTEGER},
+      sbm_left = #{sbmLeft,jdbcType=INTEGER},
+      attachments = #{attachments,jdbcType=VARCHAR}
     where sbm_inst_id = #{sbmInstId,jdbcType=INTEGER}
   </update>
-  <select id="selectBySbmId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+
+
+  <select id="selectBySbmId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from submission_insts

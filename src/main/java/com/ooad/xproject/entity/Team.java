@@ -1,5 +1,6 @@
 package com.ooad.xproject.entity;
 
+@Deprecated
 public class Team {
     private Integer teamId;
 
