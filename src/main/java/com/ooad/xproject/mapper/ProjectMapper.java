@@ -1,9 +1,11 @@
 package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.Project;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 
+@Repository
 public interface ProjectMapper {
     int deleteByPrimaryKey(Integer projId);
 

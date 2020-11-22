@@ -57,7 +57,6 @@ public class ProjectServiceImpl implements ProjectService {
         return recordMapper.selectByProjId(pid);
     }
 
-    //todo: Team forming task
     @Override
     public TeamFormTask getTeamFormTask(Integer pid) {
         return teamFormTaskMapper.selectByPrimaryKey(pid);

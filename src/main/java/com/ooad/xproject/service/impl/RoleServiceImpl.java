@@ -19,10 +19,6 @@ import java.util.List;
 @Service
 public class RoleServiceImpl implements RoleService {
     // role type
-    // TODO see class constant.RoleType
-    public static final String ADMIN = "A";
-    public static final String TEACHER = "T";
-    public static final String STUDENT = "S";
 
     // Contain number and letter, at least 8 chars.
     // For username, not start with number
@@ -51,14 +47,15 @@ public class RoleServiceImpl implements RoleService {
     public SvRoleInfo getRoleInfo(Role role) {      // TODO how about save admin/t/s directly ?
         int rid = role.getRoleId();
         SvRoleInfo roleInfo = new SvRoleInfo(role.getRoleId(), role.getRoleType());
-        switch (role.getRoleType()) {
-            case ADMIN:
+        RoleType roleType = RoleType.getRoleType(role.getRoleType());
+        switch (roleType) {
+            case Admin:
                 roleInfo.setTypeId(adminMapper.selectByRoleId(rid).getAdminId());
                 break;
-            case TEACHER:
+            case Teacher:
                 roleInfo.setTypeId(teacherMapper.selectByRoleId(rid).getTchId());
                 break;
-            case STUDENT:
+            case Student:
                 roleInfo.setTypeId(studentMapper.selectByRoleId(rid).getStdId());
                 break;
             default:
