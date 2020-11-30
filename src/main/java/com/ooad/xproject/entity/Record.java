@@ -1,5 +1,7 @@
 package com.ooad.xproject.entity;
 
+import java.util.Date;
+
 public class Record {
     private Integer rcdId;
 
@@ -12,6 +14,8 @@ public class Record {
     private String type;
 
     private String baseContent;
+
+    private Date createdTime;
 
     public Integer getRcdId() {
         return rcdId;
@@ -59,5 +63,13 @@ public class Record {
 
     public void setBaseContent(String baseContent) {
         this.baseContent = baseContent == null ? null : baseContent.trim();
+    }
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
     }
 }

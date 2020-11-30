@@ -5,11 +5,13 @@ public class ProjectInst {
 
     private Integer projId;
 
-    private Integer teamId;
-
     private String topicStr;
 
     private String description;
+
+    private String status;
+
+    private String flags;
 
     public Integer getProjInstId() {
         return projInstId;
@@ -27,14 +29,6 @@ public class ProjectInst {
         this.projId = projId;
     }
 
-    public Integer getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(Integer teamId) {
-        this.teamId = teamId;
-    }
-
     public String getTopicStr() {
         return topicStr;
     }
@@ -49,5 +43,21 @@ public class ProjectInst {
 
     public void setDescription(String description) {
         this.description = description == null ? null : description.trim();
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
+    }
+
+    public String getFlags() {
+        return flags;
+    }
+
+    public void setFlags(String flags) {
+        this.flags = flags == null ? null : flags.trim();
     }
 }

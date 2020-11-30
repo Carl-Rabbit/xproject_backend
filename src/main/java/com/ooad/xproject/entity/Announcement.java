@@ -13,7 +13,9 @@ public class Announcement {
 
     private String message;
 
-    private Date modifiedDate;
+    private Date modifiedTime;
+
+    private Date createdTime;
 
     public Integer getAnnId() {
         return annId;
@@ -55,11 +57,19 @@ public class Announcement {
         this.message = message == null ? null : message.trim();
     }
 
-    public Date getModifiedDate() {
-        return modifiedDate;
+    public Date getModifiedTime() {
+        return modifiedTime;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
+    public void setModifiedTime(Date modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
     }
 }

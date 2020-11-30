@@ -13,6 +13,10 @@ public class Student {
 
     private String flags;
 
+    private Integer schId;
+
+    private String email;
+
     public Integer getStdId() {
         return stdId;
     }
@@ -59,5 +63,21 @@ public class Student {
 
     public void setFlags(String flags) {
         this.flags = flags == null ? null : flags.trim();
+    }
+
+    public Integer getSchId() {
+        return schId;
+    }
+
+    public void setSchId(Integer schId) {
+        this.schId = schId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
     }
 }

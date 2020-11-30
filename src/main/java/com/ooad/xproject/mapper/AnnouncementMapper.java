@@ -13,13 +13,11 @@ public interface AnnouncementMapper {
 
     Announcement selectByPrimaryKey(Integer annId);
 
-    ArrayList<Announcement> selectByProjId(Integer projId);
-
     int updateByPrimaryKeySelective(Announcement record);
 
     int updateByPrimaryKey(Announcement record);
 
     // extra
 
-
+    ArrayList<Announcement> selectByProjId(Integer projId);
 }

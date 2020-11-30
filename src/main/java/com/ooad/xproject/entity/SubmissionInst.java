@@ -7,11 +7,15 @@ public class SubmissionInst {
 
     private Integer sbmId;
 
-    private Integer teamId;
+    private Integer projInstId;
 
     private Date submitTime;
 
     private Integer submitterId;
+
+    private Integer sbmLeft;
+
+    private String attachments;
 
     public Integer getSbmInstId() {
         return sbmInstId;
@@ -29,12 +33,12 @@ public class SubmissionInst {
         this.sbmId = sbmId;
     }
 
-    public Integer getTeamId() {
-        return teamId;
+    public Integer getProjInstId() {
+        return projInstId;
     }
 
-    public void setTeamId(Integer teamId) {
-        this.teamId = teamId;
+    public void setProjInstId(Integer projInstId) {
+        this.projInstId = projInstId;
     }
 
     public Date getSubmitTime() {
@@ -51,5 +55,21 @@ public class SubmissionInst {
 
     public void setSubmitterId(Integer submitterId) {
         this.submitterId = submitterId;
+    }
+
+    public Integer getSbmLeft() {
+        return sbmLeft;
+    }
+
+    public void setSbmLeft(Integer sbmLeft) {
+        this.sbmLeft = sbmLeft;
+    }
+
+    public String getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(String attachments) {
+        this.attachments = attachments == null ? null : attachments.trim();
     }
 }

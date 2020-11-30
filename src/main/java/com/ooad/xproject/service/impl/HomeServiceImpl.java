@@ -1,7 +1,6 @@
 package com.ooad.xproject.service.impl;
 
 import com.ooad.xproject.bo.SvRoleInfo;
-import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.entity.Announcement;
 import com.ooad.xproject.entity.Project;
 import com.ooad.xproject.mapper.ProjectMapper;
@@ -18,19 +17,19 @@ public class HomeServiceImpl implements HomeService {
         this.projectMapper = projectMapper;
     }
 
+    //todo: specify the student or teacher?
     @Override
     public ArrayList<Project> getProjectList(SvRoleInfo roleInfo) {
         ArrayList<Project> projects;
-        RoleType roleType = RoleType.getRoleType(roleInfo.getRoleType());
-        switch (roleType) {
-            case Admin:
+        switch (roleInfo.getRoleType()) {
+            case RoleServiceImpl.ADMIN:
                 projects = projectMapper.selectAll();
                 break;
-            case Teacher:
+            case RoleServiceImpl.TEACHER:
                 projects = projectMapper.selectByTchId(roleInfo.getTypeId());
                 break;
-            case Student:
-                projects = projectMapper.selectByStdId(roleInfo.getTypeId());
+            case RoleServiceImpl.STUDENT:
+                projects = projectMapper.selectByStdId(roleInfo.getRoleId());
                 break;
             default:
                 projects = new ArrayList<>();

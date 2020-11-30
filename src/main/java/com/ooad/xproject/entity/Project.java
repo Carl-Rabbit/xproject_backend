@@ -1,5 +1,7 @@
 package com.ooad.xproject.entity;
 
+import java.util.Date;
+
 public class Project {
     private Integer projId;
 
@@ -7,7 +9,13 @@ public class Project {
 
     private Integer creatorId;
 
+    private Date createTime;
+
     private String projName;
+
+    private String courseName;
+
+    private String term;
 
     private String description;
 
@@ -35,12 +43,36 @@ public class Project {
         this.creatorId = creatorId;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
     public String getProjName() {
         return projName;
     }
 
     public void setProjName(String projName) {
         this.projName = projName == null ? null : projName.trim();
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName == null ? null : courseName.trim();
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term == null ? null : term.trim();
     }
 
     public String getDescription() {

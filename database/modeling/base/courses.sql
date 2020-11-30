@@ -1,3 +1,5 @@
+-- deprecated
+
 drop table if exists courses cascade;
 
 create table courses

@@ -21,7 +21,7 @@ public interface ProjectMapper {
 
     ArrayList<Project> selectByTchId(Integer tchId);
 
-    ArrayList<Project> selectByStdId(Integer stdId);
+    ArrayList<Project> selectByStdId(Integer roleId);
 
     ArrayList<Project> selectAll();
 }

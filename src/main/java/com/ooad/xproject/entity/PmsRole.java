@@ -5,6 +5,8 @@ public class PmsRole {
 
     private String name;
 
+    private String prDesc;
+
     public Integer getPmsRoleId() {
         return pmsRoleId;
     }
@@ -19,5 +21,13 @@ public class PmsRole {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getPrDesc() {
+        return prDesc;
+    }
+
+    public void setPrDesc(String prDesc) {
+        this.prDesc = prDesc == null ? null : prDesc.trim();
     }
 }

@@ -1,87 +1,109 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ooad.xproject.mapper.RecordInstMapper" >
-  <resultMap id="BaseResultMap" type="com.ooad.xproject.entity.RecordInst" >
-    <id column="rcd_inst_id" property="rcdInstId" jdbcType="INTEGER" />
-    <result column="rcd_id" property="rcdId" jdbcType="INTEGER" />
-    <result column="std_id" property="stdId" jdbcType="INTEGER" />
-    <result column="content" property="content" jdbcType="VARCHAR" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ooad.xproject.mapper.RecordInstMapper">
+  <resultMap id="BaseResultMap" type="com.ooad.xproject.entity.RecordInst">
+    <id column="rcd_inst_id" jdbcType="INTEGER" property="rcdInstId" />
+    <result column="rcd_id" jdbcType="INTEGER" property="rcdId" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="comments" jdbcType="VARCHAR" property="comments" />
   </resultMap>
-  <sql id="Base_Column_List" >
-    rcd_inst_id, rcd_id, std_id, content
+  <sql id="Base_Column_List">
+    rcd_inst_id, rcd_id, role_id, modified_time, content, comments
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from record_insts
     where rcd_inst_id = #{rcdInstId,jdbcType=INTEGER}
   </select>
-
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from record_insts
     where rcd_inst_id = #{rcdInstId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ooad.xproject.entity.RecordInst" >
-    <selectKey resultType="java.lang.Integer" keyProperty="rcdInstId" order="AFTER" >
+  <insert id="insert" parameterType="com.ooad.xproject.entity.RecordInst">
+    <selectKey keyProperty="rcdInstId" order="AFTER" resultType="java.lang.Integer">
       Postgres
     </selectKey>
-    insert into record_insts (rcd_id, std_id, content
-      )
-    values (#{rcdId,jdbcType=INTEGER}, #{stdId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}
-      )
+    insert into record_insts (rcd_id, role_id, modified_time, 
+      content, comments)
+    values (#{rcdId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{modifiedTime,jdbcType=TIMESTAMP}, 
+      #{content,jdbcType=VARCHAR}, #{comments,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.RecordInst" >
-    <selectKey resultType="java.lang.Integer" keyProperty="rcdInstId" order="AFTER" >
+  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.RecordInst">
+    <selectKey keyProperty="rcdInstId" order="AFTER" resultType="java.lang.Integer">
       Postgres
     </selectKey>
     insert into record_insts
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="rcdId != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="rcdId != null">
         rcd_id,
       </if>
-      <if test="stdId != null" >
-        std_id,
+      <if test="roleId != null">
+        role_id,
       </if>
-      <if test="content != null" >
+      <if test="modifiedTime != null">
+        modified_time,
+      </if>
+      <if test="content != null">
         content,
       </if>
+      <if test="comments != null">
+        comments,
+      </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="rcdId != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="rcdId != null">
         #{rcdId,jdbcType=INTEGER},
       </if>
-      <if test="stdId != null" >
-        #{stdId,jdbcType=INTEGER},
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
       </if>
-      <if test="content != null" >
+      <if test="modifiedTime != null">
+        #{modifiedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
         #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="comments != null">
+        #{comments,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.ooad.xproject.entity.RecordInst" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.ooad.xproject.entity.RecordInst">
     update record_insts
-    <set >
-      <if test="rcdId != null" >
+    <set>
+      <if test="rcdId != null">
         rcd_id = #{rcdId,jdbcType=INTEGER},
       </if>
-      <if test="stdId != null" >
-        std_id = #{stdId,jdbcType=INTEGER},
+      <if test="roleId != null">
+        role_id = #{roleId,jdbcType=INTEGER},
       </if>
-      <if test="content != null" >
+      <if test="modifiedTime != null">
+        modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
         content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="comments != null">
+        comments = #{comments,jdbcType=VARCHAR},
       </if>
     </set>
     where rcd_inst_id = #{rcdInstId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.ooad.xproject.entity.RecordInst" >
+  <update id="updateByPrimaryKey" parameterType="com.ooad.xproject.entity.RecordInst">
     update record_insts
     set rcd_id = #{rcdId,jdbcType=INTEGER},
-      std_id = #{stdId,jdbcType=INTEGER},
-      content = #{content,jdbcType=VARCHAR}
+      role_id = #{roleId,jdbcType=INTEGER},
+      modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=VARCHAR},
+      comments = #{comments,jdbcType=VARCHAR}
     where rcd_inst_id = #{rcdInstId,jdbcType=INTEGER}
   </update>
 
-  <select id="selectByRcdId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+
+  <select id="selectByRcdId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from record_insts

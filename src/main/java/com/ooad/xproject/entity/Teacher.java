@@ -11,6 +11,8 @@ public class Teacher {
 
     private Integer schId;
 
+    private String email;
+
     public Integer getTchId() {
         return tchId;
     }
@@ -49,5 +51,13 @@ public class Teacher {
 
     public void setSchId(Integer schId) {
         this.schId = schId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
     }
 }

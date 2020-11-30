@@ -13,9 +13,19 @@ public class Submission {
 
     private String description;
 
-    private Date due;
-
     private Date modifiedTime;
+
+    private Date createdTime;
+
+    private Date dueTime;
+
+    private Date finalTime;
+
+    private Integer maxSbm;
+
+    private String status;
+
+    private String resources;
 
     public Integer getSbmId() {
         return sbmId;
@@ -57,19 +67,59 @@ public class Submission {
         this.description = description == null ? null : description.trim();
     }
 
-    public Date getDue() {
-        return due;
-    }
-
-    public void setDue(Date due) {
-        this.due = due;
-    }
-
     public Date getModifiedTime() {
         return modifiedTime;
     }
 
     public void setModifiedTime(Date modifiedTime) {
         this.modifiedTime = modifiedTime;
+    }
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Date getDueTime() {
+        return dueTime;
+    }
+
+    public void setDueTime(Date dueTime) {
+        this.dueTime = dueTime;
+    }
+
+    public Date getFinalTime() {
+        return finalTime;
+    }
+
+    public void setFinalTime(Date finalTime) {
+        this.finalTime = finalTime;
+    }
+
+    public Integer getMaxSbm() {
+        return maxSbm;
+    }
+
+    public void setMaxSbm(Integer maxSbm) {
+        this.maxSbm = maxSbm;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
+    }
+
+    public String getResources() {
+        return resources;
+    }
+
+    public void setResources(String resources) {
+        this.resources = resources == null ? null : resources.trim();
     }
 }
