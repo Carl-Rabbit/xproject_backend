@@ -1,9 +1,11 @@
 package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.ProjectInst;
+import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
+import java.util.List;
 
+@Repository
 public interface ProjectInstMapper {
     int deleteByPrimaryKey(Integer projInstId);
 
@@ -17,5 +19,5 @@ public interface ProjectInstMapper {
 
     int updateByPrimaryKey(ProjectInst record);
 
-    ArrayList<ProjectInst> selectByProjId(Integer pid);
+    List<ProjectInst> selectByProjId(Integer pid);
 }

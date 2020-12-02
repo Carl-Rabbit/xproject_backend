@@ -13,6 +13,8 @@ public class ProjectInst {
 
     private String flags;
 
+    private String teamName;
+
     public Integer getProjInstId() {
         return projInstId;
     }
@@ -59,5 +61,13 @@ public class ProjectInst {
 
     public void setFlags(String flags) {
         this.flags = flags == null ? null : flags.trim();
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName == null ? null : teamName.trim();
     }
 }

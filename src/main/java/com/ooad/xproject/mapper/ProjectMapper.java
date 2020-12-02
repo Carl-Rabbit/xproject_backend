@@ -3,7 +3,7 @@ package com.ooad.xproject.mapper;
 import com.ooad.xproject.entity.Project;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public interface ProjectMapper {
@@ -19,9 +19,9 @@ public interface ProjectMapper {
 
     int updateByPrimaryKey(Project record);
 
-    ArrayList<Project> selectByTchId(Integer tchId);
+    List<Project> selectByTchId(Integer tchId);
 
-    ArrayList<Project> selectByStdId(Integer roleId);
+    List<Project> selectByStdId(Integer roleId);
 
-    ArrayList<Project> selectAll();
+    List<Project> selectAll();
 }

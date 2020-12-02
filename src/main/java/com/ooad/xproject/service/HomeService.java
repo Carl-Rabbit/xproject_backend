@@ -4,11 +4,11 @@ import com.ooad.xproject.bo.SvRoleInfo;
 import com.ooad.xproject.entity.Announcement;
 import com.ooad.xproject.entity.Project;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface HomeService {
 
-    ArrayList<Project> getProjectList(SvRoleInfo roleInfo);
+    List<Project> getProjectList(SvRoleInfo roleInfo);
 
-    ArrayList<Announcement> getAnnounceList();
+    List<Announcement> getAnnounceList();
 }

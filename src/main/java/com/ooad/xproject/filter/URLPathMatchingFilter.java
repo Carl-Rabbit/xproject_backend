@@ -22,7 +22,7 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
     protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-        // 放行 options 请求
+
         if (HttpMethod.OPTIONS.toString().equals((httpServletRequest).getMethod())) {
             httpServletResponse.setStatus(HttpStatus.NO_CONTENT.value());
             return true;
@@ -33,22 +33,21 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
         }
 
         String requestAPI = getPathWithinApplication(request);
-        System.out.println("访问接口：" + requestAPI);
+        System.out.println("Visit interface" + requestAPI);
 
         Subject subject = SecurityUtils.getSubject();
 
         if (!subject.isAuthenticated()) {
-            System.out.println("需要登录");
+            System.out.println("Need login");
             return false;
         }
 
-        // 判断访问接口是否需要过滤（数据库中是否有对应信息）
         boolean needFilter = adminPermissionService.needFilter(requestAPI);
         if (!needFilter) {
-            System.out.println("接口：" + requestAPI + "无需权限");
+            System.out.println("Interface: " + requestAPI + " not need auth");
             return true;
         } else {
-            System.out.println("验证访问权限：" + requestAPI);
+            System.out.println("Verify access rights: " + requestAPI);
             // 判断当前用户是否有相应权限
             boolean hasPermission = false;
             String username = subject.getPrincipal().toString();
@@ -58,10 +57,10 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
             }
 
             if (hasPermission) {
-                System.out.println("访问权限：" + requestAPI + "验证成功");
+                System.out.println("Access right: " + requestAPI + "verify successfully");
                 return true;
             } else {
-                System.out.println("当前用户没有访问接口" + requestAPI + "的权限");
+                System.out.println("The current user has no right to access interface" + requestAPI);
                 return false;
             }
         }

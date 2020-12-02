@@ -3,7 +3,7 @@ package com.ooad.xproject.mapper;
 import com.ooad.xproject.entity.Student;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public interface StudentMapper {
@@ -21,9 +21,9 @@ public interface StudentMapper {
 
     Student selectByRoleId(Integer rid);
 
-    ArrayList<Student> selectBySgpId(Integer sgpId);
+    List<Student> selectBySgpId(Integer sgpId);
 
-    ArrayList<Student> selectByTeamId(Integer tid);
+    List<Student> selectByTeamId(Integer tid);
 
     int selectTeamIdByStdId(Integer sid);
 }

@@ -2,7 +2,7 @@ package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.Announcement;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface AnnouncementMapper {
     int deleteByPrimaryKey(Integer annId);
@@ -19,5 +19,5 @@ public interface AnnouncementMapper {
 
     // extra
 
-    ArrayList<Announcement> selectByProjId(Integer projId);
+    List<Announcement> selectByProjId(Integer projId);
 }

@@ -8,6 +8,7 @@ import com.ooad.xproject.service.HomeService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class HomeServiceImpl implements HomeService {
@@ -19,8 +20,8 @@ public class HomeServiceImpl implements HomeService {
 
     //todo: specify the student or teacher?
     @Override
-    public ArrayList<Project> getProjectList(SvRoleInfo roleInfo) {
-        ArrayList<Project> projects;
+    public List<Project> getProjectList(SvRoleInfo roleInfo) {
+        List<Project> projects;
         switch (roleInfo.getRoleType()) {
             case RoleServiceImpl.ADMIN:
                 projects = projectMapper.selectAll();

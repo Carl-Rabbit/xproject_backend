@@ -2,7 +2,7 @@ package com.ooad.xproject.service;
 
 import com.ooad.xproject.entity.Student;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface StudentService {
 
@@ -12,11 +12,11 @@ public interface StudentService {
 //    ArrayList<Integer> getStdGroupList();
 
     // select by group id, return all the students of this group
-    ArrayList<Student> getStudentList(Integer group);
+    List<Student> getStudentList(Integer group);
 
     // select by team id, return the teammates
-    ArrayList<Student> getTeammatesByTeamId(Integer tid);
+    List<Student> getTeammatesByTeamId(Integer tid);
 
-    ArrayList<Student> getTeammatesByStdId(Integer sid);
+    List<Student> getTeammatesByStdId(Integer sid);
 
 }
