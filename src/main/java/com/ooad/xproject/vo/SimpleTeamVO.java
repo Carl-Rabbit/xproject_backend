@@ -17,6 +17,7 @@ public class SimpleTeamVO {
     private String status;
     private List<String> tags;
     private String descriptions;
+    private int targetMemNum;
 
     public static SimpleTeamVO createFrom(ProjectInst projectInst) {
         SimpleTeamVO ret = new SimpleTeamVO();
@@ -26,6 +27,7 @@ public class SimpleTeamVO {
         ret.status = projectInst.getStatus();
         ret.tags = Arrays.asList(projectInst.getFlags().split(","));
         ret.descriptions = projectInst.getDescription();
+        ret.targetMemNum = projectInst.getTargetMemNum();
         return ret;
     }
 }

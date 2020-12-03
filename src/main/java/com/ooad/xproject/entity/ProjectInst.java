@@ -15,6 +15,8 @@ public class ProjectInst {
 
     private String teamName;
 
+    private Integer targetMemNum;
+
     public Integer getProjInstId() {
         return projInstId;
     }
@@ -69,5 +71,13 @@ public class ProjectInst {
 
     public void setTeamName(String teamName) {
         this.teamName = teamName == null ? null : teamName.trim();
+    }
+
+    public Integer getTargetMemNum() {
+        return targetMemNum;
+    }
+
+    public void setTargetMemNum(Integer targetMemNum) {
+        this.targetMemNum = targetMemNum;
     }
 }

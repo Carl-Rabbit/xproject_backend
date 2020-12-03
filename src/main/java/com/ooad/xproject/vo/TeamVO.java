@@ -18,6 +18,7 @@ public class TeamVO {
     private String status;
     private List<String> tags;
     private String descriptions;
+    private int targetMemNum;
     private List<StudentDTO> teamMemberList;
 
     public static TeamVO createFrom(ProjectInst projectInst, List<StudentDTO> teamMemberList) {
@@ -28,6 +29,7 @@ public class TeamVO {
         ret.status = projectInst.getStatus();
         ret.tags = Arrays.asList(projectInst.getFlags().split(","));
         ret.descriptions = projectInst.getDescription();
+        ret.targetMemNum = projectInst.getTargetMemNum();
 
         ret.teamMemberList = teamMemberList;
 
