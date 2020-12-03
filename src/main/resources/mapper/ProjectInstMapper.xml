@@ -8,9 +8,10 @@
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="status" jdbcType="CHAR" property="status" />
     <result column="flags" jdbcType="VARCHAR" property="flags" />
+    <result column="team_name" jdbcType="VARCHAR" property="teamName" />
   </resultMap>
   <sql id="Base_Column_List">
-    proj_inst_id, proj_id, topic_str, description, status, flags
+    proj_inst_id, proj_id, topic_str, description, status, flags, team_name
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -27,9 +28,11 @@
       Postgres
     </selectKey>
     insert into project_insts (proj_id, topic_str, description, 
-      status, flags)
+      status, flags, team_name
+      )
     values (#{projId,jdbcType=INTEGER}, #{topicStr,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
-      #{status,jdbcType=CHAR}, #{flags,jdbcType=VARCHAR})
+      #{status,jdbcType=CHAR}, #{flags,jdbcType=VARCHAR}, #{teamName,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.ooad.xproject.entity.ProjectInst">
     <selectKey keyProperty="projInstId" order="AFTER" resultType="java.lang.Integer">
@@ -52,6 +55,9 @@
       <if test="flags != null">
         flags,
       </if>
+      <if test="teamName != null">
+        team_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="projId != null">
@@ -68,6 +74,9 @@
       </if>
       <if test="flags != null">
         #{flags,jdbcType=VARCHAR},
+      </if>
+      <if test="teamName != null">
+        #{teamName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -89,6 +98,9 @@
       <if test="flags != null">
         flags = #{flags,jdbcType=VARCHAR},
       </if>
+      <if test="teamName != null">
+        team_name = #{teamName,jdbcType=VARCHAR},
+      </if>
     </set>
     where proj_inst_id = #{projInstId,jdbcType=INTEGER}
   </update>
@@ -98,7 +110,8 @@
       topic_str = #{topicStr,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR},
       status = #{status,jdbcType=CHAR},
-      flags = #{flags,jdbcType=VARCHAR}
+      flags = #{flags,jdbcType=VARCHAR},
+      team_name = #{teamName,jdbcType=VARCHAR}
     where proj_inst_id = #{projInstId,jdbcType=INTEGER}
   </update>
 
@@ -108,5 +121,18 @@
     <include refid="Base_Column_List" />
     from project_insts
     where proj_id = #{projId,jdbcType=INTEGER}
+  </select>
+
+  <sql id="StudentDTO_Column_List">
+    std_id, r.role_id, username, std_name, std_no, std_class, std.flags, sch_id, email
+  </sql>
+  <select id="selectStudentByProjInstId" resultType="com.ooad.xproject.dto.StudentDTO">
+    select
+    <include refid="StudentDTO_Column_List"/>
+    from project_insts as pi
+    join proj_inst_student_rt pisr on pi.proj_inst_id = pisr.proj_inst_id
+    join roles r on pisr.std_role_id = r.role_id
+    join students as std on pisr.std_role_id = std.role_id
+    where pi.proj_inst_id = #{projInstId};
   </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
 import com.ooad.xproject.entity.RecordInst;
 import com.ooad.xproject.entity.SubmissionInst;
@@ -31,6 +32,11 @@ public class ProjInstServiceImpl implements ProjInstService {
     @Override
     public List<ProjectInst> getProInstList(Integer projId) {
         return projectInstMapper.selectByProjId(projId);
+    }
+
+    @Override
+    public List<StudentDTO> getStudentDTOByProjInstId(Integer projInstId) {
+        return projectInstMapper.selectStudentByProjInstId(projInstId);
     }
 
 

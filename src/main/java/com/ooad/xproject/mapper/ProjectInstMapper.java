@@ -1,5 +1,6 @@
 package com.ooad.xproject.mapper;
 
+import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
 import org.springframework.stereotype.Repository;
 
@@ -20,4 +21,9 @@ public interface ProjectInstMapper {
     int updateByPrimaryKey(ProjectInst record);
 
     List<ProjectInst> selectByProjId(Integer pid);
+
+
+    // extra
+
+    List<StudentDTO> selectStudentByProjInstId(Integer projInstId);
 }
