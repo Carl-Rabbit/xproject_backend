@@ -15,6 +15,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+
+// todo: role + database -> directory name -> upload/download
 @RestController
 public class FileController {
 

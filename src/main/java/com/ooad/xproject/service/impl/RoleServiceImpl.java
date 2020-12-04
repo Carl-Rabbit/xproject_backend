@@ -1,6 +1,5 @@
 package com.ooad.xproject.service.impl;
 
-import com.ooad.xproject.bo.SvRoleInfo;
 import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.Student;
@@ -43,26 +42,6 @@ public class RoleServiceImpl implements RoleService {
         return roleMapper.selectByUsername(username);
     }
 
-    @Override
-    public SvRoleInfo getRoleInfo(Role role) {      // TODO how about saving admin/t/s directly ?
-        int rid = role.getRoleId();
-        SvRoleInfo roleInfo = new SvRoleInfo(role.getRoleId(), role.getRoleType());
-        RoleType roleType = RoleType.getRoleType(role.getRoleType());
-        switch (roleType) {
-            case Admin:
-                roleInfo.setTypeId(adminMapper.selectByRoleId(rid).getAdminId());
-                break;
-            case Teacher:
-                roleInfo.setTypeId(teacherMapper.selectByRoleId(rid).getTchId());
-                break;
-            case Student:
-                roleInfo.setTypeId(studentMapper.selectByRoleId(rid).getStdId());
-                break;
-            default:
-                break;
-        }
-        return roleInfo;
-    }
 
 //    /**
 //     * Check the role with the username and the pwd.

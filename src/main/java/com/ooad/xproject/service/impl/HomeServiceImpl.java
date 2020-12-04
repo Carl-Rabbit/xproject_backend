@@ -1,14 +1,13 @@
 package com.ooad.xproject.service.impl;
 
-import com.ooad.xproject.bo.SvRoleInfo;
 import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.entity.Announcement;
 import com.ooad.xproject.entity.Project;
+import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.mapper.ProjectMapper;
 import com.ooad.xproject.service.HomeService;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,18 +20,20 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
-    public List<Project> getProjectList(SvRoleInfo roleInfo) {
+    public List<Project> getProjectList(Role role) {
         List<Project> projects;
-        RoleType roleType = RoleType.getRoleType(roleInfo.getRoleType());
+        RoleType roleType = RoleType.getRoleType(role.getRoleType());
+        System.out.println(roleType);
         switch (roleType) {
             case Admin:
                 projects = projectMapper.selectAll();
                 break;
             case Teacher:
-                projects = projectMapper.selectByTchId(roleInfo.getTypeId());
+                projects = projectMapper.selectByTchId(role.getRoleId());
                 break;
             case Student:
-                projects = projectMapper.selectByStdId(roleInfo.getTypeId());
+                projects = projectMapper.selectByStdId(role.getRoleId());
+                System.out.println(role.getRoleId());
                 break;
             default:
                 projects = new ArrayList<>();
