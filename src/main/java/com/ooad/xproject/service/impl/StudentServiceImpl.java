@@ -5,7 +5,7 @@ import com.ooad.xproject.mapper.StudentMapper;
 import com.ooad.xproject.service.StudentService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -21,17 +21,17 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ArrayList<Student> getStudentList(Integer group) {
+    public List<Student> getStudentList(Integer group) {
         return studentMapper.selectBySgpId(group);
     }
 
     @Override
-    public ArrayList<Student> getTeammatesByTeamId(Integer tid) {
+    public List<Student> getTeammatesByTeamId(Integer tid) {
         return studentMapper.selectByTeamId(tid);
     }
 
     @Override
-    public ArrayList<Student> getTeammatesByStdId(Integer sid) {
+    public List<Student> getTeammatesByStdId(Integer sid) {
         int tid = studentMapper.selectTeamIdByStdId(sid);
         return studentMapper.selectByTeamId(tid);
     }

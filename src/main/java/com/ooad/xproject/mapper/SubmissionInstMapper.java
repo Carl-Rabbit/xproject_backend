@@ -1,10 +1,11 @@
 package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.SubmissionInst;
+import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public interface SubmissionInstMapper {
     int deleteByPrimaryKey(Integer sbmInstId);
 
@@ -18,5 +19,5 @@ public interface SubmissionInstMapper {
 
     int updateByPrimaryKey(SubmissionInst record);
 
-    ArrayList<SubmissionInst> selectBySbmId(Integer sbmId);
+    List<SubmissionInst> selectBySbmId(Integer sbmId);
 }

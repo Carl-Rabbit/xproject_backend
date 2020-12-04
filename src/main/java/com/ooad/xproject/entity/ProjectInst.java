@@ -13,6 +13,10 @@ public class ProjectInst {
 
     private String flags;
 
+    private String teamName;
+
+    private Integer targetMemNum;
+
     public Integer getProjInstId() {
         return projInstId;
     }
@@ -59,5 +63,21 @@ public class ProjectInst {
 
     public void setFlags(String flags) {
         this.flags = flags == null ? null : flags.trim();
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName == null ? null : teamName.trim();
+    }
+
+    public Integer getTargetMemNum() {
+        return targetMemNum;
+    }
+
+    public void setTargetMemNum(Integer targetMemNum) {
+        this.targetMemNum = targetMemNum;
     }
 }

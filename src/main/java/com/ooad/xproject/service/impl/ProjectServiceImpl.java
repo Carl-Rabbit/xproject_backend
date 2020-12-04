@@ -5,23 +5,22 @@ import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.ProjectService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProjectServiceImpl implements ProjectService {
     private final AnnouncementMapper announcementMapper;
     private final EventArrangeTaskMapper eventArrangeTaskMapper;
     private final SubmissionMapper submissionMapper;
     private final RecordMapper recordMapper;
-    private final TeamMapper teamMapper;
     private final ProjectMapper projectMapper;
     private final ProjectInstMapper projectInstMapper;
     private final TeamFormTaskMapper teamFormTaskMapper;
 
-    public ProjectServiceImpl(AnnouncementMapper announcementMapper, EventArrangeTaskMapper eventArrangeTaskMapper, SubmissionMapper submissionMapper, RecordMapper recordMapper, TeamMapper teamMapper, ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, TeamFormTaskMapper teamFormTaskMapper) {
+    public ProjectServiceImpl(AnnouncementMapper announcementMapper, EventArrangeTaskMapper eventArrangeTaskMapper, SubmissionMapper submissionMapper, RecordMapper recordMapper, ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, TeamFormTaskMapper teamFormTaskMapper) {
         this.announcementMapper = announcementMapper;
         this.eventArrangeTaskMapper = eventArrangeTaskMapper;
         this.submissionMapper = submissionMapper;
         this.recordMapper = recordMapper;
-        this.teamMapper = teamMapper;
         this.projectMapper = projectMapper;
         this.projectInstMapper = projectInstMapper;
         this.teamFormTaskMapper = teamFormTaskMapper;
@@ -33,37 +32,32 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ArrayList<ProjectInst> getProjectInstList(Integer pid) {
+    public List<ProjectInst> getProjectInstList(Integer pid) {
         return projectInstMapper.selectByProjId(pid);
     }
 
     @Override
-    public ArrayList<Announcement> getAnnounceList(Integer pid) {
+    public List<Announcement> getAnnounceList(Integer pid) {
         return announcementMapper.selectByProjId(pid);
     }
 
     @Override
-    public ArrayList<EventArrangeTask> getEventList(Integer pid) {
+    public List<EventArrangeTask> getEventList(Integer pid) {
         return eventArrangeTaskMapper.selectByProjId(pid);
     }
 
     @Override
-    public ArrayList<Submission> getSubmissionList(Integer pid) {
+    public List<Submission> getSubmissionList(Integer pid) {
         return submissionMapper.selectByProjId(pid);
     }
 
     @Override
-    public ArrayList<Record> getRecordList(Integer pid) {
+    public List<Record> getRecordList(Integer pid) {
         return recordMapper.selectByProjId(pid);
     }
 
     @Override
     public TeamFormTask getTeamFormTask(Integer pid) {
         return teamFormTaskMapper.selectByPrimaryKey(pid);
-    }
-
-    @Override
-    public ArrayList<Team> getTeamList(Integer pid) {
-        return teamMapper.selectByProjId(pid);
     }
 }
