@@ -1,5 +1,6 @@
 package com.ooad.xproject.mapper;
 
+import com.ooad.xproject.dto.RecordInstDTO;
 import com.ooad.xproject.entity.RecordInst;
 import org.springframework.stereotype.Repository;
 
@@ -20,4 +21,8 @@ public interface RecordInstMapper {
     int updateByPrimaryKey(RecordInst record);
 
     List<RecordInst> selectByRcdId(Integer rid);
+
+    // extra
+
+    List<RecordInstDTO> selectByProjAndStdRoleId(Integer projId, Integer stdRoleId);
 }

@@ -22,19 +22,15 @@
     delete from teachers
     where tch_id = #{tchId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ooad.xproject.entity.Teacher">
-    <selectKey keyProperty="tchId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insert" parameterType="com.ooad.xproject.entity.Teacher"
+          useGeneratedKeys="true" keyProperty="tchId" keyColumn="tch_id">
     insert into teachers (role_id, tch_name, tch_no, 
       sch_id, email)
     values (#{roleId,jdbcType=INTEGER}, #{tchName,jdbcType=VARCHAR}, #{tchNo,jdbcType=CHAR}, 
       #{schId,jdbcType=INTEGER}, #{email,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.Teacher">
-    <selectKey keyProperty="tchId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.Teacher"
+          useGeneratedKeys="true" keyProperty="tchId" keyColumn="tch_id">
     insert into teachers
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="roleId != null">

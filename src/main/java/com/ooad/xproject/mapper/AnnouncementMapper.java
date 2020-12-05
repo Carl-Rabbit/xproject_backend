@@ -1,9 +1,11 @@
 package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.Announcement;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface AnnouncementMapper {
     int deleteByPrimaryKey(Integer annId);
 

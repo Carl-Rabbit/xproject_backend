@@ -1,5 +1,6 @@
 package com.ooad.xproject.service;
 
+import com.ooad.xproject.dto.RecordInstDTO;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
 import com.ooad.xproject.entity.RecordInst;
@@ -18,8 +19,8 @@ public interface ProjInstService {
     // select by record, return recordinst of the record
     List<RecordInst> getRecordInstList(Integer rid);
 
-    // select by Project id and student id, return the student's RecordInsts under the project
-    List<RecordInst> getRecordInstList(Integer pid, Integer sid);
+    // select by Project id and student's role id, return the student's RecordInsts under the project
+    List<RecordInstDTO> getRecordInstList(Integer projId, Integer stdRoleId);
 
     // select by submission, return submissionInst of the submission
     List<SubmissionInst> getSubmissionInstList(Integer sbmid);

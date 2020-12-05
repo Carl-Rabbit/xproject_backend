@@ -1,5 +1,6 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.dto.RecordInstDTO;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
 import com.ooad.xproject.entity.RecordInst;
@@ -47,8 +48,8 @@ public class ProjInstServiceImpl implements ProjInstService {
 
     // todo: select Record by project and student
     @Override
-    public List<RecordInst> getRecordInstList(Integer pid, Integer sid) {
-        return null;
+    public List<RecordInstDTO> getRecordInstList(Integer projId, Integer stdRoleId) {
+        return recordInstMapper.selectByProjAndStdRoleId(projId, stdRoleId);
     }
 
 
