@@ -9,13 +9,12 @@ import com.ooad.xproject.service.HomeService;
 import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.service.StudentService;
 import com.ooad.xproject.utils.RoleUtils;
+import com.ooad.xproject.vo.AcInfoStdUpdateVO;
 import com.ooad.xproject.vo.AccountInfoStdVO;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AccountController {
@@ -42,6 +41,24 @@ public class AccountController {
             School school = homeService.getSchool(student.getSchId());
             AccountInfoStdVO accountInfoStdVO = AccountInfoStdVO.createFrom(role, student, school);
             return new Result<>(accountInfoStdVO);
+        } else {
+            return new Result<>(RespStatus.NOT_IMPLEMENTED, "Not supported yet");
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("api/self-intro")
+    public Result<?> updateAccountInfo(@RequestBody AcInfoStdUpdateVO acInfoStdUpdateVO) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        if (RoleType.Student.match(role.getRoleType())) {
+            boolean success = studentService.updateAcInfo(role, acInfoStdUpdateVO);
+            if (success) {
+                return new Result<>(RespStatus.SUCCESS);
+            } else {
+                return new Result<>(RespStatus.FAIL);
+            }
         } else {
             return new Result<>(RespStatus.NOT_IMPLEMENTED, "Not supported yet");
         }

@@ -1,6 +1,8 @@
 package com.ooad.xproject.service;
 
+import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.Student;
+import com.ooad.xproject.vo.AcInfoStdUpdateVO;
 
 import java.util.List;
 
@@ -20,4 +22,6 @@ public interface StudentService {
     List<Student> getTeammatesByStdId(Integer sid);
 
     Student getStudentByRoleId(Integer roleId);
+
+    boolean updateAcInfo(Role role, AcInfoStdUpdateVO acInfoStdUpdateVO);
 }

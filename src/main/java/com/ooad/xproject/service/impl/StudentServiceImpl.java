@@ -1,8 +1,12 @@
 package com.ooad.xproject.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.ooad.xproject.bo.SvResult;
+import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.Student;
 import com.ooad.xproject.mapper.StudentMapper;
 import com.ooad.xproject.service.StudentService;
+import com.ooad.xproject.vo.AcInfoStdUpdateVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,5 +43,23 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student getStudentByRoleId(Integer roleId) {
         return studentMapper.selectByRoleId(roleId);
+    }
+
+    @Override
+    public boolean updateAcInfo(Role role, AcInfoStdUpdateVO acInfoStdUpdateVO) {
+        Student student = studentMapper.selectByRoleId(role.getRoleId());
+        String newFlagsJson = JSON.toJSONString(acInfoStdUpdateVO.getFlags());
+        String newSkillsJson = JSON.toJSONString(acInfoStdUpdateVO.getSkills());
+        String newBio = acInfoStdUpdateVO.getBio();
+
+        Student newStd = new Student();     // not use the old one to save recourse
+        newStd.setStdId(student.getStdId());
+        newStd.setFlags(newFlagsJson);
+        newStd.setSkills(newSkillsJson);
+        newStd.setBio(newBio);
+
+        int affectedRowCnt = studentMapper.updateByPrimaryKeySelective(newStd);
+
+        return affectedRowCnt == 1;
     }
 }
