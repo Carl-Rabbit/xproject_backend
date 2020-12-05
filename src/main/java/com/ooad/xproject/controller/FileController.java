@@ -48,7 +48,7 @@ public class FileController {
 
 
     @GetMapping("api/download")
-    public ResponseEntity<byte[]> downlaodFile(HttpServletRequest request, @RequestParam("path") String path
+    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request, @RequestParam("path") String path
             , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
         // 根路径加上传参数的路径构成文件路径地址
