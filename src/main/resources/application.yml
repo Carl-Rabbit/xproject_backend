@@ -14,3 +14,8 @@ mybatis:
 logging:
   level:
     com.ooad.xproject.mapper: debug
+
+ooad:
+  file:
+    root:
+      path: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\"

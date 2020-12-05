@@ -1,6 +1,5 @@
 package com.ooad.xproject.controller;
 
-import com.ooad.xproject.bo.SvRoleInfo;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.entity.Project;
 import com.ooad.xproject.entity.Role;
@@ -47,8 +46,7 @@ public class HomePageController {
         String username = subject.getPrincipal().toString();
 
         Role role = roleService.getByUsername(username);
-        SvRoleInfo roleInfo = roleService.getRoleInfo(role);
-        List<Project> projList = homeService.getProjectList(roleInfo);
+        List<Project> projList = homeService.getProjectList(role);
         return new Result<>(projList);
     }
 }
