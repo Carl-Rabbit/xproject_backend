@@ -19,6 +19,8 @@ public class Project {
 
     private String description;
 
+    private String topics;
+
     public Integer getProjId() {
         return projId;
     }
@@ -81,5 +83,13 @@ public class Project {
 
     public void setDescription(String description) {
         this.description = description == null ? null : description.trim();
+    }
+
+    public String getTopics() {
+        return topics;
+    }
+
+    public void setTopics(String topics) {
+        this.topics = topics == null ? null : topics.trim();
     }
 }
