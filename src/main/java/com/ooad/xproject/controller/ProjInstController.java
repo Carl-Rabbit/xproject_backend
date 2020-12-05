@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,14 +73,37 @@ public class ProjInstController {
 
     @ResponseBody
     @PostMapping("api/team-deletion")
-    public Result<?> postTeamDeletion(@RequestParam(value="teamId") int projInstId) {
-        SvResult<Boolean> svResult = projInstService.deleteProjInst(projInstId);
-        if (svResult.getData()) {
-            // true
-            return new Result<>(RespStatus.SUCCESS);
-        } else {
-            // false
-            return new Result<>(RespStatus.FAIL);
+    public Result<Integer> postTeamDeletion(@RequestParam(value="teamIdList") int[] projInstIdList) {
+        List<Integer> successList = new ArrayList<>();
+        for (int projInstId : projInstIdList) {
+            SvResult<Boolean> svResult = projInstService.deleteProjInst(projInstId);
+            if (svResult.getData()) {
+                // true
+                successList.add(projInstId);
+            } else {
+                // false
+                // do nothing
+            }
         }
+        int successCnt = successList.size();
+        return new Result<>(successCnt);
+    }
+
+    @ResponseBody
+    @PostMapping("api/team-confirm")
+    public Result<Integer> postTeamConfirm(@RequestParam(value="teamIdList") int[] projInstIdList) {
+        List<Integer> successList = new ArrayList<>();
+        for (int projInstId : projInstIdList) {
+            SvResult<Boolean> svResult = projInstService.confirmProjInst(projInstId);
+            if (svResult.getData()) {
+                // true
+                successList.add(projInstId);
+            } else {
+                // false
+                // do nothing
+            }
+        }
+        int successCnt = successList.size();
+        return new Result<>(successCnt);
     }
 }

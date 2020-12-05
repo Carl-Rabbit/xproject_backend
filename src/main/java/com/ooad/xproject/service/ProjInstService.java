@@ -30,4 +30,6 @@ public interface ProjInstService {
    List<SubmissionInst> getSubmissionInstList(Integer pid, Integer sid);
 
     SvResult<Boolean> deleteProjInst(int projInstId);
+
+    SvResult<Boolean> confirmProjInst(int projInstId);
 }

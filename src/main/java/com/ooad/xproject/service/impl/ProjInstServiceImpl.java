@@ -1,6 +1,7 @@
 package com.ooad.xproject.service.impl;
 
 import com.ooad.xproject.bo.SvResult;
+import com.ooad.xproject.constant.ProjInstStatus;
 import com.ooad.xproject.dto.RecordInstDTO;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
@@ -70,6 +71,22 @@ public class ProjInstServiceImpl implements ProjInstService {
     @Override
     public SvResult<Boolean> deleteProjInst(int projInstId) {
         int affectedRowCnt = projectInstMapper.deleteByPrimaryKey(projInstId);
+        if (affectedRowCnt == 1) {
+            return new SvResult<>(0, true);
+        } else {
+            return new SvResult<>(0, false);
+        }
+    }
+
+    @Transactional
+    @Override
+    public SvResult<Boolean> confirmProjInst(int projInstId) {
+        ProjectInst record = new ProjectInst();
+        record.setProjInstId(projInstId);
+        record.setStatus(ProjInstStatus.Confirm.toString());
+
+        int affectedRowCnt = projectInstMapper.updateByPrimaryKeySelective(record);
+
         if (affectedRowCnt == 1) {
             return new SvResult<>(0, true);
         } else {
