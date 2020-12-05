@@ -109,4 +109,24 @@
     from record_insts
     where rcd_id = #{rcdId,jdbcType=INTEGER}
   </select>
+    <select id="selectByProjAndStdRoleId" resultType="com.ooad.xproject.dto.RecordInstDTO">
+      select r.rcd_id,
+             ri.rcd_inst_id,
+             rcd_name,
+             r.type,
+             created_time,
+             modified_time,
+             r.derived,
+             t.tch_name,
+             t.email,
+             ri.content,
+             r.base_content,
+             comments
+      from records as r
+             join record_insts ri on r.rcd_id = ri.rcd_id
+             join teachers t on r.creator_id = t.role_id
+      where proj_id = #{projId}
+        and ri.role_id = #{stdRoleId}
+      order by rcd_id;
+    </select>
 </mapper>

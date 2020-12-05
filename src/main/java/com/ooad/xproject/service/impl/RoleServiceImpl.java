@@ -70,7 +70,9 @@ public class RoleServiceImpl implements RoleService {
         newRole.setPassword(encodedPassword);
         newRole.setRoleType(type);
         newRole.setSalt(salt);
-        int roleId = roleMapper.insertSelective(newRole);
+        roleMapper.insertSelective(newRole);
+        int roleId = newRole.getRoleId();
+        System.out.println(roleId);
 
         if (RoleType.Teacher.match(type)) {
             // create teacher

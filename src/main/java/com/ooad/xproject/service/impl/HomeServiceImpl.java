@@ -4,7 +4,9 @@ import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.entity.Announcement;
 import com.ooad.xproject.entity.Project;
 import com.ooad.xproject.entity.Role;
+import com.ooad.xproject.entity.School;
 import com.ooad.xproject.mapper.ProjectMapper;
+import com.ooad.xproject.mapper.SchoolMapper;
 import com.ooad.xproject.service.HomeService;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +16,11 @@ import java.util.List;
 @Service
 public class HomeServiceImpl implements HomeService {
     private final ProjectMapper projectMapper;
+    private final SchoolMapper schoolMapper;
 
-    public HomeServiceImpl(ProjectMapper projectMapper) {
+    public HomeServiceImpl(ProjectMapper projectMapper, SchoolMapper schoolMapper) {
         this.projectMapper = projectMapper;
+        this.schoolMapper = schoolMapper;
     }
 
     @Override
@@ -49,4 +53,8 @@ public class HomeServiceImpl implements HomeService {
         return null;
     }
 
+    @Override
+    public School getSchool(int schId) {
+        return schoolMapper.selectByPrimaryKey(schId);
+    }
 }

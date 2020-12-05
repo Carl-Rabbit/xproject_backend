@@ -16,7 +16,7 @@ alter table roles
     add constraint
         roles_username_ukey unique (username);
 
-alter sequence roles_role_id_seq restart;
+alter sequence roles_role_id_seq restart with 3;
 
 truncate roles cascade;
 

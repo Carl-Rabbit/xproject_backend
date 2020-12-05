@@ -10,12 +10,14 @@
     <result column="flags" jdbcType="VARCHAR" property="flags" />
     <result column="sch_id" jdbcType="INTEGER" property="schId" />
     <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="skills" jdbcType="VARCHAR" property="skills" />
+    <result column="bio" jdbcType="VARCHAR" property="bio" />
   </resultMap>
   <sql id="Base_Column_List">
-    std_id, role_id, std_name, std_no, std_class, flags, sch_id, email
+    std_id, role_id, std_name, std_no, std_class, flags, sch_id, email, skills, bio
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
     from students
     where std_id = #{stdId,jdbcType=INTEGER}
@@ -24,21 +26,15 @@
     delete from students
     where std_id = #{stdId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ooad.xproject.entity.Student">
-    <selectKey keyProperty="stdId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
-    insert into students (role_id, std_name, std_no,
-      std_class, flags, sch_id,
-      email)
-    values (#{roleId,jdbcType=INTEGER}, #{stdName,jdbcType=VARCHAR}, #{stdNo,jdbcType=CHAR},
-      #{stdClass,jdbcType=CHAR}, #{flags,jdbcType=VARCHAR}, #{schId,jdbcType=INTEGER},
-      #{email,jdbcType=VARCHAR})
+  <insert id="insert" keyColumn="std_id" keyProperty="stdId" parameterType="com.ooad.xproject.entity.Student" useGeneratedKeys="true">
+    insert into students (role_id, std_name, std_no, 
+      std_class, flags, sch_id, 
+      email, skills, bio)
+    values (#{roleId,jdbcType=INTEGER}, #{stdName,jdbcType=VARCHAR}, #{stdNo,jdbcType=CHAR}, 
+      #{stdClass,jdbcType=CHAR}, #{flags,jdbcType=VARCHAR}, #{schId,jdbcType=INTEGER}, 
+      #{email,jdbcType=VARCHAR}, #{skills,jdbcType=VARCHAR}, #{bio,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.Student">
-    <selectKey keyProperty="stdId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insertSelective" keyColumn="std_id" keyProperty="stdId" parameterType="com.ooad.xproject.entity.Student" useGeneratedKeys="true">
     insert into students
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="roleId != null">
@@ -62,6 +58,12 @@
       <if test="email != null">
         email,
       </if>
+      <if test="skills != null">
+        skills,
+      </if>
+      <if test="bio != null">
+        bio,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="roleId != null">
@@ -84,6 +86,12 @@
       </if>
       <if test="email != null">
         #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="skills != null">
+        #{skills,jdbcType=VARCHAR},
+      </if>
+      <if test="bio != null">
+        #{bio,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -111,6 +119,12 @@
       <if test="email != null">
         email = #{email,jdbcType=VARCHAR},
       </if>
+      <if test="skills != null">
+        skills = #{skills,jdbcType=VARCHAR},
+      </if>
+      <if test="bio != null">
+        bio = #{bio,jdbcType=VARCHAR},
+      </if>
     </set>
     where std_id = #{stdId,jdbcType=INTEGER}
   </update>
@@ -122,7 +136,9 @@
       std_class = #{stdClass,jdbcType=CHAR},
       flags = #{flags,jdbcType=VARCHAR},
       sch_id = #{schId,jdbcType=INTEGER},
-      email = #{email,jdbcType=VARCHAR}
+      email = #{email,jdbcType=VARCHAR},
+      skills = #{skills,jdbcType=VARCHAR},
+      bio = #{bio,jdbcType=VARCHAR}
     where std_id = #{stdId,jdbcType=INTEGER}
   </update>
 

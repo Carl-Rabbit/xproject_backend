@@ -8,3 +8,5 @@ create table teachers
     tch_name varchar,
     tch_no char(8)
 );
+
+alter sequence teachers_tch_id_seq restart with 2;

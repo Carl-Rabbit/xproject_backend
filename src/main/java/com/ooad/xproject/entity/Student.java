@@ -17,6 +17,10 @@ public class Student {
 
     private String email;
 
+    private String skills;
+
+    private String bio;
+
     public Integer getStdId() {
         return stdId;
     }
@@ -79,5 +83,21 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email == null ? null : email.trim();
+    }
+
+    public String getSkills() {
+        return skills;
+    }
+
+    public void setSkills(String skills) {
+        this.skills = skills == null ? null : skills.trim();
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio == null ? null : bio.trim();
     }
 }

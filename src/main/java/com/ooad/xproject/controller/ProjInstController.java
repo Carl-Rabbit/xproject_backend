@@ -1,10 +1,12 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
 import com.ooad.xproject.service.ProjInstService;
 import com.ooad.xproject.service.RoleService;
+import com.ooad.xproject.vo.ProjInstCreationVO;
 import com.ooad.xproject.vo.Result;
 import com.ooad.xproject.vo.SimpleTeamVO;
 import com.ooad.xproject.vo.TeamVO;
@@ -12,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,5 +63,47 @@ public class ProjInstController {
     @PostMapping("api/team-apply")
     public Result<?> postTeamApply(@RequestParam(value="teamId") int projInstId) {
         return new Result<>(RespStatus.SUCCESS, "Just a fake interface");
+    }
+
+    @ResponseBody
+    @PostMapping("api/team-creation")
+    public Result<?> postTeamCreation(@RequestBody ProjInstCreationVO projectCreationVO) {
+        return new Result<>(RespStatus.NOT_IMPLEMENTED);
+    }
+
+    @ResponseBody
+    @PostMapping("api/team-deletion")
+    public Result<Integer> postTeamDeletion(@RequestParam(value="teamIdList") int[] projInstIdList) {
+        List<Integer> successList = new ArrayList<>();
+        for (int projInstId : projInstIdList) {
+            SvResult<Boolean> svResult = projInstService.deleteProjInst(projInstId);
+            if (svResult.getData()) {
+                // true
+                successList.add(projInstId);
+            } else {
+                // false
+                // do nothing
+            }
+        }
+        int successCnt = successList.size();
+        return new Result<>(successCnt);
+    }
+
+    @ResponseBody
+    @PostMapping("api/team-confirm")
+    public Result<Integer> postTeamConfirm(@RequestParam(value="teamIdList") int[] projInstIdList) {
+        List<Integer> successList = new ArrayList<>();
+        for (int projInstId : projInstIdList) {
+            SvResult<Boolean> svResult = projInstService.confirmProjInst(projInstId);
+            if (svResult.getData()) {
+                // true
+                successList.add(projInstId);
+            } else {
+                // false
+                // do nothing
+            }
+        }
+        int successCnt = successList.size();
+        return new Result<>(successCnt);
     }
 }

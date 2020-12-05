@@ -10,9 +10,11 @@
     <result column="course_name" jdbcType="VARCHAR" property="courseName" />
     <result column="term" jdbcType="VARCHAR" property="term" />
     <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="topics" jdbcType="VARCHAR" property="topics" />
   </resultMap>
   <sql id="Base_Column_List">
-    proj_id, sch_id, creator_id, create_time, proj_name, course_name, term, description
+    proj_id, sch_id, creator_id, create_time, proj_name, course_name, term, description, 
+    topics
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,21 +26,17 @@
     delete from projects
     where proj_id = #{projId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ooad.xproject.entity.Project">
-    <selectKey keyProperty="projId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insert" parameterType="com.ooad.xproject.entity.Project"
+          useGeneratedKeys="true" keyProperty="projId" keyColumn="proj_id">
     insert into projects (sch_id, creator_id, create_time, 
       proj_name, course_name, term, 
-      description)
+      description, topics)
     values (#{schId,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{projName,jdbcType=VARCHAR}, #{courseName,jdbcType=VARCHAR}, #{term,jdbcType=VARCHAR}, 
-      #{description,jdbcType=VARCHAR})
+      #{description,jdbcType=VARCHAR}, #{topics,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.Project">
-    <selectKey keyProperty="projId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.Project"
+          useGeneratedKeys="true" keyProperty="projId" keyColumn="proj_id">
     insert into projects
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="schId != null">
@@ -62,6 +60,9 @@
       <if test="description != null">
         description,
       </if>
+      <if test="topics != null">
+        topics,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="schId != null">
@@ -84,6 +85,9 @@
       </if>
       <if test="description != null">
         #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="topics != null">
+        #{topics,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -111,6 +115,9 @@
       <if test="description != null">
         description = #{description,jdbcType=VARCHAR},
       </if>
+      <if test="topics != null">
+        topics = #{topics,jdbcType=VARCHAR},
+      </if>
     </set>
     where proj_id = #{projId,jdbcType=INTEGER}
   </update>
@@ -122,10 +129,10 @@
       proj_name = #{projName,jdbcType=VARCHAR},
       course_name = #{courseName,jdbcType=VARCHAR},
       term = #{term,jdbcType=VARCHAR},
-      description = #{description,jdbcType=VARCHAR}
+      description = #{description,jdbcType=VARCHAR},
+      topics = #{topics,jdbcType=VARCHAR}
     where proj_id = #{projId,jdbcType=INTEGER}
   </update>
-
 
   <select id="selectAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select

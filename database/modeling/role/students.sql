@@ -17,3 +17,5 @@ create table students
 	email varchar
 );
 
+alter sequence students_std_id_seq restart with 2;
+

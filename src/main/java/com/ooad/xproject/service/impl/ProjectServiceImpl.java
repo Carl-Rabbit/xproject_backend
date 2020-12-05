@@ -3,10 +3,11 @@ package com.ooad.xproject.service.impl;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.ProjectService;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ProjectServiceImpl implements ProjectService {
     private final AnnouncementMapper announcementMapper;
     private final EventArrangeTaskMapper eventArrangeTaskMapper;

@@ -1,6 +1,6 @@
 package com.ooad.xproject.entity;
 
-public class Schools {
+public class School {
     private Integer schId;
 
     private String schName;

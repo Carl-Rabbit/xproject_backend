@@ -19,4 +19,5 @@ public interface StudentService {
 
     List<Student> getTeammatesByStdId(Integer sid);
 
+    Student getStudentByRoleId(Integer roleId);
 }
