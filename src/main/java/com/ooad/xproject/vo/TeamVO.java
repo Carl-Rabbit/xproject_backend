@@ -1,10 +1,10 @@
 package com.ooad.xproject.vo;
 
+import com.alibaba.fastjson.JSON;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
 import lombok.Data;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,7 +16,7 @@ public class TeamVO {
     private String teamName;
     private String topic;
     private String status;
-    private List<String> tags;
+    private String tags;
     private String descriptions;
     private int targetMemNum;
     private List<StudentDTO> teamMemberList;
@@ -27,7 +27,8 @@ public class TeamVO {
         ret.teamName = projectInst.getTeamName();
         ret.topic = projectInst.getTopicStr();
         ret.status = projectInst.getStatus();
-        ret.tags = Arrays.asList(projectInst.getFlags().split(","));
+//        ret.tags = JSON.parseArray(projectInst.getFlags(), String.class);
+        ret.tags = projectInst.getFlags();
         ret.descriptions = projectInst.getDescription();
         ret.targetMemNum = projectInst.getTargetMemNum();
 

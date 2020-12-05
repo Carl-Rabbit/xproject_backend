@@ -1,16 +1,10 @@
 package com.ooad.xproject.constant;
 
 public enum RoleType {
-    Teacher("T"),
-    Student("S"),
-    Admin("A"),
-    Null("N");
-
-    public String code;
-
-    RoleType(String code) {
-        this.code = code;
-    }
+    Teacher,
+    Student,
+    Admin,
+    Null;
 
     public static RoleType getRoleType(String code) {
         for (RoleType i : RoleType.values()) {
@@ -24,7 +18,7 @@ public enum RoleType {
     /**
      * Return ture if the enum match the type code
      */
-    public boolean match(String code) {
-        return this.code.equals(code);
+    public boolean match(String typeStr) {
+        return this.toString().equals(typeStr);
     }
 }

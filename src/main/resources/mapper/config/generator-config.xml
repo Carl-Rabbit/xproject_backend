@@ -146,7 +146,7 @@
 <!--            <generatedKey column="role_id" sqlStatement="Postgres" identity="true"/>-->
 <!--        </table>-->
 
-<!--        <table tableName="schools" domainObjectName="Schools" enableCountByExample="false"-->
+<!--        <table tableName="schools" domainObjectName="School" enableCountByExample="false"-->
 <!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
 <!--               enableSelectByExample="false" selectByExampleQueryId="false">-->
 <!--            <property name="useActualColumnNames" value="false"/>-->

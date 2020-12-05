@@ -24,10 +24,8 @@
     delete from project_insts
     where proj_inst_id = #{projInstId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ooad.xproject.entity.ProjectInst">
-    <selectKey keyProperty="projInstId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insert" parameterType="com.ooad.xproject.entity.ProjectInst"
+          useGeneratedKeys="true" keyProperty="projId" keyColumn="proj_id">
     insert into project_insts (proj_id, topic_str, description, 
       status, flags, team_name, 
       target_mem_num)
@@ -35,10 +33,8 @@
       #{status,jdbcType=CHAR}, #{flags,jdbcType=VARCHAR}, #{teamName,jdbcType=VARCHAR}, 
       #{targetMemNum,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.ProjectInst">
-    <selectKey keyProperty="projInstId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.ProjectInst"
+          useGeneratedKeys="true" keyProperty="projId" keyColumn="proj_id">
     insert into project_insts
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="projId != null">

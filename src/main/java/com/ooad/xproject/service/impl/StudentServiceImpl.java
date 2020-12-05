@@ -35,4 +35,9 @@ public class StudentServiceImpl implements StudentService {
         int tid = studentMapper.selectTeamIdByStdId(sid);
         return studentMapper.selectByTeamId(tid);
     }
+
+    @Override
+    public Student getStudentByRoleId(Integer roleId) {
+        return studentMapper.selectByRoleId(roleId);
+    }
 }

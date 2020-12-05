@@ -1,5 +1,7 @@
 package com.ooad.xproject.entity;
 
+import java.util.Date;
+
 public class Role {
     private Integer roleId;
 
@@ -12,6 +14,8 @@ public class Role {
     private String status;
 
     private String salt;
+
+    private Date registerTime;
 
     public Integer getRoleId() {
         return roleId;
@@ -59,5 +63,13 @@ public class Role {
 
     public void setSalt(String salt) {
         this.salt = salt == null ? null : salt.trim();
+    }
+
+    public Date getRegisterTime() {
+        return registerTime;
+    }
+
+    public void setRegisterTime(Date registerTime) {
+        this.registerTime = registerTime;
     }
 }

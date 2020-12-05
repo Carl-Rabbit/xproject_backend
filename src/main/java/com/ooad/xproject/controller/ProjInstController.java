@@ -1,10 +1,12 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
 import com.ooad.xproject.service.ProjInstService;
 import com.ooad.xproject.service.RoleService;
+import com.ooad.xproject.vo.ProjInstCreationVO;
 import com.ooad.xproject.vo.Result;
 import com.ooad.xproject.vo.SimpleTeamVO;
 import com.ooad.xproject.vo.TeamVO;
@@ -60,5 +62,24 @@ public class ProjInstController {
     @PostMapping("api/team-apply")
     public Result<?> postTeamApply(@RequestParam(value="teamId") int projInstId) {
         return new Result<>(RespStatus.SUCCESS, "Just a fake interface");
+    }
+
+    @ResponseBody
+    @PostMapping("api/team-creation")
+    public Result<?> postTeamCreation(@RequestBody ProjInstCreationVO projectCreationVO) {
+        return new Result<>(RespStatus.NOT_IMPLEMENTED);
+    }
+
+    @ResponseBody
+    @PostMapping("api/team-deletion")
+    public Result<?> postTeamDeletion(@RequestParam(value="teamId") int projInstId) {
+        SvResult<Boolean> svResult = projInstService.deleteProjInst(projInstId);
+        if (svResult.getData()) {
+            // true
+            return new Result<>(RespStatus.SUCCESS);
+        } else {
+            // false
+            return new Result<>(RespStatus.FAIL);
+        }
     }
 }

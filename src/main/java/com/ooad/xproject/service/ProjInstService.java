@@ -1,5 +1,6 @@
 package com.ooad.xproject.service;
 
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.dto.RecordInstDTO;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
@@ -27,4 +28,6 @@ public interface ProjInstService {
 
     // select by Project id and student id, return the student's submissionInsts under the submission
    List<SubmissionInst> getSubmissionInstList(Integer pid, Integer sid);
+
+    SvResult<Boolean> deleteProjInst(int projInstId);
 }

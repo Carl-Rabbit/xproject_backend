@@ -1,5 +1,6 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.dto.RecordInstDTO;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
@@ -10,6 +11,7 @@ import com.ooad.xproject.mapper.RecordInstMapper;
 import com.ooad.xproject.mapper.SubmissionInstMapper;
 import com.ooad.xproject.service.ProjInstService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -62,5 +64,16 @@ public class ProjInstServiceImpl implements ProjInstService {
     @Override
     public List<SubmissionInst> getSubmissionInstList(Integer pid, Integer sid) {
         return null;
+    }
+
+    @Transactional
+    @Override
+    public SvResult<Boolean> deleteProjInst(int projInstId) {
+        int affectedRowCnt = projectInstMapper.deleteByPrimaryKey(projInstId);
+        if (affectedRowCnt == 1) {
+            return new SvResult<>(0, true);
+        } else {
+            return new SvResult<>(0, false);
+        }
     }
 }
