@@ -5,6 +5,8 @@ public class School {
 
     private String schName;
 
+    private String location;
+
     public Integer getSchId() {
         return schId;
     }
@@ -19,5 +21,13 @@ public class School {
 
     public void setSchName(String schName) {
         this.schName = schName == null ? null : schName.trim();
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location == null ? null : location.trim();
     }
 }
