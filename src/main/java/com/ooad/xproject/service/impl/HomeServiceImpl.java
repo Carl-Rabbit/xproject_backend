@@ -33,11 +33,11 @@ public class HomeServiceImpl implements HomeService {
                 projects = projectMapper.selectAll();
                 break;
             case Teacher:
-                projects = projectMapper.selectByTchId(role.getRoleId());
+                // temp version: user relation table
+                projects = projectMapper.selectByStdId(role.getRoleId());
                 break;
             case Student:
                 projects = projectMapper.selectByStdId(role.getRoleId());
-                System.out.println(role.getRoleId());
                 break;
             default:
                 projects = new ArrayList<>();
