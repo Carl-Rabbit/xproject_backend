@@ -98,13 +98,13 @@
 <!--            <generatedKey column="pms_role_id" sqlStatement="Postgres" identity="true"/>-->
 <!--        </table>-->
 
-        <table tableName="proj_inst_student_rt" domainObjectName="ProjInstStudentRT" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false">
-            <property name="useActualColumnNames" value="false"/>
-            <!-- 数据库表主键 -->
-            <generatedKey column="proj_inst_rt_id" sqlStatement="Postgres" identity="true"/>
-        </table>
+<!--        <table tableName="proj_inst_student_rt" domainObjectName="ProjInstStudentRT" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false">-->
+<!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            &lt;!&ndash; 数据库表主键 &ndash;&gt;-->
+<!--            <generatedKey column="proj_inst_rt_id" sqlStatement="Postgres" identity="true"/>-->
+<!--        </table>-->
 
 <!--        <table tableName="project_insts" domainObjectName="ProjectInst" enableCountByExample="false"-->
 <!--               enableUpdateByExample="false" enableDeleteByExample="false"-->

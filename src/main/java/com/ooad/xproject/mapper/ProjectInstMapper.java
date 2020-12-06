@@ -27,5 +27,5 @@ public interface ProjectInstMapper {
 
     List<StudentDTO> selectStudentByProjInstId(Integer projInstId);
 
-    ProjectInst checkStdRoleId(int projId, int stdRoleId);
+    ProjectInst selectPIByProjIdAndStdRoleId(int projId, int stdRoleId);
 }

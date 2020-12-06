@@ -102,9 +102,8 @@ public class ProjInstServiceImpl implements ProjInstService {
     }
 
     @Override
-    public boolean alreadyHasATeam(int projId, int stdRoleId) {
-        ProjectInst existProjInst = projectInstMapper.checkStdRoleId(projId, stdRoleId);
-        return existProjInst != null;
+    public ProjectInst getPIByProjIdAndStdRoleId(int projId, int stdRoleId) {
+        return projectInstMapper.selectPIByProjIdAndStdRoleId(projId, stdRoleId);
     }
 
     /**
@@ -114,7 +113,7 @@ public class ProjInstServiceImpl implements ProjInstService {
     @Override
     public SvResult<Boolean> createProjInst(int stdRoleId, ProjInstCreationVO projectCreationVO) {
         // check first
-        if (this.alreadyHasATeam(projectCreationVO.getProjId(), stdRoleId)) {
+        if (this.getPIByProjIdAndStdRoleId(projectCreationVO.getProjId(), stdRoleId) != null) {
             return new SvResult<>("Already in a team", false);
         }
 

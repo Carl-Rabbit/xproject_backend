@@ -142,7 +142,7 @@
     join students as std on pisr.std_role_id = std.role_id
     where pi.proj_inst_id = #{projInstId};
   </select>
-    <select id="checkStdRoleId" resultType="com.ooad.xproject.entity.ProjectInst">
+    <select id="selectPIByProjIdAndStdRoleId" resultType="com.ooad.xproject.entity.ProjectInst">
       select pi.*
       from project_insts as pi
              join proj_inst_student_rt pisr on pi.proj_inst_id = pisr.proj_inst_id

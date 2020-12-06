@@ -34,7 +34,7 @@ public interface ProjInstService {
 
     SvResult<Boolean> confirmProjInst(int projInstId);
 
-    boolean alreadyHasATeam(int projId, int stdRoleId);
+    ProjectInst getPIByProjIdAndStdRoleId(int projId, int stdRoleId);
 
     SvResult<Boolean> createProjInst(int stdRoleId, ProjInstCreationVO projectCreationVO);
 }

@@ -124,4 +124,18 @@ public class ProjInstController {
         int successCnt = successList.size();
         return new Result<>(successCnt);
     }
+
+    @ResponseBody
+    @GetMapping("api/student/team/detail")
+    public Result<TeamVO> getTeamDetailByProjId(@RequestParam(value="projId") int projId) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        ProjectInst projectInst = projInstService.getPIByProjIdAndStdRoleId(projId, role.getRoleId());
+        List<StudentDTO> studentList = projInstService.getStudentDTOByProjInstId(projectInst.getProjInstId());
+        TeamVO teamVO = TeamVO.createFrom(projectInst, studentList);
+
+        logger.info(String.format("getTeamDetailByProjId -> %s", teamVO));
+        return new Result<>(teamVO);
+    }
 }
