@@ -17,5 +17,9 @@ logging:
 
 ooad:
   file:
-    root:
-      path: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\"
+    path:
+      upload: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\"
+
+      download: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\"
+
+      output: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\"
