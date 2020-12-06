@@ -29,7 +29,7 @@ public class ProjController {
 
     @ResponseBody
     @GetMapping("api/proj-topic")
-    public Result<?> getTeamInfoList(@RequestParam(value="projId") int projId) {
+    public Result<?> getProjTopics(@RequestParam(value="projId") int projId) {
         Project project = projectService.getProject(projId);
         List<TopicBO> topicList = JSON.parseArray(project.getTopics(), TopicBO.class);
         return new Result<>(topicList);

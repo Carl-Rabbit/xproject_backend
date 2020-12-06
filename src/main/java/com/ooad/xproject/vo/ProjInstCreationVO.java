@@ -10,10 +10,10 @@ public class ProjInstCreationVO {
     private int projId;
     private String teamName;
     private String topic;
-    private String idealSize;
+    private int idealSize;
     private String description;
 
     private boolean useIncrNum;     // if true, replace the %d in the team name to an auto incr number
-    private String generateNum;     // create ? team once
+    private int generateNum;     // create ? team once
 }
 

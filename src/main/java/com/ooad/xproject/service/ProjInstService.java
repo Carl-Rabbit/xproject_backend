@@ -6,6 +6,7 @@ import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
 import com.ooad.xproject.entity.RecordInst;
 import com.ooad.xproject.entity.SubmissionInst;
+import com.ooad.xproject.vo.ProjInstCreationVO;
 
 import java.util.List;
 
@@ -32,4 +33,8 @@ public interface ProjInstService {
     SvResult<Boolean> deleteProjInst(int projInstId);
 
     SvResult<Boolean> confirmProjInst(int projInstId);
+
+    boolean alreadyHasATeam(int projId, int stdRoleId);
+
+    SvResult<Boolean> createProjInst(int stdRoleId, ProjInstCreationVO projectCreationVO);
 }

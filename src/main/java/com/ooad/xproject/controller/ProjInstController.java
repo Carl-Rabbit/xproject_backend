@@ -2,10 +2,13 @@ package com.ooad.xproject.controller;
 
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.RespStatus;
+import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
+import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.service.ProjInstService;
 import com.ooad.xproject.service.RoleService;
+import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.ProjInstCreationVO;
 import com.ooad.xproject.vo.Result;
 import com.ooad.xproject.vo.SimpleTeamVO;
@@ -67,8 +70,23 @@ public class ProjInstController {
 
     @ResponseBody
     @PostMapping("api/team-creation")
-    public Result<?> postTeamCreation(@RequestBody ProjInstCreationVO projectCreationVO) {
-        return new Result<>(RespStatus.NOT_IMPLEMENTED);
+    public Result<Integer> postTeamCreation(@RequestBody ProjInstCreationVO projectCreationVO) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        if (RoleType.Teacher.match(role.getRoleType())) {
+            int successCnt = 0;
+            return new Result<>(RespStatus.NOT_IMPLEMENTED);
+        } else if (RoleType.Student.match(role.getRoleType())) {
+            SvResult<Boolean> svResult = projInstService.createProjInst(role.getRoleId(), projectCreationVO);
+            if (svResult.getData()) {
+                return new Result<>(RespStatus.SUCCESS, svResult.getMsg(), 1);
+            } else {
+                return new Result<>(RespStatus.FAIL, svResult.getMsg(), 0);
+            }
+        } else {
+            return new Result<>(RespStatus.NOT_IMPLEMENTED, "Type Error");
+        }
     }
 
     @ResponseBody

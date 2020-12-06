@@ -25,7 +25,7 @@
     where proj_inst_id = #{projInstId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.ooad.xproject.entity.ProjectInst"
-          useGeneratedKeys="true" keyProperty="projId" keyColumn="proj_id">
+          useGeneratedKeys="true" keyProperty="projInstId" keyColumn="proj_inst_id">
     insert into project_insts (proj_id, topic_str, description, 
       status, flags, team_name, 
       target_mem_num)
@@ -34,7 +34,7 @@
       #{targetMemNum,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.ooad.xproject.entity.ProjectInst"
-          useGeneratedKeys="true" keyProperty="projId" keyColumn="proj_id">
+          useGeneratedKeys="true" keyProperty="projInstId" keyColumn="proj_inst_id">
     insert into project_insts
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="projId != null">
@@ -142,4 +142,10 @@
     join students as std on pisr.std_role_id = std.role_id
     where pi.proj_inst_id = #{projInstId};
   </select>
+    <select id="checkStdRoleId" resultType="com.ooad.xproject.entity.ProjectInst">
+      select pi.*
+      from project_insts as pi
+             join proj_inst_student_rt pisr on pi.proj_inst_id = pisr.proj_inst_id
+      where proj_id = #{projId} and std_role_id = #{stdRoleId};
+    </select>
 </mapper>
