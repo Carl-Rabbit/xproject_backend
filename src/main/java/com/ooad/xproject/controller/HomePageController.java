@@ -33,9 +33,9 @@ public class HomePageController {
 
     @ResponseBody
     @GetMapping("api/home-page-info")
-    public Result<?> getRoleInfo() {
-        String data = "I have a great plan, but there's not enough room here.";
-        return new Result<>(RespStatus.SUCCESS, "only a test", data);
+    public Result<?> getHomePageInfo() {
+        logger.info("getHomePageInfo");
+        return new Result<>(RespStatus.NOT_IMPLEMENTED, "Use account-info instead");
     }
 
     @ResponseBody

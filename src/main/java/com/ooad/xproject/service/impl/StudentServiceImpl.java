@@ -1,7 +1,6 @@
 package com.ooad.xproject.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.Student;
 import com.ooad.xproject.mapper.StudentMapper;
@@ -48,15 +47,24 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public boolean updateAcInfo(Role role, AcInfoStdUpdateVO acInfoStdUpdateVO) {
         Student student = studentMapper.selectByRoleId(role.getRoleId());
-        String newFlagsJson = JSON.toJSONString(acInfoStdUpdateVO.getFlags());
-        String newSkillsJson = JSON.toJSONString(acInfoStdUpdateVO.getSkills());
-        String newBio = acInfoStdUpdateVO.getBio();
-
         Student newStd = new Student();     // not use the old one to save recourse
+
         newStd.setStdId(student.getStdId());
-        newStd.setFlags(newFlagsJson);
-        newStd.setSkills(newSkillsJson);
-        newStd.setBio(newBio);
+
+        if (acInfoStdUpdateVO.getFlags() != null) {
+            String newFlagsJson = JSON.toJSONString(acInfoStdUpdateVO.getFlags());
+            newStd.setFlags(newFlagsJson);
+        }
+
+        if (acInfoStdUpdateVO.getSkills() != null) {
+            String newSkillsJson = JSON.toJSONString(acInfoStdUpdateVO.getSkills());
+            newStd.setSkills(newSkillsJson);
+        }
+
+        if (acInfoStdUpdateVO.getBio() != null) {
+            String newBio = acInfoStdUpdateVO.getBio();
+            newStd.setBio(newBio);
+        }
 
         int affectedRowCnt = studentMapper.updateByPrimaryKeySelective(newStd);
 
