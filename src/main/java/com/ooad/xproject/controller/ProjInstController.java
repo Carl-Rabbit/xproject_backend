@@ -125,12 +125,14 @@ public class ProjInstController {
                 successList.add(projInstId);
             } else {
                 // false
-                // do nothing
+                logger.info(String.format("postTeamDeletion: delete fail. " +
+                        "projInstId=%d, msg=%s", projInstId, svResult.getMsg()));
             }
         }
         int successCnt = successList.size();
         RespStatus status = (successCnt == 0) ? RespStatus.FAIL : RespStatus.SUCCESS;
-        return new Result<>(status, "Delete teams done", successCnt);
+        String msg = (successCnt == 0) ? "Delete all teams fail" : "Delete teams done";
+        return new Result<>(status, msg, successCnt);
     }
 
     @ResponseBody
