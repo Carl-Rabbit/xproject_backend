@@ -94,7 +94,8 @@ public class ProjInstController {
             }
             logger.info("postTeamCreation: create success for teacher. successCnt=" + successCnt);
             RespStatus status = (successCnt == 0) ? RespStatus.FAIL : RespStatus.SUCCESS;
-            return new Result<>(status, "Create teams done", successCnt);
+            String msg = (successCnt == 0) ? "Create teams fail" : "Create teams done";
+            return new Result<>(status, msg, successCnt);
 
         } else if (RoleType.Student.match(role.getRoleType())) {
 

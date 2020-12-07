@@ -123,7 +123,7 @@ public class ProjInstServiceImpl implements ProjInstService {
                 throw new Exception("Error when insert projInst");
             }
 
-            return new SvResult<>("Create project inst, and take student as first member", true);
+            return new SvResult<>("Create project inst", true);
         } catch (Exception e) {
             // roll back
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
