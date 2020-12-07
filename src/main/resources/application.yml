@@ -7,7 +7,7 @@ spring:
   mail:
     host: smtp.163.com
     username: xproject309@163.com
-    password: abc12345678
+    password: OFQXAREVALBUVGPB    # auth code
     protocol: smtp
     properties.mail.smtp.auth: true
     properties.mail.smtp.port: 994 #465或者994

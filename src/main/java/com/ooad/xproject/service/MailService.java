@@ -1,7 +1,9 @@
 package com.ooad.xproject.service;
 
-public interface MailService {
-    void sendSimpleMail(String to, String subject, String content);
+import com.ooad.xproject.bo.SvResult;
 
-    void sendSimpleMail(String to, String subject, String content, String... cc);
+public interface MailService {
+    SvResult<Boolean> sendSimpleMail(String to, String subject, String content);
+
+    SvResult<Boolean> sendSimpleMail(String to, String subject, String content, String... cc);
 }

@@ -1,7 +1,9 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.entity.TestObject;
+import com.ooad.xproject.service.MailService;
 import com.ooad.xproject.service.TestService;
 import com.ooad.xproject.vo.Result;
 import com.ooad.xproject.vo.RoleVO;
@@ -17,10 +19,12 @@ import java.util.Objects;
 public class TestController {
 
     private final TestService testService;
+    private final MailService mailService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
 
-    public TestController(TestService testService) {
+    public TestController(TestService testService, MailService mailService) {
         this.testService = testService;
+        this.mailService = mailService;
     }
 
     @RequestMapping("/test/select")
@@ -33,7 +37,6 @@ public class TestController {
         testService.updateNum();
     }
 
-    @CrossOrigin
     @ResponseBody
     @RequestMapping(value = "api/test/login", method = RequestMethod.POST)
     public Result<?> login(@RequestBody RoleVO requestRoleVO) {
@@ -49,5 +52,14 @@ public class TestController {
             logger.info("Login successfully");
             return new Result<Null>(RespStatus.SUCCESS);
         }
+    }
+
+    @ResponseBody
+    @GetMapping("api/test/mail")
+    public Result<?> testSendMail(@RequestParam("to") String to,
+                                  @RequestParam("subject") String subject,
+                                  @RequestParam("content") String content) {
+        SvResult<Boolean> svResult = mailService.sendSimpleMail(to, subject, content);
+        return new Result<>(svResult.getData() ? RespStatus.SUCCESS : RespStatus.FAIL, svResult.getMsg());
     }
 }
