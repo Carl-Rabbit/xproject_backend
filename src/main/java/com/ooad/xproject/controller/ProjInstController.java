@@ -90,9 +90,10 @@ public class ProjInstController {
                     successCnt ++;
                 } else {
                     // fail to create
+                    logger.info("postTeamCreation: create failed when i=" + i + ". " + svResult.getMsg());
                 }
             }
-            logger.info("postTeamCreation: create success for teacher. successCnt=" + successCnt);
+            logger.info("postTeamCreation: creation process done for teacher. successCnt=" + successCnt);
             RespStatus status = (successCnt == 0) ? RespStatus.FAIL : RespStatus.SUCCESS;
             String msg = (successCnt == 0) ? "Create teams fail" : "Create teams done";
             return new Result<>(status, msg, successCnt);
