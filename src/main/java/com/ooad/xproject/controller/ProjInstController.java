@@ -93,7 +93,8 @@ public class ProjInstController {
                 }
             }
             logger.info("postTeamCreation: create success for teacher. successCnt=" + successCnt);
-            return new Result<>("Create teams done", successCnt);
+            RespStatus status = (successCnt == 0) ? RespStatus.FAIL : RespStatus.SUCCESS;
+            return new Result<>(status, "Create teams done", successCnt);
 
         } else if (RoleType.Student.match(role.getRoleType())) {
 
@@ -126,7 +127,8 @@ public class ProjInstController {
             }
         }
         int successCnt = successList.size();
-        return new Result<>("Delete teams done", successCnt);
+        RespStatus status = (successCnt == 0) ? RespStatus.FAIL : RespStatus.SUCCESS;
+        return new Result<>(status, "Delete teams done", successCnt);
     }
 
     @ResponseBody
