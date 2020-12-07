@@ -36,5 +36,7 @@ public interface ProjInstService {
 
     ProjectInst getPIByProjIdAndStdRoleId(int projId, int stdRoleId);
 
-    SvResult<Boolean> createProjInst(int stdRoleId, ProjInstCreationVO projectCreationVO);
+    SvResult<Boolean> createProjInst(ProjInstCreationVO projInstCreationVO);
+
+    SvResult<Boolean> createProjInstAndLink(int stdRoleId, ProjInstCreationVO projectCreationVO);
 }

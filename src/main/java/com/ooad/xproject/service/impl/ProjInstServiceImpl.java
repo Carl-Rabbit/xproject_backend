@@ -106,24 +106,50 @@ public class ProjInstServiceImpl implements ProjInstService {
         return projectInstMapper.selectPIByProjIdAndStdRoleId(projId, stdRoleId);
     }
 
+    @Transactional
+    @Override
+    public SvResult<Boolean> createProjInst(ProjInstCreationVO projInstCreationVO) {
+        try {
+            ProjectInst projInst = new ProjectInst();
+            projInst.setProjId(projInstCreationVO.getProjId());
+            projInst.setTeamName(projInstCreationVO.getTeamName());
+            projInst.setTopicStr(projInstCreationVO.getTopic());
+            projInst.setTargetMemNum(projInstCreationVO.getIdealSize());
+            projInst.setDescription(projInstCreationVO.getDescription());
+
+            int affectedRowCnt = projectInstMapper.insertSelective(projInst);
+
+            if (affectedRowCnt == 0) {
+                throw new Exception("Error when insert projInst");
+            }
+
+            return new SvResult<>("Create project inst, and take student as first member", true);
+        } catch (Exception e) {
+            // roll back
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            e.printStackTrace();
+            return new SvResult<>(e.toString(), false);
+        }
+    }
+
     /**
      * Reuse VO to create project inst.
      */
     @Transactional
     @Override
-    public SvResult<Boolean> createProjInst(int stdRoleId, ProjInstCreationVO projectCreationVO) {
+    public SvResult<Boolean> createProjInstAndLink(int stdRoleId, ProjInstCreationVO projInstCreationVO) {
         // check first
-        if (this.getPIByProjIdAndStdRoleId(projectCreationVO.getProjId(), stdRoleId) != null) {
+        if (this.getPIByProjIdAndStdRoleId(projInstCreationVO.getProjId(), stdRoleId) != null) {
             return new SvResult<>("Already in a team", false);
         }
 
         try {
             ProjectInst projInst = new ProjectInst();
-            projInst.setProjId(projectCreationVO.getProjId());
-            projInst.setTeamName(projectCreationVO.getTeamName());
-            projInst.setTopicStr(projectCreationVO.getTopic());
-            projInst.setTargetMemNum(projectCreationVO.getIdealSize());
-            projInst.setDescription(projectCreationVO.getDescription());
+            projInst.setProjId(projInstCreationVO.getProjId());
+            projInst.setTeamName(projInstCreationVO.getTeamName());
+            projInst.setTopicStr(projInstCreationVO.getTopic());
+            projInst.setTargetMemNum(projInstCreationVO.getIdealSize());
+            projInst.setDescription(projInstCreationVO.getDescription());
 
             int affectedRowCnt = projectInstMapper.insertSelective(projInst);
 
@@ -146,6 +172,7 @@ public class ProjInstServiceImpl implements ProjInstService {
 
             return new SvResult<>("Create project inst, and take student as first member", true);
         } catch (Exception e) {
+            // roll back
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             e.printStackTrace();
             return new SvResult<>(e.toString(), false);

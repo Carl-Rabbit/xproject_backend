@@ -70,20 +70,42 @@ public class ProjInstController {
 
     @ResponseBody
     @PostMapping("api/team-creation")
-    public Result<Integer> postTeamCreation(@RequestBody ProjInstCreationVO projectCreationVO) {
+    public Result<Integer> postTeamCreation(@RequestBody ProjInstCreationVO projInstCreationVO) {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
         if (RoleType.Teacher.match(role.getRoleType())) {
+
             int successCnt = 0;
-            return new Result<>(RespStatus.NOT_IMPLEMENTED);
+            boolean useIncrNum = projInstCreationVO.isUseIncrNum();
+            int generateNum = projInstCreationVO.getGenerateNum();
+            String baseTeamName = projInstCreationVO.getTeamName();
+
+            for (int i = 0; i < generateNum; i++) {
+                if (useIncrNum) {
+                    projInstCreationVO.setTeamName(baseTeamName + ' ' + i);
+                }
+                SvResult<Boolean> svResult = projInstService.createProjInst(projInstCreationVO);
+                if (svResult.getData()) {
+                    successCnt ++;
+                } else {
+                    // fail to create
+                }
+            }
+            logger.info("postTeamCreation: create success for teacher. successCnt=" + successCnt);
+            return new Result<>("Create teams done", successCnt);
+
         } else if (RoleType.Student.match(role.getRoleType())) {
-            SvResult<Boolean> svResult = projInstService.createProjInst(role.getRoleId(), projectCreationVO);
+
+            SvResult<Boolean> svResult = projInstService.createProjInstAndLink(role.getRoleId(), projInstCreationVO);
             if (svResult.getData()) {
+                logger.info("postTeamCreation: create success for student. " + svResult.getMsg());
                 return new Result<>(RespStatus.SUCCESS, svResult.getMsg(), 1);
             } else {
+                logger.info("postTeamCreation: create fail for student. " + svResult.getMsg());
                 return new Result<>(RespStatus.FAIL, svResult.getMsg(), 0);
             }
+
         } else {
             return new Result<>(RespStatus.NOT_IMPLEMENTED, "Type Error");
         }
@@ -104,7 +126,7 @@ public class ProjInstController {
             }
         }
         int successCnt = successList.size();
-        return new Result<>(successCnt);
+        return new Result<>("Delete teams done", successCnt);
     }
 
     @ResponseBody
