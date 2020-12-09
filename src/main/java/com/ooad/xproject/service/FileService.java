@@ -9,5 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface FileService {
     ResponseEntity<byte[]> download(HttpServletRequest request, String realPath, String userAgent, String filename, boolean inline);
 
-    String upload(@RequestParam("file") MultipartFile[] files, String uploadPath);
+    String upload(MultipartFile[] files, String uploadPath);
+
+    String upload(MultipartFile file, String uploadPath, String fileName);
 }

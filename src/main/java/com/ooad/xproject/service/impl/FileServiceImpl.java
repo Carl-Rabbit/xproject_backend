@@ -53,7 +53,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public String upload(@RequestParam("file") MultipartFile[] files, String uploadPath) {
+    public String upload(MultipartFile[] files, String uploadPath) {
         String filePath = "";
         for (MultipartFile file : files) {
             // get filename
@@ -68,6 +68,17 @@ public class FileServiceImpl implements FileService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        return filePath;
+    }
+
+    @Override
+    public String upload(MultipartFile file, String uploadPath, String fileName) {
+        String filePath = uploadPath + fileName;
+        try {
+            file.transferTo(new File(filePath));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return filePath;
     }
