@@ -1,6 +1,7 @@
 package com.ooad.xproject.service;
 
 import com.github.pagehelper.PageInfo;
+import com.ooad.xproject.bo.StudentImportBO;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.Role;
@@ -31,4 +32,6 @@ public interface StudentService {
     boolean updateAcInfo(Role role, AcInfoStdUpdateVO acInfoStdUpdateVO);
 
     SvResult<PageInfo<StudentDTO>> getStudentListBySelector(Role role, Teacher teacher, SelectorStdVO selectorStdVO);
+
+    SvResult<Boolean> creatRoleAndStudent(StudentImportBO studentImportBO);
 }
