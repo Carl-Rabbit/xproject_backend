@@ -21,6 +21,8 @@ public class Project {
 
     private String topics;
 
+    private String projSettings;
+
     public Integer getProjId() {
         return projId;
     }
@@ -91,5 +93,13 @@ public class Project {
 
     public void setTopics(String topics) {
         this.topics = topics == null ? null : topics.trim();
+    }
+
+    public String getProjSettings() {
+        return projSettings;
+    }
+
+    public void setProjSettings(String projSettings) {
+        this.projSettings = projSettings == null ? null : projSettings.trim();
     }
 }

@@ -11,10 +11,11 @@
     <result column="term" jdbcType="VARCHAR" property="term" />
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="topics" jdbcType="VARCHAR" property="topics" />
+    <result column="proj_settings" jdbcType="VARCHAR" property="projSettings" />
   </resultMap>
   <sql id="Base_Column_List">
     proj_id, sch_id, creator_id, create_time, proj_name, course_name, term, description, 
-    topics
+    topics, proj_settings
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -27,16 +28,18 @@
     where proj_id = #{projId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.ooad.xproject.entity.Project"
-          useGeneratedKeys="true" keyProperty="projId" keyColumn="proj_id">
+          useGeneratedKeys="true" keyColumn="proj_id" keyProperty="projId">
     insert into projects (sch_id, creator_id, create_time, 
       proj_name, course_name, term, 
-      description, topics)
+      description, topics, proj_settings
+      )
     values (#{schId,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{projName,jdbcType=VARCHAR}, #{courseName,jdbcType=VARCHAR}, #{term,jdbcType=VARCHAR}, 
-      #{description,jdbcType=VARCHAR}, #{topics,jdbcType=VARCHAR})
+      #{description,jdbcType=VARCHAR}, #{topics,jdbcType=VARCHAR}, #{projSettings,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.ooad.xproject.entity.Project"
-          useGeneratedKeys="true" keyProperty="projId" keyColumn="proj_id">
+          useGeneratedKeys="true" keyColumn="proj_id" keyProperty="projId">
     insert into projects
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="schId != null">
@@ -63,6 +66,9 @@
       <if test="topics != null">
         topics,
       </if>
+      <if test="projSettings != null">
+        proj_settings,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="schId != null">
@@ -88,6 +94,9 @@
       </if>
       <if test="topics != null">
         #{topics,jdbcType=VARCHAR},
+      </if>
+      <if test="projSettings != null">
+        #{projSettings,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -118,19 +127,10 @@
       <if test="topics != null">
         topics = #{topics,jdbcType=VARCHAR},
       </if>
+      <if test="projSettings != null">
+        proj_settings = #{projSettings,jdbcType=VARCHAR},
+      </if>
     </set>
-    where proj_id = #{projId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.ooad.xproject.entity.Project">
-    update projects
-    set sch_id = #{schId,jdbcType=INTEGER},
-      creator_id = #{creatorId,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      proj_name = #{projName,jdbcType=VARCHAR},
-      course_name = #{courseName,jdbcType=VARCHAR},
-      term = #{term,jdbcType=VARCHAR},
-      description = #{description,jdbcType=VARCHAR},
-      topics = #{topics,jdbcType=VARCHAR}
     where proj_id = #{projId,jdbcType=INTEGER}
   </update>
 
