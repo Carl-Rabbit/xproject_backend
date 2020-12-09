@@ -1,9 +1,11 @@
 package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.Student;
+import com.ooad.xproject.entity.StudentExample;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface StudentMapper {
@@ -12,6 +14,8 @@ public interface StudentMapper {
     int insert(Student record);
 
     int insertSelective(Student record);
+
+    List<Student> selectByExample(StudentExample example);
 
     Student selectByPrimaryKey(Integer stdId);
 
@@ -26,4 +30,6 @@ public interface StudentMapper {
     List<Student> selectByTeamId(Integer tid);
 
     int selectTeamIdByStdId(Integer sid);
+
+    List<Student> selectByPage(Map<?, ?> param);
 }

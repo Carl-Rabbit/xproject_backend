@@ -1,8 +1,11 @@
 package com.ooad.xproject.service;
 
+import com.github.pagehelper.PageInfo;
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.Student;
 import com.ooad.xproject.vo.AcInfoStdUpdateVO;
+import com.ooad.xproject.vo.SelectorStdVO;
 
 import java.util.List;
 
@@ -24,4 +27,6 @@ public interface StudentService {
     Student getStudentByRoleId(Integer roleId);
 
     boolean updateAcInfo(Role role, AcInfoStdUpdateVO acInfoStdUpdateVO);
+
+    SvResult<PageInfo<Student>> getStudentListBySelector(SelectorStdVO selectorStdVO);
 }

@@ -1,11 +1,16 @@
 package com.ooad.xproject.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.Student;
+import com.ooad.xproject.entity.StudentExample;
 import com.ooad.xproject.mapper.StudentMapper;
 import com.ooad.xproject.service.StudentService;
 import com.ooad.xproject.vo.AcInfoStdUpdateVO;
+import com.ooad.xproject.vo.SelectorStdVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,5 +74,20 @@ public class StudentServiceImpl implements StudentService {
         int affectedRowCnt = studentMapper.updateByPrimaryKeySelective(newStd);
 
         return affectedRowCnt == 1;
+    }
+
+    @Override
+    public SvResult<PageInfo<Student>> getStudentListBySelector(SelectorStdVO selectorStdVO) {
+        PageHelper.startPage(selectorStdVO.getPage(), selectorStdVO.getPageSize(), selectorStdVO.getOrderStr());
+
+        StudentExample stdExample = new StudentExample();
+
+        if (selectorStdVO.getStdClass() != null) {
+            stdExample.createCriteria().andStdClassEqualTo(selectorStdVO.getStdClass());
+        }
+
+        PageInfo<Student> pageInfo = new PageInfo<>(studentMapper.selectByExample(stdExample));
+
+        return new SvResult<>("Success", pageInfo);
     }
 }
