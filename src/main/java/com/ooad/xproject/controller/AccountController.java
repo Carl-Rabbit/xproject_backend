@@ -5,12 +5,15 @@ import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.School;
 import com.ooad.xproject.entity.Student;
+import com.ooad.xproject.entity.Teacher;
 import com.ooad.xproject.service.HomeService;
 import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.service.StudentService;
+import com.ooad.xproject.service.TeacherService;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.AcInfoStdUpdateVO;
 import com.ooad.xproject.vo.AccountInfoStdVO;
+import com.ooad.xproject.vo.AccountInfoTchVO;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,12 +24,14 @@ public class AccountController {
 
     private final RoleService roleService;
     private final StudentService studentService;
+    private final TeacherService teacherService;
     private final HomeService homeService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
 
-    public AccountController(RoleService testService, StudentService studentService, HomeService homeService) {
+    public AccountController(RoleService testService, StudentService studentService, TeacherService teacherService, HomeService homeService) {
         this.roleService = testService;
         this.studentService = studentService;
+        this.teacherService = teacherService;
         this.homeService = homeService;
     }
 
@@ -42,7 +47,10 @@ public class AccountController {
             AccountInfoStdVO accountInfoStdVO = AccountInfoStdVO.createFrom(role, student, school);
             return new Result<>(accountInfoStdVO);
         } else {
-            return new Result<>(RespStatus.NOT_IMPLEMENTED, "Not supported yet");
+            Teacher teacher = teacherService.getTeacherByRoleId(role.getRoleId());
+            School school = homeService.getSchool(teacher.getSchId());
+            AccountInfoTchVO accountInfoTchVO = AccountInfoTchVO.createFrom(role, teacher, school);
+            return new Result<>(accountInfoTchVO);
         }
     }
 
