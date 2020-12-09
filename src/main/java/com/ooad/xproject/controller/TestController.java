@@ -5,6 +5,7 @@ import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.entity.TestObject;
 import com.ooad.xproject.service.MailService;
 import com.ooad.xproject.service.TestService;
+import com.ooad.xproject.vo.AcInfoStdUpdateVO;
 import com.ooad.xproject.vo.Result;
 import com.ooad.xproject.vo.RoleVO;
 import org.apache.ibatis.jdbc.Null;
@@ -27,7 +28,7 @@ public class TestController {
         this.mailService = mailService;
     }
 
-    @RequestMapping("/test/select")
+    @GetMapping("/test/select")
     public TestObject index() {
         return testService.getTestObject();
     }
@@ -61,5 +62,12 @@ public class TestController {
                                   @RequestParam("content") String content) {
         SvResult<Boolean> svResult = mailService.sendSimpleMail(to, subject, content);
         return new Result<>(svResult.getData() ? RespStatus.SUCCESS : RespStatus.FAIL, svResult.getMsg());
+    }
+
+    @ResponseBody
+    @PostMapping("api/test/vo-default")
+    public Result<?> testVODefault(@RequestBody AcInfoStdUpdateVO acInfoStdUpdateVO) {
+        System.out.println(acInfoStdUpdateVO);
+        return new Result<>(true);
     }
 }
