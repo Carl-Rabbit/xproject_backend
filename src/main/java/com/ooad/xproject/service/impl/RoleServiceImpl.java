@@ -60,7 +60,7 @@ public class RoleServiceImpl implements RoleService {
 //    }
 
     @Override
-    public void createUser(String type, String username, String password) {
+    public Role createUser(String type, String username, String password) {
         String salt = new SecureRandomNumberGenerator().nextBytes().toString();
         int times = 2;      // hash times
         String encodedPassword = new SimpleHash("md5", password, salt, times).toString();
@@ -85,6 +85,8 @@ public class RoleServiceImpl implements RoleService {
             std.setRoleId(roleId);
             studentMapper.insertSelective(std);
         }
+
+        return newRole;
     }
 
     @Override

@@ -3,12 +3,15 @@ package com.ooad.xproject.controller;
 import com.github.pagehelper.PageInfo;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.RespStatus;
+import com.ooad.xproject.constant.RoleType;
+import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.Project;
 import com.ooad.xproject.entity.Role;
-import com.ooad.xproject.entity.Student;
+import com.ooad.xproject.entity.Teacher;
 import com.ooad.xproject.service.HomeService;
 import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.service.StudentService;
+import com.ooad.xproject.service.TeacherService;
 import com.ooad.xproject.vo.Result;
 import com.ooad.xproject.vo.SelectorStdVO;
 import org.apache.logging.log4j.LogManager;
@@ -23,12 +26,14 @@ import java.util.List;
 public class HomePageController {
 
     private final RoleService roleService;
+    private final TeacherService teacherService;
     private final StudentService studentService;
     private final HomeService homeService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
 
-    public HomePageController(RoleService roleService, StudentService studentService, HomeService homeService) {
+    public HomePageController(RoleService roleService, TeacherService teacherService, StudentService studentService, HomeService homeService) {
         this.roleService = roleService;
+        this.teacherService = teacherService;
         this.studentService = studentService;
         this.homeService = homeService;
     }
@@ -58,8 +63,15 @@ public class HomePageController {
         logger.info("getProjectList");
         Subject subject = SecurityUtils.getSubject();
         String username = subject.getPrincipal().toString();
+        Role role = roleService.getByUsername(username);
 
-        SvResult<PageInfo<Student>> svResult = studentService.getStudentListBySelector(selectorStdVO);
+        if (RoleType.Student.match(role.getRoleType())) {
+            return new Result<>(RespStatus.FAIL, "Student can't visit this api");
+        }
+
+        Teacher teacher = teacherService.getTeacherByRoleId(role.getRoleId());
+
+        SvResult<PageInfo<StudentDTO>> svResult = studentService.getStudentListBySelector(role, teacher, selectorStdVO);
 
         return new Result<>(svResult.getData());
     }

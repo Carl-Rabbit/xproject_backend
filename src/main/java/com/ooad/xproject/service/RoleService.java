@@ -9,7 +9,7 @@ public interface RoleService {
 
     Role getByUsername(String username);
 
-    void createUser(String type, String username, String password);
+    Role createUser(String type, String username, String password);
 
     boolean validUsername(String username);
 
