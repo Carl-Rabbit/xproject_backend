@@ -4,9 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ooad.xproject.bo.SvResult;
+import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.Student;
-import com.ooad.xproject.entity.StudentExample;
+import com.ooad.xproject.entity.Teacher;
 import com.ooad.xproject.mapper.StudentMapper;
 import com.ooad.xproject.service.StudentService;
 import com.ooad.xproject.vo.AcInfoStdUpdateVO;
@@ -77,16 +78,17 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public SvResult<PageInfo<Student>> getStudentListBySelector(SelectorStdVO selectorStdVO) {
+    public SvResult<PageInfo<StudentDTO>> getStudentListBySelector(Role role, Teacher teacher, SelectorStdVO selectorStdVO) {
         PageHelper.startPage(selectorStdVO.getPage(), selectorStdVO.getPageSize(), selectorStdVO.getOrderStr());
 
-        StudentExample stdExample = new StudentExample();
-
-        if (selectorStdVO.getStdClass() != null) {
-            stdExample.createCriteria().andStdClassEqualTo(selectorStdVO.getStdClass());
+        List<StudentDTO> stdDTOList;
+        try {
+            stdDTOList = studentMapper.selectDTOBySelector(teacher.getSchId(), selectorStdVO.getStdClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new SvResult<>(-1, e.getMessage());
         }
-
-        PageInfo<Student> pageInfo = new PageInfo<>(studentMapper.selectByExample(stdExample));
+        PageInfo<StudentDTO> pageInfo = new PageInfo<>(stdDTOList);
 
         return new SvResult<>("Success", pageInfo);
     }

@@ -1,11 +1,11 @@
 package com.ooad.xproject.mapper;
 
+import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.Student;
 import com.ooad.xproject.entity.StudentExample;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public interface StudentMapper {
@@ -31,5 +31,5 @@ public interface StudentMapper {
 
     int selectTeamIdByStdId(Integer sid);
 
-    List<Student> selectByPage(Map<?, ?> param);
+    List<StudentDTO> selectDTOBySelector(Integer schId, String stdClass);
 }

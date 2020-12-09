@@ -195,24 +195,38 @@
         where role_id = #{rid,jdbcType=INTEGER}
     </select>
     <select id="selectBySgpId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        select students.*
-        from students
-                 join std_group_student_rt sgsr on students.std_id = sgsr.std_id
-        where sgp_id = #{sgpId,jdbcType=INTEGER};
+--         select students.*
+--         from students
+--                  join std_group_student_rt sgsr on students.std_id = sgsr.std_id
+--         where sgp_id = #{sgpId,jdbcType=INTEGER};
     </select>
     <select id="selectByTeamId" parameterType="java.lang.Integer" resultType="com.ooad.xproject.entity.Student">
-        select students.*
-        from students
-                 join team_student_rt tsr on students.std_id = tsr.std_id
-        where team_id = 1;
+--         select students.*
+--         from students
+--                  join team_student_rt tsr on students.std_id = tsr.std_id
+--         where team_id = 1;
     </select>
     <select id="selectTeamIdByStdId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-        select team_id
-        from team_student_rt
-        where std_id = #{sid,jdbcType=INTEGER}
+--         select team_id
+--         from team_student_rt
+--         where std_id = #{sid,jdbcType=INTEGER}
     </select>
-    <select id="selectByPage" resultType="com.ooad.xproject.entity.Student">
-
-    </select>
+  <sql id="StudentDTO_Column_List">
+    std_id, r.role_id, username, std_name, std_no, std_class, std.flags, sch_id, email
+  </sql>
+  <select id="selectDTOBySelector" resultType="com.ooad.xproject.dto.StudentDTO">
+    select
+    <include refid="StudentDTO_Column_List" />
+    from students as std
+        join roles r on std.role_id = r.role_id
+    <where>
+      <if test="true">
+        std.sch_id = #{schId}
+      </if>
+      <if test="stdClass != null">
+        and std_class = #{stdClass}
+      </if>
+    </where>
+  </select>
 
 </mapper>
