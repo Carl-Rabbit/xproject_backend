@@ -3,6 +3,11 @@ spring:
 #    active: @profileActive@
     active: cloud
 #    active: prod
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
 
   mail:
     host: smtp.163.com

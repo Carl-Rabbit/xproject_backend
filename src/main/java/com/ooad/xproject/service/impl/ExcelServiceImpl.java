@@ -1,27 +1,29 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.bo.StudentImportBO;
 import com.ooad.xproject.service.ExcelService;
+import lombok.SneakyThrows;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.xmlbeans.impl.jam.JField;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Service
 public class ExcelServiceImpl implements ExcelService {
 
-//    objectList: List of data
+    //    objectList: List of data
 //    filePath: output path of excel
 //    fields: Output list of fields of the class of data
 //    titles: first row
@@ -54,39 +56,93 @@ public class ExcelServiceImpl implements ExcelService {
 
         try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
             workbook.write(outputStream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return filePath + ", rowCount: " + rowCount;
     }
 
-//  titles = fields
+    //  titles = fields
     @Override
     public String generate(List<?> objectList, String filePath, String[] fields) {
         return generate(objectList, filePath, fields, fields);
     }
 
-//    fields = all the fields in class of data
+    //    fields = all the fields in class of data
 //    titles = fields
     @Override
     public String generate(List<?> objectList, String filePath) {
         String[] fields;
         fields = new String[0];
 
-        if(!objectList.isEmpty())
+        if (!objectList.isEmpty())
             fields = getField(objectList.get(0).getClass());
 
         return generate(objectList, filePath, fields, fields);
     }
 
+    @Override
+    public List<StudentImportBO> readStudentImportBO(String filePath) {
+        Workbook workbook = readWorkbook(filePath);
+        Sheet sheet = workbook.getSheetAt(0);
+
+        List<StudentImportBO> ret = new ArrayList<>();
+
+        if (sheet != null) {
+            Row titleRow = sheet.getRow(sheet.getFirstRowNum());
+            List<String> titleList = new ArrayList<>(titleRow.getLastCellNum() - titleRow.getFirstCellNum());
+            for (int j = titleRow.getFirstCellNum(); j < titleRow.getLastCellNum(); ++j) {
+                titleList.add(readCellValueToString(titleRow.getCell(j)));
+            }
+
+            for (int i = sheet.getFirstRowNum() + 1; i <= sheet.getLastRowNum(); ++i) {
+                Row row = sheet.getRow(i);
+                StudentImportBO studentImportBO = new StudentImportBO();
+                List<String> rowList = new ArrayList<>(titleRow.getLastCellNum() - titleRow.getFirstCellNum());
+                for (int j = titleRow.getFirstCellNum(); j < titleRow.getLastCellNum(); ++j) {
+                    rowList.add(readCellValueToString(row.getCell(j)));
+                }
+
+                for (int j = 0; j < titleList.size(); ++j) {
+                    if ("username".equals(titleList.get(j))) {
+                        studentImportBO.setUsername(rowList.get(j));
+                    } else if ("password".equals(titleList.get(j))) {
+                        studentImportBO.setPassword(rowList.get(j));
+                    } else if ("stdName".equals(titleList.get(j))) {
+                        studentImportBO.setStdName(rowList.get(j));
+                    } else if ("stdNo".equals(titleList.get(j))) {
+                        studentImportBO.setStdNo(rowList.get(j));
+                    } else if ("stdClass".equals(titleList.get(j))) {
+                        studentImportBO.setStdClass(rowList.get(j));
+                    } else if ("email".equals(titleList.get(j))) {
+                        studentImportBO.setEmail(rowList.get(j));
+                    }
+                }
+                ret.add(studentImportBO);
+            }
+
+        }
+//        System.out.println(sheet.getFirstRowNum());
+        return ret;
+    }
+
+    Workbook readWorkbook(String filePath) {
+        Workbook workbook = null;
+        try {
+            FileInputStream fileInputStream = new FileInputStream(filePath);
+            workbook = new XSSFWorkbook(fileInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return workbook;
+    }
+
     public String[] getField(Class cls) {
-        Field[] fields=cls.getDeclaredFields();
-        String[] fieldNames=new String[fields.length];
-        for(int i=0;i<fields.length;i++){
+        Field[] fields = cls.getDeclaredFields();
+        String[] fieldNames = new String[fields.length];
+        for (int i = 0; i < fields.length; i++) {
 //            System.out.println(fields[i].getType());
-            fieldNames[i]=fields[i].getName();
+            fieldNames[i] = fields[i].getName();
         }
         return fieldNames;
     }
@@ -95,12 +151,30 @@ public class ExcelServiceImpl implements ExcelService {
         try {
             String firstLetter = fieldName.substring(0, 1).toUpperCase();
             String getter = "get" + firstLetter + fieldName.substring(1);
-            Method method = o.getClass().getMethod(getter, new Class[] {});
-            Object value = method.invoke(o, new Object[] {});
-            return value;
+            Method method = o.getClass().getMethod(getter);
+            return method.invoke(o);
         } catch (Exception e) {
 
             return null;
+        }
+    }
+
+    String readCellValueToString(Cell cell) {
+        if (cell == null) {
+            return null;
+        }
+        CellType type = cell.getCellType();
+        switch (type) {
+            case STRING:
+                return cell.getStringCellValue();
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            case NUMERIC:
+                return String.valueOf(cell.getNumericCellValue());
+            case FORMULA:
+                return String.valueOf(cell.getCellFormula());
+            default:
+                return cell.toString();
         }
     }
 }
