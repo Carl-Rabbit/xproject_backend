@@ -9,10 +9,7 @@ import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.service.ProjInstService;
 import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.utils.RoleUtils;
-import com.ooad.xproject.vo.ProjInstCreationVO;
-import com.ooad.xproject.vo.Result;
-import com.ooad.xproject.vo.SimpleTeamVO;
-import com.ooad.xproject.vo.TeamVO;
+import com.ooad.xproject.vo.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
@@ -116,9 +113,9 @@ public class ProjInstController {
 
     @ResponseBody
     @PostMapping("api/team-deletion")
-    public Result<Integer> postTeamDeletion(@RequestParam(value="teamIdList") int[] projInstIdList) {
+    public Result<Integer> postTeamDeletion(@RequestBody ProjInstIdListVO projInstIdListVO) {
         List<Integer> successList = new ArrayList<>();
-        for (int projInstId : projInstIdList) {
+        for (int projInstId : projInstIdListVO.getProjInstIdList()) {
             SvResult<Boolean> svResult = projInstService.deleteProjInst(projInstId);
             if (svResult.getData()) {
                 // true
