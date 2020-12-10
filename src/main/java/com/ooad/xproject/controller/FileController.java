@@ -50,9 +50,10 @@ public class FileController {
         return fileService.download(request, realPath, userAgent, filename, inline);
     }
 
-    @PostMapping("api/teacher/students")
+    @PostMapping("api/teacher/students/import")
     public Result<Integer> postStudentAcCreationFromExcel(@RequestParam("file") MultipartFile[] files) {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
+        System.out.println(filePath);
         List<StudentImportBO> studentImportBOList = excelService.readStudentImportBO(filePath);
 
         int successCnt = 0;

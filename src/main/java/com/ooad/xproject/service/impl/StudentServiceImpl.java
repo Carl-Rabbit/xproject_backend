@@ -5,7 +5,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ooad.xproject.bo.StudentImportBO;
 import com.ooad.xproject.bo.SvResult;
-import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.Student;
@@ -18,6 +17,7 @@ import com.ooad.xproject.vo.SelectorStdVO;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
@@ -101,6 +101,7 @@ public class StudentServiceImpl implements StudentService {
         return new SvResult<>("Success", pageInfo);
     }
 
+    @Transactional
     @Override
     public SvResult<Boolean> creatRoleAndStudent(StudentImportBO studentImportBO) {
         if (roleMapper.selectByUsername(studentImportBO.getUsername()) != null) {
