@@ -12,25 +12,25 @@ class ExcelServiceImplTest {
 
     @Test
     void generate() {
-        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output.xlsx";
-//        String[] strings = new String[2];
-//        strings[0] = "col1";
-//        strings[1] = "col2";
-
+        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\input.xlsx";
         ExcelServiceImpl excelService = new ExcelServiceImpl();
-
-//        String[] fields = excelService.getField(Admin.class);
+        int clsFrom = 64, clsTo = 65; // 10 ~ 99
+        int stdFrom = 10, stdTo = 60; // 10 ~ 99
 
         List<StudentImportBO> studentImportBOS = new ArrayList<>();
-        for (int i = 0; i < 3; ++i) {
-            StudentImportBO studentImportBO = new StudentImportBO();
-            studentImportBO.setEmail("email of " + i);
-            studentImportBO.setStdClass("class of " + i);
-            studentImportBO.setStdNo("stdNo of " + i);
-            studentImportBO.setStdName("name of " + i);
-            studentImportBO.setUsername("username of " + i);
-            studentImportBO.setPassword("password of " + i);
-            studentImportBOS.add(studentImportBO);
+        for (int lab = clsFrom; lab <= clsTo; ++lab) {
+            for (int i = stdFrom; i <= stdTo; ++i) {
+                String stdId = "1181" + lab + i;
+                StudentImportBO studentImportBO = new StudentImportBO();
+                studentImportBO.setEmail(stdId + "@mail.sustech.edu.cn");
+                studentImportBO.setStdClass("" + lab);
+                studentImportBO.setStdNo(stdId);
+                studentImportBO.setStdName("std" + lab + "_" + i);
+                studentImportBO.setUsername("sustech" + stdId);
+                studentImportBO.setPassword("sustech" + stdId);
+                System.out.println(studentImportBO.getEmail());
+                studentImportBOS.add(studentImportBO);
+            }
         }
 
         System.out.println(excelService.generate(studentImportBOS, filePath));
