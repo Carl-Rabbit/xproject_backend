@@ -1,6 +1,7 @@
 package com.ooad.xproject.service;
 
 import com.ooad.xproject.entity.*;
+import com.ooad.xproject.vo.ProjectUpdateVO;
 
 import java.util.List;
 
@@ -24,4 +25,6 @@ public interface ProjectService {
 
     // select by project id, return the Team form task of project
     TeamFormTask getTeamFormTask(Integer pid);
+
+    boolean updateProject(ProjectUpdateVO projectUpdateVO);
 }

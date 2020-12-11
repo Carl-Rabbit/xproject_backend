@@ -3,6 +3,7 @@ package com.ooad.xproject.service.impl;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.ProjectService;
+import com.ooad.xproject.vo.ProjectUpdateVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,5 +61,18 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public TeamFormTask getTeamFormTask(Integer pid) {
         return teamFormTaskMapper.selectByPrimaryKey(pid);
+    }
+
+    @Override
+    public boolean updateProject(ProjectUpdateVO projectUpdateVO) {
+        Project proj = new Project();
+        proj.setProjId(projectUpdateVO.getProjId());
+        proj.setDescription(projectUpdateVO.getDescription());
+        proj.setProjSettings(projectUpdateVO.getProjSettings());
+        proj.setTopics(projectUpdateVO.getTopics());
+
+        int affectedRowCnt = projectMapper.updateByPrimaryKeySelective(proj);
+
+        return affectedRowCnt == 1;
     }
 }
