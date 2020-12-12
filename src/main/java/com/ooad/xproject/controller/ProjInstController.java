@@ -60,6 +60,24 @@ public class ProjInstController {
     }
 
     @ResponseBody
+    @GetMapping("api/team/my/detail")
+    public Result<?> getMyTeamDetail(@RequestParam(value="projId") int projId) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        if (!RoleType.Student.match(role.getRoleType())) {
+            return new Result<>(RespStatus.FAIL, "Only student can have a own team");
+        }
+
+        ProjectInst projInst = projInstService.getPIByProjIdAndStdRoleId(projId, role.getRoleId());
+        List<StudentDTO> studentList = projInstService.getStudentDTOByProjInstId(projInst.getProjInstId());
+        TeamVO teamVO = TeamVO.createFrom(projInst, studentList);
+
+        logger.info(String.format("getTeamDetail -> %s", projInst));
+        return new Result<>(teamVO);
+    }
+
+    @ResponseBody
     @PostMapping("api/team-apply")
     public Result<?> postTeamApply(@RequestParam(value="teamId") int projInstId) {
         return new Result<>(RespStatus.SUCCESS, "Just a fake interface");
