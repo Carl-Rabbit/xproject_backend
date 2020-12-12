@@ -133,8 +133,20 @@
     </set>
     where proj_id = #{projId,jdbcType=INTEGER}
   </update>
+  <update id="updateByPrimaryKey" parameterType="com.ooad.xproject.entity.Project">
+    update projects
+    set sch_id = #{schId,jdbcType=INTEGER},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      proj_name = #{projName,jdbcType=VARCHAR},
+      course_name = #{courseName,jdbcType=VARCHAR},
+      term = #{term,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      topics = #{topics,jdbcType=VARCHAR}
+    where proj_id = #{projId,jdbcType=INTEGER}
+  </update>
 
-  <select id="selectAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <select id="selectAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from projects
@@ -150,5 +162,12 @@
     from projects p join project_role_rt prr on p.proj_id = prr.proj_id
     where role_id = #{roleId,jdbcType=INTEGER}
   </select>
+  <select id="selectBySchId" resultType="com.ooad.xproject.entity.Project">
+    select p.*
+    from projects as p where sch_id = #{schId}
+  </select>
+  <insert id="joinProject">
+--     insert
+  </insert>
 
 </mapper>

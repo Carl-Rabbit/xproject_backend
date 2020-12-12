@@ -14,4 +14,8 @@ public interface HomeService {
     List<Announcement> getAnnounceList();
 
     School getSchool(int roleId);
+
+    List<Project> getProjectListBySch(Role role);
+
+    boolean joinProject(int roleId, int projId);
 }

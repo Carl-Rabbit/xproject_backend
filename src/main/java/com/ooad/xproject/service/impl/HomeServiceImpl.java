@@ -1,12 +1,11 @@
 package com.ooad.xproject.service.impl;
 
 import com.ooad.xproject.constant.RoleType;
-import com.ooad.xproject.entity.Announcement;
-import com.ooad.xproject.entity.Project;
-import com.ooad.xproject.entity.Role;
-import com.ooad.xproject.entity.School;
+import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.ProjectMapper;
 import com.ooad.xproject.mapper.SchoolMapper;
+import com.ooad.xproject.mapper.StudentMapper;
+import com.ooad.xproject.mapper.TeacherMapper;
 import com.ooad.xproject.service.HomeService;
 import org.springframework.stereotype.Service;
 
@@ -17,17 +16,21 @@ import java.util.List;
 public class HomeServiceImpl implements HomeService {
     private final ProjectMapper projectMapper;
     private final SchoolMapper schoolMapper;
+    private final StudentMapper studentMapper;
+    private final TeacherMapper teacherMapper;
 
-    public HomeServiceImpl(ProjectMapper projectMapper, SchoolMapper schoolMapper) {
+    public HomeServiceImpl(ProjectMapper projectMapper, SchoolMapper schoolMapper,
+                           StudentMapper studentMapper, TeacherMapper teacherMapper) {
         this.projectMapper = projectMapper;
         this.schoolMapper = schoolMapper;
+        this.studentMapper = studentMapper;
+        this.teacherMapper = teacherMapper;
     }
 
     @Override
     public List<Project> getProjectList(Role role) {
         List<Project> projects;
         RoleType roleType = RoleType.getRoleType(role.getRoleType());
-        System.out.println(roleType);
         switch (roleType) {
             case Admin:
                 projects = projectMapper.selectAll();
@@ -56,5 +59,34 @@ public class HomeServiceImpl implements HomeService {
     @Override
     public School getSchool(int schId) {
         return schoolMapper.selectByPrimaryKey(schId);
+    }
+
+    @Override
+    public List<Project> getProjectListBySch(Role role) {
+        List<Project> projects;
+        RoleType roleType = RoleType.getRoleType(role.getRoleType());
+        switch (roleType) {
+            case Admin:
+                projects = projectMapper.selectAll();
+                break;
+            case Teacher:
+                Teacher tch = teacherMapper.selectByRoleId(role.getRoleId());
+                projects = projectMapper.selectBySchId(tch.getSchId());
+                break;
+            case Student:
+                Student std = studentMapper.selectByRoleId(role.getRoleId());
+                projects = projectMapper.selectBySchId(std.getSchId());
+                break;
+            default:
+                projects = new ArrayList<>();
+                break;
+        }
+        return projects;
+    }
+
+    @Override
+    public boolean joinProject(int roleId, int projId) {
+        projectMapper.joinProject(roleId, projId);
+        return false;
     }
 }

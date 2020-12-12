@@ -24,4 +24,8 @@ public interface ProjectMapper {
     List<Project> selectByStdId(Integer roleId);
 
     List<Project> selectAll();
+
+    List<Project> selectBySchId(Integer schId);
+
+    void joinProject(int roleId, int projId);
 }

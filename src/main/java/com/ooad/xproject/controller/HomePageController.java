@@ -58,6 +58,35 @@ public class HomePageController {
     }
 
     @ResponseBody
+    @GetMapping("api/project/join")
+    public Result<?> joinProject(@RequestParam("projId") int projId) {
+        logger.info("joinProject");
+        Subject subject = SecurityUtils.getSubject();
+        String username = subject.getPrincipal().toString();
+
+        Role role = roleService.getByUsername(username);
+        boolean success = homeService.joinProject(role.getRoleId(), projId);
+
+        if (success) {
+            return new Result<>(true);
+        } else {
+            return new Result<>(RespStatus.FAIL,"Join project failed", false);
+        }
+    }
+
+    @ResponseBody
+    @GetMapping("api/project-list/school")
+    public Result<?> getProjectListBySch() {
+        logger.info("getProjectList");
+        Subject subject = SecurityUtils.getSubject();
+        String username = subject.getPrincipal().toString();
+
+        Role role = roleService.getByUsername(username);
+        List<Project> projList = homeService.getProjectListBySch(role);
+        return new Result<>(projList);
+    }
+
+    @ResponseBody
     @PostMapping("api/teacher/students")
     public Result<?> postSelectStudents(@RequestBody SelectorStdVO selectorStdVO) {
         logger.info("getProjectList");
