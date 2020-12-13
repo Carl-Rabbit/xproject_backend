@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class RecordUnitBO {
-    private String record;
+    private String rcdName;
     private String stdNo;
     private String stdName;
 
     private String grade;
     private String type;
-    private String comment;
+    private String comments;
 }
