@@ -6,13 +6,15 @@
     <result column="proj_id" jdbcType="INTEGER" property="projId" />
     <result column="topic_str" jdbcType="VARCHAR" property="topicStr" />
     <result column="description" jdbcType="VARCHAR" property="description" />
-    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="flags" jdbcType="VARCHAR" property="flags" />
     <result column="team_name" jdbcType="VARCHAR" property="teamName" />
     <result column="target_mem_num" jdbcType="INTEGER" property="targetMemNum" />
+    <result column="icon_url" jdbcType="VARCHAR" property="iconUrl" />
   </resultMap>
   <sql id="Base_Column_List">
-    proj_inst_id, proj_id, topic_str, description, status, flags, team_name, target_mem_num
+    proj_inst_id, proj_id, topic_str, description, status, flags, team_name, target_mem_num, 
+    icon_url
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -28,10 +30,10 @@
           useGeneratedKeys="true" keyProperty="projInstId" keyColumn="proj_inst_id">
     insert into project_insts (proj_id, topic_str, description, 
       status, flags, team_name, 
-      target_mem_num)
+      target_mem_num, icon_url)
     values (#{projId,jdbcType=INTEGER}, #{topicStr,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
-      #{status,jdbcType=CHAR}, #{flags,jdbcType=VARCHAR}, #{teamName,jdbcType=VARCHAR}, 
-      #{targetMemNum,jdbcType=INTEGER})
+      #{status,jdbcType=VARCHAR}, #{flags,jdbcType=VARCHAR}, #{teamName,jdbcType=VARCHAR}, 
+      #{targetMemNum,jdbcType=INTEGER}, #{iconUrl,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ooad.xproject.entity.ProjectInst"
           useGeneratedKeys="true" keyProperty="projInstId" keyColumn="proj_inst_id">
@@ -58,6 +60,9 @@
       <if test="targetMemNum != null">
         target_mem_num,
       </if>
+      <if test="iconUrl != null">
+        icon_url,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="projId != null">
@@ -70,7 +75,7 @@
         #{description,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
-        #{status,jdbcType=CHAR},
+        #{status,jdbcType=VARCHAR},
       </if>
       <if test="flags != null">
         #{flags,jdbcType=VARCHAR},
@@ -80,6 +85,9 @@
       </if>
       <if test="targetMemNum != null">
         #{targetMemNum,jdbcType=INTEGER},
+      </if>
+      <if test="iconUrl != null">
+        #{iconUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -96,7 +104,7 @@
         description = #{description,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
-        status = #{status,jdbcType=CHAR},
+        status = #{status,jdbcType=VARCHAR},
       </if>
       <if test="flags != null">
         flags = #{flags,jdbcType=VARCHAR},
@@ -107,6 +115,9 @@
       <if test="targetMemNum != null">
         target_mem_num = #{targetMemNum,jdbcType=INTEGER},
       </if>
+      <if test="iconUrl != null">
+        icon_url = #{iconUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     where proj_inst_id = #{projInstId,jdbcType=INTEGER}
   </update>
@@ -115,10 +126,11 @@
     set proj_id = #{projId,jdbcType=INTEGER},
       topic_str = #{topicStr,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR},
-      status = #{status,jdbcType=CHAR},
+      status = #{status,jdbcType=VARCHAR},
       flags = #{flags,jdbcType=VARCHAR},
       team_name = #{teamName,jdbcType=VARCHAR},
-      target_mem_num = #{targetMemNum,jdbcType=INTEGER}
+      target_mem_num = #{targetMemNum,jdbcType=INTEGER},
+      icon_url = #{iconUrl,jdbcType=VARCHAR}
     where proj_inst_id = #{projInstId,jdbcType=INTEGER}
   </update>
 
