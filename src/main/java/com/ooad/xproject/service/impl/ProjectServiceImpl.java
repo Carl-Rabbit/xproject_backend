@@ -1,5 +1,6 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.ProjectService;
@@ -17,8 +18,9 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectMapper projectMapper;
     private final ProjectInstMapper projectInstMapper;
     private final TeamFormTaskMapper teamFormTaskMapper;
+    private final StudentMapper studentMapper;
 
-    public ProjectServiceImpl(AnnouncementMapper announcementMapper, EventArrangeTaskMapper eventArrangeTaskMapper, SubmissionMapper submissionMapper, RecordMapper recordMapper, ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, TeamFormTaskMapper teamFormTaskMapper) {
+    public ProjectServiceImpl(AnnouncementMapper announcementMapper, EventArrangeTaskMapper eventArrangeTaskMapper, SubmissionMapper submissionMapper, RecordMapper recordMapper, ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, TeamFormTaskMapper teamFormTaskMapper, StudentMapper studentMapper) {
         this.announcementMapper = announcementMapper;
         this.eventArrangeTaskMapper = eventArrangeTaskMapper;
         this.submissionMapper = submissionMapper;
@@ -26,6 +28,7 @@ public class ProjectServiceImpl implements ProjectService {
         this.projectMapper = projectMapper;
         this.projectInstMapper = projectInstMapper;
         this.teamFormTaskMapper = teamFormTaskMapper;
+        this.studentMapper = studentMapper;
     }
 
     @Override
@@ -74,5 +77,10 @@ public class ProjectServiceImpl implements ProjectService {
         int affectedRowCnt = projectMapper.updateByPrimaryKeySelective(proj);
 
         return affectedRowCnt == 1;
+    }
+
+    @Override
+    public List<StudentProjDTO> getStdProjList(int projId) {
+        return studentMapper.selectProjStudents(projId);
     }
 }
