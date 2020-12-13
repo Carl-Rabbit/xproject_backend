@@ -28,4 +28,10 @@ select string_agg(coe || '#' || name, ',' order by derived_id) as derived
 from (select r.rcd_id as result_id, r2.rcd_id as derived_id, r2.rcd_name as name, coefficient as coe
       from records as r
                join records_derived_rt rdr on r.rcd_id = rdr.rcd_id
-               join records as r2 on rdr.derived_id = r2.rcd_id) t
+               join records as r2 on rdr.derived_id = r2.rcd_id) t;
+
+
+select rcd.rcd_name, s.std_no, s.std_name, content, rcd.type,comments
+from records rcd join record_insts ri on rcd.rcd_id = ri.rcd_id
+join students s on ri.role_id = s.role_id
+where rcd.proj_id = 1;

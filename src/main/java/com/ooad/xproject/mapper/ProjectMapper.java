@@ -1,5 +1,6 @@
 package com.ooad.xproject.mapper;
 
+import com.ooad.xproject.bo.RecordUnitBO;
 import com.ooad.xproject.entity.Project;
 import org.springframework.stereotype.Repository;
 
@@ -28,4 +29,6 @@ public interface ProjectMapper {
     List<Project> selectBySchId(Integer schId);
 
     void joinProject(int roleId, int projId);
+
+    List<RecordUnitBO> selectRecordUnitByProjId(Integer pid);
 }

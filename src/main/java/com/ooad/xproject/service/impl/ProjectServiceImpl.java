@@ -1,5 +1,6 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.bo.RecordUnitBO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.ProjectService;
@@ -74,5 +75,10 @@ public class ProjectServiceImpl implements ProjectService {
         int affectedRowCnt = projectMapper.updateByPrimaryKeySelective(proj);
 
         return affectedRowCnt == 1;
+    }
+
+    @Override
+    public List<RecordUnitBO> getRecordUnitList(Integer pid) {
+        return projectMapper.selectRecordUnitByProjId(pid);
     }
 }

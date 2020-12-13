@@ -1,5 +1,6 @@
 package com.ooad.xproject.service;
 
+import com.ooad.xproject.bo.RecordUnitBO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.vo.ProjectUpdateVO;
 
@@ -27,4 +28,6 @@ public interface ProjectService {
     TeamFormTask getTeamFormTask(Integer pid);
 
     boolean updateProject(ProjectUpdateVO projectUpdateVO);
+
+    List<RecordUnitBO> getRecordUnitList(Integer pid);
 }

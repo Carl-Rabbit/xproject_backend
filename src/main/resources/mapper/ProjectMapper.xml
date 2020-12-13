@@ -166,7 +166,13 @@
     select p.*
     from projects as p where sch_id = #{schId}
   </select>
-  <insert id="joinProject">
+    <select id="selectRecordUnitByProjId" resultType="com.ooad.xproject.bo.RecordUnitBO">
+      select rcd.rcd_name, s.std_no, s.std_name, content, rcd.type,comments
+      from records rcd join record_insts ri on rcd.rcd_id = ri.rcd_id
+                       join students s on ri.role_id = s.role_id
+      where rcd.proj_id = #{pid};
+    </select>
+    <insert id="joinProject">
 --     insert
   </insert>
 
