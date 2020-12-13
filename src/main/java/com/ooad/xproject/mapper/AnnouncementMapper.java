@@ -1,5 +1,6 @@
 package com.ooad.xproject.mapper;
 
+import com.ooad.xproject.dto.AnnDTO;
 import com.ooad.xproject.entity.Announcement;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +23,6 @@ public interface AnnouncementMapper {
     // extra
 
     List<Announcement> selectByProjId(Integer projId);
+
+    List<AnnDTO> selectAnnDTOByProjId(int projId);
 }

@@ -23,10 +23,8 @@
     delete from announcements
     where ann_id = #{annId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ooad.xproject.entity.Announcement">
-    <selectKey keyProperty="annId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insert" parameterType="com.ooad.xproject.entity.Announcement"
+          useGeneratedKeys="true" keyColumn="ann_id" keyProperty="annId">
     insert into announcements (proj_id, creator_id, title, 
       message, modified_time, created_time
       )
@@ -34,10 +32,8 @@
       #{message,jdbcType=VARCHAR}, #{modifiedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.Announcement">
-    <selectKey keyProperty="annId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.Announcement"
+          useGeneratedKeys="true" keyColumn="ann_id" keyProperty="annId">
     insert into announcements
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="projId != null">
@@ -98,6 +94,9 @@
       <if test="modifiedTime != null">
         modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="modifiedTime == null">
+        modified_time = now(),
+      </if>
       <if test="createdTime != null">
         created_time = #{createdTime,jdbcType=TIMESTAMP},
       </if>
@@ -121,4 +120,10 @@
         from announcements
         where proj_id = #{projId, jdbcType=INTEGER}
     </select>
+  <select id="selectAnnDTOByProjId" resultType="com.ooad.xproject.dto.AnnDTO">
+    select ann.*, tch_name, email
+    from announcements as ann
+           join teachers as tch on tch.role_id = ann.creator_id
+    where proj_id = #{projId, jdbcType=INTEGER}
+  </select>
 </mapper>
