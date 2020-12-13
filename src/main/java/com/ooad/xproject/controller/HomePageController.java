@@ -65,6 +65,11 @@ public class HomePageController {
         String username = subject.getPrincipal().toString();
 
         Role role = roleService.getByUsername(username);
+
+        if (!RoleType.Student.match(role.getRoleType())) {
+            return new Result<>(RespStatus.FAIL,"Join project failed: Teacher account", false);
+        }
+
         boolean success = homeService.joinProject(role.getRoleId(), projId);
 
         if (success) {

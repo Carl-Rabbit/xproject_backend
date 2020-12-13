@@ -1,6 +1,7 @@
 package com.ooad.xproject.service;
 
 import com.ooad.xproject.bo.RecordUnitBO;
+import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.vo.ProjectUpdateVO;
 
@@ -30,4 +31,6 @@ public interface ProjectService {
     boolean updateProject(ProjectUpdateVO projectUpdateVO);
 
     List<RecordUnitBO> getRecordUnitList(Integer pid);
+
+    List<StudentProjDTO> getStdProjList(int projId);
 }

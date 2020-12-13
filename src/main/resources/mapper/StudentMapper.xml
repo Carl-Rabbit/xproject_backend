@@ -228,5 +228,18 @@
       </if>
     </where>
   </select>
+  <sql id="StudentProjDTO_Column_List">
+    std_id, r.role_id, username, std_name, std_no, std_class, std.flags, sch_id, email, group_mark, pi.proj_inst_id, topic_str, pi.status
+  </sql>
+  <select id="selectProjStudents" resultType="com.ooad.xproject.dto.StudentProjDTO">
+    select
+    <include refid="StudentProjDTO_Column_List"/>
+    from students as std
+    join roles r on std.role_id = r.role_id
+    left join proj_inst_student_rt as pisr on pisr.std_role_id = r.role_id
+    left join project_insts pi on pisr.proj_inst_id = pi.proj_inst_id
+    left join project_role_rt prr on r.role_id = prr.role_id and pi.proj_id = prr.proj_id
+    where pi.proj_id = #{projId};
+  </select>
 
 </mapper>

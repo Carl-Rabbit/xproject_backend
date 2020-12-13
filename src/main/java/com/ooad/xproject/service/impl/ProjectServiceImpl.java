@@ -1,6 +1,7 @@
 package com.ooad.xproject.service.impl;
 
 import com.ooad.xproject.bo.RecordUnitBO;
+import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.ProjectService;
@@ -80,5 +81,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<RecordUnitBO> getRecordUnitList(Integer pid) {
         return projectMapper.selectRecordUnitByProjId(pid);
+    }
+
+    @Override
+    public List<StudentProjDTO> getStdProjList(int projId) {
+        return studentMapper.selectProjStudents(projId);
     }
 }

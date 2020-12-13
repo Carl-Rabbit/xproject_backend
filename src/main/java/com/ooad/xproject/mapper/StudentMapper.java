@@ -1,6 +1,7 @@
 package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.dto.StudentDTO;
+import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.Student;
 import com.ooad.xproject.entity.StudentExample;
 import org.springframework.stereotype.Repository;
@@ -32,4 +33,6 @@ public interface StudentMapper {
     int selectTeamIdByStdId(Integer sid);
 
     List<StudentDTO> selectDTOBySelector(Integer schId, String stdClass);
+
+    List<StudentProjDTO> selectProjStudents(int projId);
 }

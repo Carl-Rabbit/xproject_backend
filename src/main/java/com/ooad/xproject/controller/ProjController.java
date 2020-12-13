@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.ooad.xproject.bo.TopicBO;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.constant.RoleType;
+import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.Project;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.service.HomeService;
@@ -107,5 +108,14 @@ public class ProjController {
         } else {
             return new Result<>(RespStatus.FAIL, "Update failed", false);
         }
+    }
+
+
+    @ResponseBody
+    @GetMapping("api/teacher/project/students")
+    public Result<?> getProjStdList(@RequestParam(value="projId") int projId) {
+        List<StudentProjDTO> stdProjDTOList = projectService.getStdProjList(projId);
+        logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
+        return new Result<>(stdProjDTOList);
     }
 }
