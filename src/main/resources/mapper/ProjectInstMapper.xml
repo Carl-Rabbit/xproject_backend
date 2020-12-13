@@ -143,7 +143,7 @@
   </select>
 
   <sql id="StudentDTO_Column_List">
-    std_id, r.role_id, username, std_name, std_no, std_class, std.flags, sch_id, email
+    std_id, r.role_id, username, std_name, std_no, std_class, std.flags, sch_id, email, r.icon_url
   </sql>
   <select id="selectStudentByProjInstId" resultType="com.ooad.xproject.dto.StudentDTO">
     select

@@ -13,6 +13,7 @@ public class StudentProjDTO {
     private String flags;
     private Integer schId;
     private String email;
+    private String iconUrl;
 
     private String groupMark;
     private int projInstId;
