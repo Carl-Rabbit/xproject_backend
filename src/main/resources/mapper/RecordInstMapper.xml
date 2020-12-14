@@ -129,4 +129,9 @@
         and ri.role_id = #{stdRoleId}
       order by rcd_id;
     </select>
+  <select id="selectByRcdIdAndRoleId" resultType="com.ooad.xproject.entity.RecordInst">
+    select *
+    from record_insts
+    where rcd_id = #{rcdId} and role_id = #{roleId}
+  </select>
 </mapper>

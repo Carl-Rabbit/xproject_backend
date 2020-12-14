@@ -1,5 +1,6 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.bo.RecordUnitBO;
 import com.ooad.xproject.bo.StudentImportBO;
 import com.ooad.xproject.service.ExcelService;
 import org.apache.poi.ss.usermodel.*;
@@ -114,6 +115,51 @@ public class ExcelServiceImpl implements ExcelService {
                     }
                 }
                 ret.add(studentImportBO);
+            }
+
+        }
+//        System.out.println(sheet.getFirstRowNum());
+        return ret;
+    }
+
+    @Override
+    public List<RecordUnitBO> readRecordUnitBO(String filePath) {
+        Workbook workbook = readWorkbook(filePath);
+        Sheet sheet = workbook.getSheetAt(0);
+
+        List<RecordUnitBO> ret = new ArrayList<>();
+
+        if (sheet != null) {
+            Row titleRow = sheet.getRow(sheet.getFirstRowNum());
+            List<String> titleList = new ArrayList<>(titleRow.getLastCellNum() - titleRow.getFirstCellNum());
+            for (int j = titleRow.getFirstCellNum(); j < titleRow.getLastCellNum(); ++j) {
+                titleList.add(readCellValueToString(titleRow.getCell(j)));
+            }
+
+            for (int i = sheet.getFirstRowNum() + 1; i <= sheet.getLastRowNum(); ++i) {
+                Row row = sheet.getRow(i);
+                RecordUnitBO recordUnitBO = new RecordUnitBO();
+                List<String> rowList = new ArrayList<>(titleRow.getLastCellNum() - titleRow.getFirstCellNum());
+                for (int j = titleRow.getFirstCellNum(); j < titleRow.getLastCellNum(); ++j) {
+                    rowList.add(readCellValueToString(row.getCell(j)));
+                }
+
+                for (int j = 0; j < titleList.size(); ++j) {
+                    if ("rcdName".equals(titleList.get(j))) {
+                        recordUnitBO.setRcdName(rowList.get(j));
+                    } else if ("stdName".equals(titleList.get(j))) {
+                        recordUnitBO.setStdName(rowList.get(j));
+                    } else if ("stdNo".equals(titleList.get(j))) {
+                        recordUnitBO.setStdNo(rowList.get(j));
+                    } else if ("grade".equals(titleList.get(j))) {
+                        recordUnitBO.setGrade(rowList.get(j));
+                    } else if ("type".equals(titleList.get(j))) {
+                        recordUnitBO.setType(rowList.get(j));
+                    } else if ("comments".equals(titleList.get(j))) {
+                        recordUnitBO.setComments(rowList.get(j));
+                    }
+                }
+                ret.add(recordUnitBO);
             }
 
         }

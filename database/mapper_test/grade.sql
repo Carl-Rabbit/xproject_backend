@@ -35,3 +35,17 @@ select rcd.rcd_name, s.std_no, s.std_name, content, rcd.type,comments
 from records rcd join record_insts ri on rcd.rcd_id = ri.rcd_id
 join students s on ri.role_id = s.role_id
 where rcd.proj_id = 1;
+
+
+select ri.*
+from records rcd join record_insts ri on rcd.rcd_id = ri.rcd_id
+                 join students s on ri.role_id = s.role_id
+where rcd.proj_id = 1 and rcd_name = 'assignment1' and std_no = '11816401';
+
+select role_id
+from students s
+where std_no = '11816401';
+
+select rcd_id
+from records
+where proj_id = 1 and rcd_name = 'assignment1';

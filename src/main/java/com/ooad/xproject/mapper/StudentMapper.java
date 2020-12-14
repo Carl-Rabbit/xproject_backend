@@ -35,4 +35,7 @@ public interface StudentMapper {
     List<StudentDTO> selectDTOBySelector(Integer schId, String stdClass);
 
     List<StudentProjDTO> selectProjStudents(int projId);
+
+
+    Student selectByStdNo(String stdNo);
 }

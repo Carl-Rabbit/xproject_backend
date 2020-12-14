@@ -1,9 +1,12 @@
 package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.Record;
+import com.ooad.xproject.entity.RecordInst;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface RecordMapper {
     int deleteByPrimaryKey(Integer rcdId);
 
@@ -18,4 +21,6 @@ public interface RecordMapper {
     int updateByPrimaryKey(Record record);
 
     List<Record> selectByProjId(Integer pid);
+
+    Record selectByProjIdAndRcdName(Integer projId, String rcdName);
 }

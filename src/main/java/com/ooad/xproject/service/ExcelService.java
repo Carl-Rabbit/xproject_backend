@@ -1,5 +1,6 @@
 package com.ooad.xproject.service;
 
+import com.ooad.xproject.bo.RecordUnitBO;
 import com.ooad.xproject.bo.StudentImportBO;
 import com.ooad.xproject.entity.Admin;
 import com.ooad.xproject.entity.Student;
@@ -15,4 +16,6 @@ public interface ExcelService {
     String generate(List<?> objectList, String filePath);
 
     List<StudentImportBO> readStudentImportBO(String filePath);
+
+    List<RecordUnitBO> readRecordUnitBO(String filePath);
 }

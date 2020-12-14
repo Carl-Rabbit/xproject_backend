@@ -1,11 +1,15 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.bo.RecordUnitBO;
 import com.ooad.xproject.bo.StudentImportBO;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.config.FileConfig;
 import com.ooad.xproject.constant.RespStatus;
+import com.ooad.xproject.entity.RecordInst;
+import com.ooad.xproject.mapper.RecordInstMapper;
 import com.ooad.xproject.service.ExcelService;
 import com.ooad.xproject.service.FileService;
+import com.ooad.xproject.service.RecordService;
 import com.ooad.xproject.service.StudentService;
 import com.ooad.xproject.vo.Result;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Time;
 import java.util.List;
 
 
@@ -28,11 +33,17 @@ public class FileController {
 
     private final StudentService studentService;
 
-    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService) {
+    private final RecordService recordService;
+
+    private final RecordInstMapper recordInstMapper;
+
+    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RecordService recordService, RecordInstMapper recordInstMapper) {
         this.fileConfig = fileConfig;
         this.fileService = fileService;
         this.excelService = excelService;
         this.studentService = studentService;
+        this.recordService = recordService;
+        this.recordInstMapper = recordInstMapper;
     }
 
     @PostMapping("api/upload")
@@ -67,6 +78,36 @@ public class FileController {
         RespStatus status = (successCnt == 0) ? RespStatus.FAIL : RespStatus.SUCCESS;
         String msg = (successCnt == 0) ? "Create Student Account fail" : "Create Student Account done";
         return new Result<>(status, msg, successCnt);
+    }
+
+//    todo: modify the insert and update of recordInstMapper
+    @PostMapping("api/teacher/records/import")
+    public Result<Integer> postRecordInstImportFromExcel(@RequestParam("file") MultipartFile[] files, @RequestParam("projId") Integer projId) {
+        String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
+        System.out.println(filePath);
+        List<RecordUnitBO> recordUnitBOList = excelService.readRecordUnitBO(filePath);
+
+        int failCnt = 0;
+        for (RecordUnitBO recordUnitBO : recordUnitBOList) {
+            RecordInst recordInst = recordService.getRecordInstByUnit(recordUnitBO, projId);
+            if (recordInst == null) {
+                ++failCnt;
+            } else {
+                RecordInst recordInst1 = recordInstMapper.selectByRcdIdAndRoleId(recordInst.getRcdId(), recordInst.getRoleId());
+                if (recordInst1 == null) {
+                    recordInst.setComments(recordUnitBO.getComments());
+                    recordInst.setContent(recordUnitBO.getGrade());
+                    recordInstMapper.insert(recordInst);
+                } else {
+                    recordInst1.setComments(recordUnitBO.getComments());
+                    recordInst1.setContent(recordUnitBO.getGrade());
+                    recordInstMapper.updateByPrimaryKey(recordInst1);
+                }
+            }
+        }
+        RespStatus status = (failCnt != 0) ? RespStatus.FAIL : RespStatus.SUCCESS;
+        String msg = (failCnt != 0) ? "Create Student Account fail" : "Create Student Account done";
+        return new Result<>(status, msg, failCnt);
     }
 
 }

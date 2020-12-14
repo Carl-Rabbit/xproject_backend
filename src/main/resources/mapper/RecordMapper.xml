@@ -122,4 +122,9 @@
         from records
         where proj_id = #{projId,jdbcType=INTEGER}
     </select>
+    <select id="selectByProjIdAndRcdName" resultType="com.ooad.xproject.entity.Record">
+      select *
+      from records
+      where proj_id = #{projId} and rcd_name = #{rcdName};
+    </select>
 </mapper>

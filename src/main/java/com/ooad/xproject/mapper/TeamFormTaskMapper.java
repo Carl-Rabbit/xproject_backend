@@ -1,7 +1,9 @@
 package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.TeamFormTask;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TeamFormTaskMapper {
     int deleteByPrimaryKey(Integer tfTaskId);
 

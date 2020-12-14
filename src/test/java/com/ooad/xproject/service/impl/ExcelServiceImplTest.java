@@ -59,7 +59,7 @@ class ExcelServiceImplTest {
                 String stdId = "1181" + lab + i;
                 StudentImportBO studentImportBO = new StudentImportBO();
                 studentImportBO.setEmail(stdId + "@mail.sustech.edu.cn");
-                studentImportBO.setStdClass("" + lab);
+                studentImportBO.setStdClass("18" + lab);
                 studentImportBO.setStdNo(stdId);
                 studentImportBO.setStdName("std" + lab + "_" + i);
                 studentImportBO.setUsername("sustech" + stdId);

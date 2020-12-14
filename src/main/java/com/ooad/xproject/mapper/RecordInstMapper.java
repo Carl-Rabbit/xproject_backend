@@ -25,4 +25,8 @@ public interface RecordInstMapper {
     // extra
 
     List<RecordInstDTO> selectByProjAndStdRoleId(Integer projId, Integer stdRoleId);
+
+    RecordInst selectByRcdIdAndRoleId(Integer rcdId, Integer roleId);
+
+
 }
