@@ -86,7 +86,10 @@ public class AccountController {
             return new Result<>(RespStatus.FAIL, "School not matched");
         }
 
-        return new Result<>(target);
+        School school = homeService.getSchool(schId);
+        AccountInfoStdVO accountInfoStdVO = AccountInfoStdVO.createFrom(targetRole, target, school);
+
+        return new Result<>(accountInfoStdVO);
     }
 
     @ResponseBody
