@@ -14,6 +14,6 @@ public class AutoFormingVO {
     private boolean autoSubmit;
 
     public ProjectInst[] getProjInstList() {
-        return (ProjectInst[]) Arrays.stream(teamList).map(FormingTeamVO::toProjectInst).toArray();
+        return Arrays.stream(teamList).map(FormingTeamVO::toProjectInst).toArray(ProjectInst[]::new);
     }
 }

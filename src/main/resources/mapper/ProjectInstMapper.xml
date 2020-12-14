@@ -154,10 +154,14 @@
     join students as std on pisr.std_role_id = std.role_id
     where pi.proj_inst_id = #{projInstId};
   </select>
-    <select id="selectPIByProjIdAndStdRoleId" resultType="com.ooad.xproject.entity.ProjectInst">
-      select pi.*
-      from project_insts as pi
-             join proj_inst_student_rt pisr on pi.proj_inst_id = pisr.proj_inst_id
-      where proj_id = #{projId} and std_role_id = #{stdRoleId};
-    </select>
+  <select id="selectPIByProjIdAndStdRoleId" resultType="com.ooad.xproject.entity.ProjectInst">
+    select pi.*
+    from project_insts as pi
+           join proj_inst_student_rt pisr on pi.proj_inst_id = pisr.proj_inst_id
+    where proj_id = #{projId} and std_role_id = #{stdRoleId};
+  </select>
+  <insert id="insertProjInstStdRT">
+    insert into proj_inst_student_rt (proj_inst_id, std_role_id, opt)
+    values (#{projInstId}, #{stdRoleId}, #{opt});
+  </insert>
 </mapper>

@@ -28,4 +28,6 @@ public interface ProjectInstMapper {
     List<StudentDTO> selectStudentByProjInstId(Integer projInstId);
 
     ProjectInst selectPIByProjIdAndStdRoleId(int projId, int stdRoleId);
+
+    boolean insertProjInstStdRT(int projInstId, int stdRoleId, String opt);
 }

@@ -26,12 +26,9 @@ public class TeamFirstForming implements FormingStrategy {
             }
         }
 
-        String message = String.format("Forming finished. Use Team First. " +
-                "success:%d, fail:%d", successCnt, stdList.length - successCnt);
-
         return FormingResultBO.builder()
                 .matchList(matchList)
-                .message(message)
+                .message("Forming finished. Use Team First.")
                 .successCnt(successCnt)
                 .failCnt(stdList.length - successCnt)
                 .build();

@@ -8,6 +8,7 @@ import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.ProjectService;
 import com.ooad.xproject.vo.ProjectUpdateVO;
+import org.apache.commons.math3.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -91,8 +92,22 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public SvResult<FormingResultBO> autoForming(FormingBO formingBO) {
         FormingResultBO res = formingBO.executeForming();
+        for (Pair<Integer, Integer> pair : res.getMatchList()) {
+            try {
+                boolean success = projectInstMapper.insertProjInstStdRT(pair.getFirst(), pair.getSecond(), null);
+                if (!success) {
+                    res.reduceSuccess(1);
+                    System.out.println("Fail in autoForming " + pair.toString());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                res.reduceSuccess(1);
+            }
+        }
+
         System.out.println(Arrays.toString(res.getMatchList().toArray()));
         System.out.println(res.getMessage());
-        return null;
+
+        return new SvResult<>("", res);
     }
 }

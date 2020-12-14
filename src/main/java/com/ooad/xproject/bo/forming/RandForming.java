@@ -34,7 +34,7 @@ public class RandForming implements FormingStrategy {
             while (idx < stdList.length) {
                 int rand = random.nextInt(cntList.size());
                 ProjectInst projInst = piList.get(rand);
-                if (projInst.getTargetMemNum() >= cntList.get(rand)) {
+                if (projInst.getTargetMemNum() <= cntList.get(rand)) {
                     piList.remove(rand);
                     cntList.remove(rand);
                 } else {
@@ -48,7 +48,7 @@ public class RandForming implements FormingStrategy {
 
         return FormingResultBO.builder()
                 .matchList(matchList)
-                .message(String.format("Forming finished. Use Rand forming. success:%d, fail:%d", stdList.length, 0))
+                .message("Forming finished. Use Rand forming.")
                 .successCnt(stdList.length)
                 .failCnt(0)
                 .build();

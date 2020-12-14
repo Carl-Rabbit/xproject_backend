@@ -13,4 +13,14 @@ public class FormingResultBO {
     private String message;
     private int successCnt;
     private int failCnt;
+
+    public String getMessage() {
+        return String.format(message +
+                " success:%d, fail:%d", successCnt, failCnt);
+    }
+
+    public void reduceSuccess(int successCntDecr) {
+        successCnt -= successCntDecr;
+        failCnt += successCntDecr;
+    }
 }

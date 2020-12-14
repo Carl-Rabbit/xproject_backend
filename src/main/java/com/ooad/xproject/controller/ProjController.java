@@ -1,8 +1,10 @@
 package com.ooad.xproject.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.bo.TopicBO;
 import com.ooad.xproject.bo.forming.FormingBO;
+import com.ooad.xproject.bo.forming.FormingResultBO;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.dto.StudentProjDTO;
@@ -131,9 +133,12 @@ public class ProjController {
         }
         formContext.setProjInstList(autoFormingVO.getProjInstList());
         formContext.setStdList(autoFormingVO.getStuList());
-        projectService.autoForming(formContext);
+
+        SvResult<FormingResultBO> result = projectService.autoForming(formContext);
 
 //        logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
-        return new Result<>(null);
+        FormingResultBO res = result.getData();
+        res.setMatchList(null);
+        return new Result<>(res);
     }
 }
