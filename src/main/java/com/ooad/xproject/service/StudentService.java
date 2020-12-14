@@ -33,5 +33,5 @@ public interface StudentService {
 
     SvResult<PageInfo<StudentDTO>> getStudentListBySelector(Role role, Teacher teacher, SelectorStdVO selectorStdVO);
 
-    SvResult<Boolean> creatRoleAndStudent(StudentImportBO studentImportBO);
+    SvResult<Boolean> creatRoleAndStudent(int schId, StudentImportBO studentImportBO);
 }

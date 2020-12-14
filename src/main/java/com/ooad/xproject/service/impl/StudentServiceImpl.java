@@ -103,7 +103,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Transactional
     @Override
-    public SvResult<Boolean> creatRoleAndStudent(StudentImportBO studentImportBO) {
+    public SvResult<Boolean> creatRoleAndStudent(int schId, StudentImportBO studentImportBO) {
         if (roleMapper.selectByUsername(studentImportBO.getUsername()) != null) {
             return new SvResult<>("User already exist", false);
         }
@@ -132,6 +132,7 @@ public class StudentServiceImpl implements StudentService {
 //            create and insert student
             Student std = new Student();
             std.setStdName(studentImportBO.getStdName());
+            std.setSchId(schId);
             std.setStdNo(studentImportBO.getStdNo());
             std.setStdClass(studentImportBO.getStdClass());
             std.setEmail(studentImportBO.getEmail());
