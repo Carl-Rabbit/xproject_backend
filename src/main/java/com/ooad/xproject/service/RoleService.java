@@ -16,4 +16,6 @@ public interface RoleService {
     boolean validPassword(String password);
 
     List<Role> selectAll(String roleType);
+
+    Role getByRoleId(int roleId);
 }
