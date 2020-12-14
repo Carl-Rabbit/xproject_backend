@@ -1,5 +1,8 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.bo.SvResult;
+import com.ooad.xproject.bo.forming.FormingBO;
+import com.ooad.xproject.bo.forming.FormingResultBO;
 import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
@@ -7,6 +10,7 @@ import com.ooad.xproject.service.ProjectService;
 import com.ooad.xproject.vo.ProjectUpdateVO;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -82,5 +86,13 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<StudentProjDTO> getStdProjList(int projId) {
         return studentMapper.selectProjStudents(projId);
+    }
+
+    @Override
+    public SvResult<FormingResultBO> autoForming(FormingBO formingBO) {
+        FormingResultBO res = formingBO.executeForming();
+        System.out.println(Arrays.toString(res.getMatchList().toArray()));
+        System.out.println(res.getMessage());
+        return null;
     }
 }

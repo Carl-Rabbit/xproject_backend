@@ -2,6 +2,7 @@ package com.ooad.xproject.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.ooad.xproject.bo.TopicBO;
+import com.ooad.xproject.bo.forming.FormingBO;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.dto.StudentProjDTO;
@@ -10,6 +11,7 @@ import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.service.HomeService;
 import com.ooad.xproject.service.ProjectService;
 import com.ooad.xproject.service.RoleService;
+import com.ooad.xproject.vo.AutoFormingVO;
 import com.ooad.xproject.vo.ProjectUpdateVO;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
@@ -117,5 +119,21 @@ public class ProjController {
         List<StudentProjDTO> stdProjDTOList = projectService.getStdProjList(projId);
         logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
         return new Result<>(stdProjDTOList);
+    }
+
+    @ResponseBody
+    @PostMapping("api/team/teacher/auto-forming")
+    public Result<?> postAutoForming(@RequestBody AutoFormingVO autoFormingVO) {
+        FormingBO formContext = new FormingBO();
+        boolean success = formContext.setStrategy(autoFormingVO.getStrategy());
+        if (!success) {
+            return new Result<>(RespStatus.FAIL, "No such strategy");
+        }
+        formContext.setProjInstList(autoFormingVO.getProjInstList());
+        formContext.setStdList(autoFormingVO.getStuList());
+        projectService.autoForming(formContext);
+
+//        logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
+        return new Result<>(null);
     }
 }
