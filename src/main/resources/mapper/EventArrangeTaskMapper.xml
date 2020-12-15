@@ -9,10 +9,10 @@
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="mode" jdbcType="CHAR" property="mode" />
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
-    <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime" />
+    <result column="due_time" jdbcType="TIMESTAMP" property="dueTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    ea_task_id, proj_id, creator_id, title, description, mode, created_time, modified_time
+    ea_task_id, proj_id, creator_id, title, description, mode, created_time, due_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,21 +24,17 @@
     delete from event_arrange_tasks
     where ea_task_id = #{eaTaskId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ooad.xproject.entity.EventArrangeTask">
-    <selectKey keyProperty="eaTaskId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insert" parameterType="com.ooad.xproject.entity.EventArrangeTask"
+          useGeneratedKeys="true" keyProperty="eaTaskId" keyColumn="ea_task_id">
     insert into event_arrange_tasks (proj_id, creator_id, title, 
       description, mode, created_time, 
-      modified_time)
+      due_time)
     values (#{projId,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
       #{description,jdbcType=VARCHAR}, #{mode,jdbcType=CHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
-      #{modifiedTime,jdbcType=TIMESTAMP})
+      #{dueTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.EventArrangeTask">
-    <selectKey keyProperty="eaTaskId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.EventArrangeTask"
+          useGeneratedKeys="true" keyProperty="eaTaskId" keyColumn="ea_task_id">
     insert into event_arrange_tasks
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="projId != null">
@@ -59,8 +55,8 @@
       <if test="createdTime != null">
         created_time,
       </if>
-      <if test="modifiedTime != null">
-        modified_time,
+      <if test="dueTime != null">
+        due_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -82,8 +78,8 @@
       <if test="createdTime != null">
         #{createdTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="modifiedTime != null">
-        #{modifiedTime,jdbcType=TIMESTAMP},
+      <if test="dueTime != null">
+        #{dueTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -108,8 +104,8 @@
       <if test="createdTime != null">
         created_time = #{createdTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="modifiedTime != null">
-        modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      <if test="dueTime != null">
+        due_time = #{dueTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where ea_task_id = #{eaTaskId,jdbcType=INTEGER}
@@ -122,7 +118,7 @@
       description = #{description,jdbcType=VARCHAR},
       mode = #{mode,jdbcType=CHAR},
       created_time = #{createdTime,jdbcType=TIMESTAMP},
-      modified_time = #{modifiedTime,jdbcType=TIMESTAMP}
+      due_time = #{dueTime,jdbcType=TIMESTAMP}
     where ea_task_id = #{eaTaskId,jdbcType=INTEGER}
   </update>
 

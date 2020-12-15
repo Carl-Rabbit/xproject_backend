@@ -15,7 +15,9 @@ public class EventArrangeTask {
 
     private String mode;
 
-    private Date modifiedDate;
+    private Date createdTime;
+
+    private Date dueTime;
 
     public Integer getEaTaskId() {
         return eaTaskId;
@@ -65,11 +67,19 @@ public class EventArrangeTask {
         this.mode = mode == null ? null : mode.trim();
     }
 
-    public Date getModifiedDate() {
-        return modifiedDate;
+    public Date getCreatedTime() {
+        return createdTime;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Date getDueTime() {
+        return dueTime;
+    }
+
+    public void setDueTime(Date dueTime) {
+        this.dueTime = dueTime;
     }
 }
