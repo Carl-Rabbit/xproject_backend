@@ -64,6 +64,17 @@ public class FileController {
         return fileService.download(request, realPath, userAgent, filename, inline);
     }
 
+    @GetMapping("api/teacher/records/export")
+    public ResponseEntity<byte[]> getRecordUnitExportToExcel(HttpServletRequest request, @RequestParam("pid") Integer projId
+            , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
+            , @RequestParam(required = false, defaultValue = "false") boolean inline) {
+
+        SvResult<String> svResult = excelService.exportRecordUnitByProjId(projId);
+
+        String realPath = svResult.getData();
+        return fileService.download(request, realPath, userAgent, filename, inline);
+    }
+
     @PostMapping("api/teacher/students/import")
     public Result<Integer> postStudentAcCreationFromExcel(@RequestParam("file") MultipartFile[] files) {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
@@ -90,7 +101,7 @@ public class FileController {
 
 
     @PostMapping("api/teacher/records/import")
-    public Result<Integer> postRecordInstImportFromExcel(@RequestParam("file") MultipartFile[] files, @RequestParam("projId") Integer projId) {
+    public Result<Integer> postRecordUnitImportFromExcel(@RequestParam("file") MultipartFile[] files, @RequestParam("projId") Integer projId) {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
         System.out.println(filePath);
         List<RecordUnitBO> recordUnitBOList = excelService.readRecordUnitBO(filePath);

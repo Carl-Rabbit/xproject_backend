@@ -15,9 +15,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,7 +81,7 @@ class ExcelServiceImplTest {
         Admin admin = new Admin();
         admin.setAdminId(1);
         admin.setRoleId(1);
-        ExcelServiceImpl excelService = new ExcelServiceImpl();
+        ExcelServiceImpl excelService = new ExcelServiceImpl(projectService);
 
         String[] strings = excelService.getField(admin.getClass());
         System.out.println(Arrays.toString(strings));
@@ -92,7 +89,7 @@ class ExcelServiceImplTest {
 
     @Test
     void importExcel() {
-        ExcelServiceImpl excelService = new ExcelServiceImpl();
+        ExcelServiceImpl excelService = new ExcelServiceImpl(projectService);
         String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output.xlsx";
         List<StudentImportBO> studentImportBOList = excelService.readStudentImportBO(filePath);
         System.out.println(studentImportBOList.toString());
