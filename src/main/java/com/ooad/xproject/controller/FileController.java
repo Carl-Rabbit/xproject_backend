@@ -1,13 +1,13 @@
 package com.ooad.xproject.controller;
 
-import com.ooad.xproject.bo.RecordUnitBO;
-import com.ooad.xproject.bo.StudentImportBO;
-import com.ooad.xproject.bo.SvResult;
+import com.ooad.xproject.bo.*;
 import com.ooad.xproject.config.FileConfig;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.entity.RecordInst;
 import com.ooad.xproject.entity.Role;
+import com.ooad.xproject.entity.Student;
 import com.ooad.xproject.entity.Teacher;
+import com.ooad.xproject.mapper.ProjectMapper;
 import com.ooad.xproject.mapper.RecordInstMapper;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
@@ -37,8 +37,9 @@ public class FileController {
     private final RecordService recordService;
 
     private final RecordInstMapper recordInstMapper;
+    private final ProjectMapper projectMapper;
 
-    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper) {
+    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper, ProjectMapper projectMapper) {
         this.fileConfig = fileConfig;
         this.fileService = fileService;
         this.excelService = excelService;
@@ -47,6 +48,7 @@ public class FileController {
         this.teacherService = teacherService;
         this.recordService = recordService;
         this.recordInstMapper = recordInstMapper;
+        this.projectMapper = projectMapper;
     }
 
     @PostMapping("api/upload")
@@ -75,7 +77,7 @@ public class FileController {
         return fileService.download(request, realPath, userAgent, filename, inline);
     }
 
-    @PostMapping("api/teacher/students/import")
+    @PostMapping("api/teacher/students/excel")
     public Result<Integer> postStudentAcCreationFromExcel(@RequestParam("file") MultipartFile[] files) {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
         System.out.println(filePath);
@@ -100,18 +102,17 @@ public class FileController {
     }
 
 
-    @PostMapping("api/teacher/records/import")
+    @PostMapping("api/teacher/records/excel")
     public Result<Integer> postRecordUnitImportFromExcel(@RequestParam("file") MultipartFile[] files, @RequestParam("projId") Integer projId) {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
-        System.out.println(filePath);
+//        System.out.println(filePath);
         List<RecordUnitBO> recordUnitBOList = excelService.readRecordUnitBO(filePath);
 
-        int failCnt = 0;
+        int successCnt = 0;
         for (RecordUnitBO recordUnitBO : recordUnitBOList) {
             RecordInst recordInst = recordService.getRecordInstByUnit(recordUnitBO, projId);
-            if (recordInst == null) {
-                ++failCnt;
-            } else {
+            if (recordInst != null) {
+                ++successCnt;
                 RecordInst recordInst1 = recordInstMapper.selectByRcdIdAndRoleId(recordInst.getRcdId(), recordInst.getRoleId());
                 if (recordInst1 == null) {
                     recordInst.setComments(recordUnitBO.getComments());
@@ -124,9 +125,36 @@ public class FileController {
                 }
             }
         }
-        RespStatus status = (failCnt != 0) ? RespStatus.FAIL : RespStatus.SUCCESS;
-        String msg = (failCnt != 0) ? "Create Student Account fail" : "Create Student Account done";
-        return new Result<>(status, msg, failCnt);
+        boolean check = (successCnt == 0);
+        RespStatus status = (check) ? RespStatus.FAIL : RespStatus.SUCCESS;
+        String msg = (check) ? "Upsert record fail" : "Upsert record done";
+        return new Result<>(status, msg, successCnt);
+    }
+
+    @PostMapping("api/teacher/project/student/excel")
+    public Result<Integer> postProjStdExcel(@RequestParam("file") MultipartFile[] files, @RequestParam("projId") Integer projId) {
+        String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
+//        System.out.println(filePath);
+        List<StudentClassBO> studentClassBOList = excelService.readStudentClassBO(filePath);
+
+        int successCnt = 0;
+        for (StudentClassBO studentClassBO : studentClassBOList) {
+            Student student = studentService.getStudentByStdNo(studentClassBO.getStdNo());
+            if (student != null) {
+                ++successCnt;
+                List<Integer> prrIdList = projectMapper.selectByProjAndRole(projId, student.getRoleId());
+                if (prrIdList.size() == 0) {
+                    projectMapper.insertProjectRoleRT(projId, student.getRoleId(), studentClassBO.getClsMark());
+                } else {
+                    projectMapper.updateProjectRoleRT(prrIdList.get(0), studentClassBO.getClsMark());
+                }
+            }
+
+        }
+        boolean check = (successCnt == 0);
+        RespStatus status = (check) ? RespStatus.FAIL : RespStatus.SUCCESS;
+        String msg = (check) ? "Upsert student to project fail" : "Upsert student to project done";
+        return new Result<>(status, msg, successCnt);
     }
 
 }

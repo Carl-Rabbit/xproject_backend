@@ -36,4 +36,6 @@ public interface StudentService {
     List<StudentDTO> getAllStudentList(Teacher teacher);
 
     SvResult<Boolean> creatRoleAndStudent(int schId, StudentImportBO studentImportBO);
+
+    Student getStudentByStdNo(String stdNo);
 }

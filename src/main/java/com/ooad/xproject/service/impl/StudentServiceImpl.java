@@ -155,4 +155,9 @@ public class StudentServiceImpl implements StudentService {
             return new SvResult<>(e.toString(), false);
         }
     }
+
+    @Override
+    public Student getStudentByStdNo(String stdNo) {
+        return studentMapper.selectByStdNo(stdNo);
+    }
 }

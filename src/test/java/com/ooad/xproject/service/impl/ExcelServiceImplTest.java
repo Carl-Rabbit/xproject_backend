@@ -1,14 +1,17 @@
 package com.ooad.xproject.service.impl;
 
-import com.ooad.xproject.bo.RecordUnitBO;
-import com.ooad.xproject.bo.StudentImportBO;
-import com.ooad.xproject.bo.SvResult;
+import com.ooad.xproject.bo.*;
 import com.ooad.xproject.config.FileConfig;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.entity.Admin;
 import com.ooad.xproject.entity.RecordInst;
+import com.ooad.xproject.entity.Student;
+import com.ooad.xproject.mapper.ProjectMapper;
 import com.ooad.xproject.mapper.RecordInstMapper;
-import com.ooad.xproject.service.*;
+import com.ooad.xproject.service.ExcelService;
+import com.ooad.xproject.service.ProjectService;
+import com.ooad.xproject.service.RecordService;
+import com.ooad.xproject.service.StudentService;
 import com.ooad.xproject.vo.Result;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +42,11 @@ class ExcelServiceImplTest {
     @Autowired
     private RecordInstMapper recordInstMapper;
 
+    @Autowired
+    private ProjectMapper projectMapper;
+
+
+
     @Test
     void outputRecordUnitList() {
         FileConfig fileConfig = new FileConfig();
@@ -46,7 +54,6 @@ class ExcelServiceImplTest {
         List<RecordUnitBO> recordUnitList = projectService.getRecordUnitList(1);
 
         excelService.generate(recordUnitList, filePath);
-
     }
 
     @Test
@@ -122,12 +129,11 @@ class ExcelServiceImplTest {
         String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output.xlsx";
         List<RecordUnitBO> recordUnitBOList = excelService.readRecordUnitBO(filePath);
 
-        int failCnt = 0;
+        int successCnt = 0;
         for (RecordUnitBO recordUnitBO : recordUnitBOList) {
             RecordInst recordInst = recordService.getRecordInstByUnit(recordUnitBO, projId);
-            if (recordInst == null) {
-                ++failCnt;
-            } else {
+            if (recordInst != null) {
+                ++successCnt;
                 RecordInst recordInst1 = recordInstMapper.selectByRcdIdAndRoleId(recordInst.getRcdId(), recordInst.getRoleId());
                 if (recordInst1 == null) {
                     recordInst.setComments(recordUnitBO.getComments());
@@ -140,8 +146,52 @@ class ExcelServiceImplTest {
                 }
             }
         }
-        RespStatus status = (failCnt != 0) ? RespStatus.FAIL : RespStatus.SUCCESS;
-        String msg = (failCnt != 0) ? "upsert fail" : "upsert done";
-        System.out.println(new Result<>(status, msg, failCnt).toString());
+        boolean check = (successCnt == 0);
+        RespStatus status = (check) ? RespStatus.FAIL : RespStatus.SUCCESS;
+        String msg = (check) ? "Upsert record fail" : "Upsert record done";
+        System.out.println(new Result<>(status, msg, successCnt).toString());
+    }
+
+    @Test
+    void outputStudentClassList() {
+        FileConfig fileConfig = new FileConfig();
+        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output.xlsx";
+        List<StudentClassBO> studentClassBOList = new ArrayList<>();
+        String cls = "Lab 7";
+        int roleFrom = 10, roleTo = 11;
+        for (int i = roleFrom; i <= roleTo; ++i) {
+            StudentClassBO studentClassBO = new StudentClassBO();
+            studentClassBO.setClsMark(cls);
+            studentClassBO.setStdNo("118170" + i);
+            studentClassBOList.add(studentClassBO);
+        }
+
+        excelService.generate(studentClassBOList, filePath);
+    }
+
+    @Test
+    void postProjStdExcel() {
+        Integer projId = 1;
+        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output.xlsx";
+        List<StudentClassBO> studentClassBOList = excelService.readStudentClassBO(filePath);
+
+        int successCnt = 0;
+        for (StudentClassBO studentClassBO : studentClassBOList) {
+            Student student = studentService.getStudentByStdNo(studentClassBO.getStdNo());
+            if (student != null) {
+                ++successCnt;
+                List<Integer> prrIdList = projectMapper.selectByProjAndRole(projId, student.getRoleId());
+                if (prrIdList.size() == 0) {
+                    projectMapper.insertProjectRoleRT(projId, student.getRoleId(), studentClassBO.getClsMark());
+                } else {
+                    projectMapper.updateProjectRoleRT(prrIdList.get(0), studentClassBO.getClsMark());
+                }
+            }
+
+        }
+        boolean check = (successCnt == 0);
+        RespStatus status = (check) ? RespStatus.FAIL : RespStatus.SUCCESS;
+        String msg = (check) ? "Upsert student to project fail" : "Upsert student to project done";
+        System.out.println(new Result<>(status, msg, successCnt).toString());
     }
 }

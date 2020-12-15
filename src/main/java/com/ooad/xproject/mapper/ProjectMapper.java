@@ -31,4 +31,10 @@ public interface ProjectMapper {
     void joinProject(int roleId, int projId);
 
     List<RecordUnitBO> selectRecordUnitByProjId(Integer pid);
+
+    List<Integer> selectByProjAndRole(Integer projId, Integer roleId);
+
+    int updateProjectRoleRT(Integer prrId, String groupMark);
+
+    int insertProjectRoleRT(Integer projId, Integer roleId, String groupMark);
 }
