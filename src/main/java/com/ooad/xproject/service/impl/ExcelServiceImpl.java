@@ -2,7 +2,12 @@ package com.ooad.xproject.service.impl;
 
 import com.ooad.xproject.bo.RecordUnitBO;
 import com.ooad.xproject.bo.StudentImportBO;
+import com.ooad.xproject.bo.SvResult;
+import com.ooad.xproject.config.FileConfig;
+import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.service.ExcelService;
+import com.ooad.xproject.service.ProjectService;
+import com.ooad.xproject.vo.Result;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
@@ -20,12 +25,18 @@ import java.util.Objects;
 @Service
 public class ExcelServiceImpl implements ExcelService {
 
+    private final ProjectService projectService;
+
+    public ExcelServiceImpl(ProjectService projectService) {
+        this.projectService = projectService;
+    }
+
     //    objectList: List of data
 //    filePath: output path of excel
 //    fields: Output list of fields of the class of data
 //    titles: first row
     @Override
-    public String generate(List<?> objectList, String filePath, String[] fields, String[] titles) {
+    public SvResult<String> generate(List<?> objectList, String filePath, String[] fields, String[] titles) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet();
         int rowCount = 0;
@@ -55,20 +66,23 @@ public class ExcelServiceImpl implements ExcelService {
             workbook.write(outputStream);
         } catch (IOException e) {
             e.printStackTrace();
+            rowCount = 0;
         }
-        return filePath + ", rowCount: " + rowCount;
+
+        String msg = (rowCount == 0) ? "null path" : filePath;
+        return new SvResult<String>(rowCount, "", msg);
     }
 
     //  titles = fields
     @Override
-    public String generate(List<?> objectList, String filePath, String[] fields) {
+    public SvResult<String> generate(List<?> objectList, String filePath, String[] fields) {
         return generate(objectList, filePath, fields, fields);
     }
 
     //    fields = all the fields in class of data
 //    titles = fields
     @Override
-    public String generate(List<?> objectList, String filePath) {
+    public SvResult<String> generate(List<?> objectList, String filePath) {
         String[] fields;
         fields = new String[0];
 
@@ -166,6 +180,14 @@ public class ExcelServiceImpl implements ExcelService {
         }
 //        System.out.println(sheet.getFirstRowNum());
         return ret;
+    }
+
+    @Override
+    public SvResult<String> exportRecordUnitByProjId(Integer projId) {
+        FileConfig fileConfig = new FileConfig();
+        String filePath = fileConfig.getOutputRoot() + "output.xlsx";
+        List<RecordUnitBO> recordUnitList = projectService.getRecordUnitList(projId);
+        return generate(recordUnitList, filePath);
     }
 
     Workbook readWorkbook(String filePath) {
