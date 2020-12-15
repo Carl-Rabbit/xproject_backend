@@ -35,7 +35,7 @@ public class GradeController {
 
     @ResponseBody
     @GetMapping("api/grade-list")
-    public Result<?> getTeamInfoList(@RequestParam(value="projId") int projId) {
+    public Result<?> getGradeList(@RequestParam(value="projId") int projId) {
         Subject subject = SecurityUtils.getSubject();
         String username = subject.getPrincipal().toString();
         Role role = roleService.getByUsername(username);
