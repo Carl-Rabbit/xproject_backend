@@ -33,20 +33,17 @@ public class MessageController {
     @ResponseBody
     @GetMapping("api/all/project/message")
     public Result<?> getProjMsgList(@RequestParam("projId") int projId) {
-//        String username = RoleUtils.getUsername();
-//        Role role = roleService.getByUsername(username);
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
 
-        List<MessageDTO> msgList = messageService.getMessageDTOList(null, projId, null);
+        List<MessageDTO> msgList = messageService.getMessageDTOList(role.getRoleId(), projId, null);
         return new Result<>(msgList);
     }
 
     @ResponseBody
     @GetMapping("api/all/team/message")
     public Result<?> getTeamMsgList(@RequestParam("projInstId") int projInstId) {
-        String username = RoleUtils.getUsername();
-        Role role = roleService.getByUsername(username);
-
-        List<MessageDTO> msgList = messageService.getMessageDTOList(role.getRoleId(), null, projInstId);
+        List<MessageDTO> msgList = messageService.getMessageDTOList(null, null, projInstId);
         return new Result<>(msgList);
     }
 

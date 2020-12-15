@@ -19,7 +19,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<MessageDTO> getMessageDTOList(Integer roleId, Integer projId, Integer projInstId) {
-        if (roleId != null) {
+        if (projId != null) {
             return messageMapper.selectDTOByProject(roleId, projId);
         } else {
             return messageMapper.selectDTOByProjInst(projInstId);

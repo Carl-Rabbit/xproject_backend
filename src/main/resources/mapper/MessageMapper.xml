@@ -194,25 +194,28 @@
   </update>
 
   <sql id="MsgDTO_Column_List">
-    msg_id, proj_inst_id, type, title, content, creator_role_id, created_time, status,
-    role_id, proj_id, handler_role_id, confirmed, decided, result,
-    c.role_type, c.username, c.register_time, c.icon_url,
-    h.role_type, h.username, h.register_time, h.icon_url,
+    messages.*,
+    c.role_type as crt_role_type,
+    c.username as crt_username,
+    c.icon_url as crt_icon_url,
+    h.role_type as hdl_role_type,
+    h.username as hdl_username,
+    h.icon_url as hdl_icon_url
   </sql>
   <select id="selectDTOByProject" resultType="com.ooad.xproject.dto.MessageDTO">
     select
     <include refid="MsgDTO_Column_List"/>
     from messages
-    left join roles as c on messages.creator_role_id = c.role_id
-    left join roles as h on messages.handler_role_id = h.role_id
+      left join roles as c on messages.creator_role_id = c.role_id
+      left join roles as h on messages.handler_role_id = h.role_id
     where proj_id = #{projId} and messages.role_id = #{roleId}
   </select>
   <select id="selectDTOByProjInst" resultType="com.ooad.xproject.dto.MessageDTO">
     select
     <include refid="MsgDTO_Column_List"/>
     from messages
-        left join roles as c on messages.creator_role_id = c.role_id
-        left join roles as h on messages.handler_role_id = h.role_id
+      left join roles as c on messages.creator_role_id = c.role_id
+      left join roles as h on messages.handler_role_id = h.role_id
     where proj_inst_id = #{projInstId}
   </select>
 </mapper>

@@ -21,13 +21,13 @@ public class MessageDTO {
     private Boolean decided;
     private String result;
 
-    private String CRoleType;
-    private String CUsername;
-    private Date CRegisterTime;
-    private String CIconUrl;
+    private String crtRoleType;
+    private String crtUsername;
+//    private Date crtRegisterTime;
+    private String crtIconUrl;
 
-    private String HRoleType;
-    private String HUsername;
-    private Date HRegisterTime;
-    private String HIconUrl;
+    private String hdlRoleType;
+    private String hdlUsername;
+//    private Date hdlRegisterTime;
+    private String hdlIconUrl;
 }
