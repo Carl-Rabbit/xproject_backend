@@ -1,13 +1,12 @@
 package com.ooad.xproject.service.impl;
 
 import com.ooad.xproject.bo.RecordUnitBO;
+import com.ooad.xproject.bo.StudentClassBO;
 import com.ooad.xproject.bo.StudentImportBO;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.config.FileConfig;
-import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.service.ExcelService;
 import com.ooad.xproject.service.ProjectService;
-import com.ooad.xproject.vo.Result;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
@@ -179,6 +178,41 @@ public class ExcelServiceImpl implements ExcelService {
 
         }
 //        System.out.println(sheet.getFirstRowNum());
+        return ret;
+    }
+
+    @Override
+    public List<StudentClassBO> readStudentClassBO(String filePath) {
+        Workbook workbook = readWorkbook(filePath);
+        Sheet sheet = workbook.getSheetAt(0);
+
+        List<StudentClassBO> ret = new ArrayList<>();
+
+        if (sheet != null) {
+            Row titleRow = sheet.getRow(sheet.getFirstRowNum());
+            List<String> titleList = new ArrayList<>(titleRow.getLastCellNum() - titleRow.getFirstCellNum());
+            for (int j = titleRow.getFirstCellNum(); j < titleRow.getLastCellNum(); ++j) {
+                titleList.add(readCellValueToString(titleRow.getCell(j)));
+            }
+
+            for (int i = sheet.getFirstRowNum() + 1; i <= sheet.getLastRowNum(); ++i) {
+                Row row = sheet.getRow(i);
+                StudentClassBO studentClassBO = new StudentClassBO();
+                List<String> rowList = new ArrayList<>(titleRow.getLastCellNum() - titleRow.getFirstCellNum());
+                for (int j = titleRow.getFirstCellNum(); j < titleRow.getLastCellNum(); ++j) {
+                    rowList.add(readCellValueToString(row.getCell(j)));
+                }
+
+                for (int j = 0; j < titleList.size(); ++j) {
+                    if ("stdNo".equals(titleList.get(j))) {
+                        studentClassBO.setStdNo(rowList.get(j));
+                    } else if ("clsMark".equals(titleList.get(j))) {
+                        studentClassBO.setClsMark(rowList.get(j));
+                    }
+                }
+                ret.add(studentClassBO);
+            }
+        }
         return ret;
     }
 
