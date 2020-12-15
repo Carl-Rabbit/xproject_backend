@@ -5,9 +5,12 @@ import com.ooad.xproject.bo.StudentImportBO;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.config.FileConfig;
 import com.ooad.xproject.constant.RespStatus;
-import com.ooad.xproject.service.ExcelService;
-import com.ooad.xproject.service.FileService;
-import com.ooad.xproject.service.StudentService;
+import com.ooad.xproject.entity.RecordInst;
+import com.ooad.xproject.entity.Role;
+import com.ooad.xproject.entity.Teacher;
+import com.ooad.xproject.mapper.RecordInstMapper;
+import com.ooad.xproject.service.*;
+import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.Result;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +38,7 @@ public class FileController {
 
     private final RecordInstMapper recordInstMapper;
 
-    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RecordService recordService, RecordInstMapper recordInstMapper) {
+    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper) {
         this.fileConfig = fileConfig;
         this.fileService = fileService;
         this.excelService = excelService;

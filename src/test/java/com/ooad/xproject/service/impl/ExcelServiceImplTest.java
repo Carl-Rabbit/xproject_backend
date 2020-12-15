@@ -109,7 +109,7 @@ class ExcelServiceImplTest {
         int successCnt = 0;
         for (StudentImportBO studentImportBO :
                 studentImportBOList) {
-            SvResult<Boolean> svResult = studentService.creatRoleAndStudent(studentImportBO);
+            SvResult<Boolean> svResult = studentService.creatRoleAndStudent(1, studentImportBO);
             if (svResult.getData()) {
                 successCnt++;
             }
