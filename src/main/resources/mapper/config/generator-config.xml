@@ -90,6 +90,14 @@
 <!--            <generatedKey column="event_id" sqlStatement="Postgres" identity="true"/>-->
 <!--        </table>-->
 
+<!--            <table tableName="messages" domainObjectName="Message" enableCountByExample="false"-->
+<!--                   enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--                   enableSelectByExample="false" selectByExampleQueryId="false">-->
+<!--                <property name="useActualColumnNames" value="false"/>-->
+<!--                &lt;!&ndash; 数据库表主键 &ndash;&gt;-->
+<!--                <generatedKey column="msg_id" sqlStatement="Postgres" identity="true"/>-->
+<!--            </table>-->
+
 <!--        <table tableName="permissions" domainObjectName="Permission" enableCountByExample="false"-->
 <!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
 <!--               enableSelectByExample="false" selectByExampleQueryId="false">-->
