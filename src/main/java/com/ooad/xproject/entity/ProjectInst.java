@@ -17,6 +17,8 @@ public class ProjectInst {
 
     private Integer targetMemNum;
 
+    private String iconUrl;
+
     public Integer getProjInstId() {
         return projInstId;
     }
@@ -79,5 +81,13 @@ public class ProjectInst {
 
     public void setTargetMemNum(Integer targetMemNum) {
         this.targetMemNum = targetMemNum;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl == null ? null : iconUrl.trim();
     }
 }

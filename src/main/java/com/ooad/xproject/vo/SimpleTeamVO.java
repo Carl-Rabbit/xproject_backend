@@ -15,6 +15,7 @@ public class SimpleTeamVO {
     private String tags;
     private String descriptions;
     private int targetMemNum;
+    private String iconUrl;
 
     public static SimpleTeamVO createFrom(ProjectInst projectInst) {
         SimpleTeamVO ret = new SimpleTeamVO();
@@ -25,6 +26,7 @@ public class SimpleTeamVO {
         ret.tags = projectInst.getFlags();
         ret.descriptions = projectInst.getDescription();
         ret.targetMemNum = projectInst.getTargetMemNum();
+        ret.iconUrl = projectInst.getIconUrl();
         return ret;
     }
 }

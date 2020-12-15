@@ -55,6 +55,44 @@ public class AccountController {
     }
 
     @ResponseBody
+    @GetMapping("api/team/stu-info")
+    public Result<?> getStuInfo(@RequestParam("roleId") int roleId) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        int schId;
+        if (RoleType.Student.match(role.getRoleType())) {
+            Student student = studentService.getStudentByRoleId(role.getRoleId());
+            schId = student.getSchId();
+        } else {
+            Teacher teacher = teacherService.getTeacherByRoleId(role.getRoleId());
+            schId = teacher.getSchId();
+        }
+
+        Role targetRole = roleService.getByRoleId(roleId);
+
+        if (!RoleType.Student.match(targetRole.getRoleType())) {
+            return new Result<>(RespStatus.FAIL, "Getting non-student info is forbidden");
+        }
+        Student target = studentService.getStudentByRoleId(roleId);
+
+        if (target == null) {
+            // not the same school
+            return new Result<>(RespStatus.FAIL, "No such student");
+        }
+
+        if (schId != target.getSchId()) {
+            // not the same school
+            return new Result<>(RespStatus.FAIL, "School not matched");
+        }
+
+        School school = homeService.getSchool(schId);
+        AccountInfoStdVO accountInfoStdVO = AccountInfoStdVO.createFrom(targetRole, target, school);
+
+        return new Result<>(accountInfoStdVO);
+    }
+
+    @ResponseBody
     @PostMapping("api/self-intro")
     public Result<?> updateAccountInfo(@RequestBody AcInfoStdUpdateVO acInfoStdUpdateVO) {
         String username = RoleUtils.getUsername();

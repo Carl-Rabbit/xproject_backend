@@ -13,4 +13,5 @@ public class StudentDTO {
     private String flags;
     private Integer schId;
     private String email;
+    private String iconUrl;
 }

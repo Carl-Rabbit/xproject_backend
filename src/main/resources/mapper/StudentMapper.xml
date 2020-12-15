@@ -212,7 +212,7 @@
 --         where std_id = #{sid,jdbcType=INTEGER}
     </select>
   <sql id="StudentDTO_Column_List">
-    std_id, r.role_id, username, std_name, std_no, std_class, std.flags, sch_id, email
+    std_id, r.role_id, username, std_name, std_no, std_class, std.flags, sch_id, email, r.icon_url
   </sql>
   <select id="selectDTOBySelector" resultType="com.ooad.xproject.dto.StudentDTO">
     select
@@ -229,7 +229,7 @@
     </where>
   </select>
   <sql id="StudentProjDTO_Column_List">
-    std_id, r.role_id, username, std_name, std_no, std_class, std.flags, sch_id, email, group_mark, pi.proj_inst_id, topic_str, pi.status
+    std_id, r.role_id, username, std_name, std_no, std_class, std.flags, sch_id, email, r.icon_url, group_mark, pi.proj_inst_id, topic_str, pi.status
   </sql>
   <select id="selectProjStudents" resultType="com.ooad.xproject.dto.StudentProjDTO">
     select

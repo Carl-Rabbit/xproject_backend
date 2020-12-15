@@ -1,6 +1,5 @@
 package com.ooad.xproject.vo;
 
-import com.alibaba.fastjson.JSON;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
 import lombok.Data;
@@ -19,6 +18,7 @@ public class TeamVO {
     private String tags;
     private String descriptions;
     private int targetMemNum;
+    private String iconUrl;
     private List<StudentDTO> teamMemberList;
 
     public static TeamVO createFrom(ProjectInst projectInst, List<StudentDTO> teamMemberList) {
@@ -31,6 +31,7 @@ public class TeamVO {
         ret.tags = projectInst.getFlags();
         ret.descriptions = projectInst.getDescription();
         ret.targetMemNum = projectInst.getTargetMemNum();
+        ret.iconUrl = projectInst.getIconUrl();
 
         ret.teamMemberList = teamMemberList;
 

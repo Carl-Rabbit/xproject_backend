@@ -1,7 +1,5 @@
 package com.ooad.xproject.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.dto.StudentDTO;
@@ -13,12 +11,14 @@ import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.service.StudentService;
 import com.ooad.xproject.service.TeacherService;
 import com.ooad.xproject.vo.Result;
-import com.ooad.xproject.vo.SelectorStdVO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -92,9 +92,9 @@ public class HomePageController {
     }
 
     @ResponseBody
-    @PostMapping("api/teacher/students")
-    public Result<?> postSelectStudents(@RequestBody SelectorStdVO selectorStdVO) {
-        logger.info("getProjectList");
+    @GetMapping("api/teacher/students")
+    public Result<?> postSelectStudents() {
+        logger.info("postSelectStudents");
         Subject subject = SecurityUtils.getSubject();
         String username = subject.getPrincipal().toString();
         Role role = roleService.getByUsername(username);
@@ -105,8 +105,8 @@ public class HomePageController {
 
         Teacher teacher = teacherService.getTeacherByRoleId(role.getRoleId());
 
-        SvResult<PageInfo<StudentDTO>> svResult = studentService.getStudentListBySelector(role, teacher, selectorStdVO);
+        List<StudentDTO> stdDTOList = studentService.getAllStudentList(teacher);
 
-        return new Result<>(svResult.getData());
+        return new Result<>(stdDTOList);
     }
 }

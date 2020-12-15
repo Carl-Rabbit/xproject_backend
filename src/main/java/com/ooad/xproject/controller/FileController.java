@@ -5,11 +5,8 @@ import com.ooad.xproject.bo.StudentImportBO;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.config.FileConfig;
 import com.ooad.xproject.constant.RespStatus;
-import com.ooad.xproject.entity.RecordInst;
-import com.ooad.xproject.mapper.RecordInstMapper;
 import com.ooad.xproject.service.ExcelService;
 import com.ooad.xproject.service.FileService;
-import com.ooad.xproject.service.RecordService;
 import com.ooad.xproject.service.StudentService;
 import com.ooad.xproject.vo.Result;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Time;
 import java.util.List;
 
 
@@ -32,6 +28,8 @@ public class FileController {
     private final ExcelService excelService;
 
     private final StudentService studentService;
+    private final RoleService roleService;
+    private final TeacherService teacherService;
 
     private final RecordService recordService;
 
@@ -42,6 +40,8 @@ public class FileController {
         this.fileService = fileService;
         this.excelService = excelService;
         this.studentService = studentService;
+        this.roleService = roleService;
+        this.teacherService = teacherService;
         this.recordService = recordService;
         this.recordInstMapper = recordInstMapper;
     }
@@ -67,10 +67,15 @@ public class FileController {
         System.out.println(filePath);
         List<StudentImportBO> studentImportBOList = excelService.readStudentImportBO(filePath);
 
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        Teacher teacher = teacherService.getTeacherByRoleId(role.getRoleId());
+
         int successCnt = 0;
         for (StudentImportBO studentImportBO :
                 studentImportBOList) {
-            SvResult<Boolean> svResult = studentService.creatRoleAndStudent(studentImportBO);
+            SvResult<Boolean> svResult = studentService.creatRoleAndStudent(teacher.getSchId(), studentImportBO);
             if (svResult.getData()) {
                 successCnt++;
             }

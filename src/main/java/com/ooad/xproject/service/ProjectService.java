@@ -1,6 +1,9 @@
 package com.ooad.xproject.service;
 
 import com.ooad.xproject.bo.RecordUnitBO;
+import com.ooad.xproject.bo.SvResult;
+import com.ooad.xproject.bo.forming.FormingBO;
+import com.ooad.xproject.bo.forming.FormingResultBO;
 import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.vo.ProjectUpdateVO;
@@ -33,4 +36,6 @@ public interface ProjectService {
     List<RecordUnitBO> getRecordUnitList(Integer pid);
 
     List<StudentProjDTO> getStdProjList(int projId);
+
+    SvResult<FormingResultBO> autoForming(FormingBO formingBO);
 }

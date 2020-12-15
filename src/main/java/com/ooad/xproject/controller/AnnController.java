@@ -67,7 +67,7 @@ public class AnnController {
 
     @ResponseBody
     @GetMapping("api/teacher/project/ann/delete")
-    public Result<?> postDeleteAnnouncement(@RequestParam("annId") int annId) {
+    public Result<?> getDeleteAnnouncement(@RequestParam("annId") int annId) {
         boolean success = annService.deleteAnn(annId);
         if (success) {
             return new Result<>(true);

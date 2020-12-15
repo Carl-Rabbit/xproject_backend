@@ -17,6 +17,8 @@ public class Role {
 
     private Date registerTime;
 
+    private String iconUrl;
+
     public Integer getRoleId() {
         return roleId;
     }
@@ -71,5 +73,13 @@ public class Role {
 
     public void setRegisterTime(Date registerTime) {
         this.registerTime = registerTime;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl == null ? null : iconUrl.trim();
     }
 }
