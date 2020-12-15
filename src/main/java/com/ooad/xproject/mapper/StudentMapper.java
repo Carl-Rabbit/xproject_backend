@@ -36,6 +36,5 @@ public interface StudentMapper {
 
     List<StudentProjDTO> selectProjStudents(int projId);
 
-
     Student selectByStdNo(String stdNo);
 }

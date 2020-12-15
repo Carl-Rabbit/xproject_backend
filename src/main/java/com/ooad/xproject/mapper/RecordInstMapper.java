@@ -28,5 +28,8 @@ public interface RecordInstMapper {
 
     RecordInst selectByRcdIdAndRoleId(Integer rcdId, Integer roleId);
 
+    int insertRecordInst(RecordInst recordInst);
+
+    int updateRecordInst(RecordInst recordInst);
 
 }

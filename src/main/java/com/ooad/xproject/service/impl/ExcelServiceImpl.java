@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -178,7 +179,7 @@ public class ExcelServiceImpl implements ExcelService {
         return workbook;
     }
 
-    public String[] getField(Class cls) {
+    public String[] getField(Class<?> cls) {
         Field[] fields = cls.getDeclaredFields();
         String[] fieldNames = new String[fields.length];
         for (int i = 0; i < fields.length; i++) {
@@ -211,7 +212,8 @@ public class ExcelServiceImpl implements ExcelService {
             case BOOLEAN:
                 return String.valueOf(cell.getBooleanCellValue());
             case NUMERIC:
-                return String.valueOf(cell.getNumericCellValue());
+                DecimalFormat df = new DecimalFormat("0");
+                return String.valueOf(df.format(cell.getNumericCellValue()));
             case FORMULA:
                 return String.valueOf(cell.getCellFormula());
             default:

@@ -22,12 +22,13 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public RecordInst getRecordInstByUnit(RecordUnitBO recordUnitBO, Integer projId) {
         RecordInst recordInst = new RecordInst();
-        recordInst.setRcdId(recordMapper.selectByProjIdAndRcdName(projId, recordUnitBO.getRcdName()).getRcdId());
-        recordInst.setRoleId(studentMapper.selectByStdNo(recordUnitBO.getStdNo()).getRoleId());
-
-        if (recordInst.getRcdId() == null || recordInst.getRoleId() == null) {
+        try {
+            recordInst.setRcdId(recordMapper.selectByProjIdAndRcdName(projId, recordUnitBO.getRcdName()).getRcdId());
+            recordInst.setRoleId(studentMapper.selectByStdNo(recordUnitBO.getStdNo()).getRoleId());
+        } catch (Exception e) {
             return null;
         }
+
         return recordInst;
     }
 }

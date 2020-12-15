@@ -80,7 +80,7 @@ public class FileController {
         return new Result<>(status, msg, successCnt);
     }
 
-//    todo: modify the insert and update of recordInstMapper
+
     @PostMapping("api/teacher/records/import")
     public Result<Integer> postRecordInstImportFromExcel(@RequestParam("file") MultipartFile[] files, @RequestParam("projId") Integer projId) {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
@@ -97,11 +97,11 @@ public class FileController {
                 if (recordInst1 == null) {
                     recordInst.setComments(recordUnitBO.getComments());
                     recordInst.setContent(recordUnitBO.getGrade());
-                    recordInstMapper.insert(recordInst);
+                    recordInstMapper.insertRecordInst(recordInst);
                 } else {
                     recordInst1.setComments(recordUnitBO.getComments());
                     recordInst1.setContent(recordUnitBO.getGrade());
-                    recordInstMapper.updateByPrimaryKey(recordInst1);
+                    recordInstMapper.updateRecordInst(recordInst1);
                 }
             }
         }

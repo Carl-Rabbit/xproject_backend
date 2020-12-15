@@ -6,15 +6,16 @@ import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.config.FileConfig;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.entity.Admin;
-import com.ooad.xproject.service.ExcelService;
-import com.ooad.xproject.service.ProjectService;
-import com.ooad.xproject.service.StudentService;
+import com.ooad.xproject.entity.RecordInst;
+import com.ooad.xproject.mapper.RecordInstMapper;
+import com.ooad.xproject.service.*;
 import com.ooad.xproject.vo.Result;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +35,12 @@ class ExcelServiceImplTest {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private RecordService recordService;
+
+    @Autowired
+    private RecordInstMapper recordInstMapper;
 
     @Test
     void outputRecordUnitList() {
@@ -110,5 +117,34 @@ class ExcelServiceImplTest {
         RespStatus status = (successCnt == 0) ? RespStatus.FAIL : RespStatus.SUCCESS;
         String msg = (successCnt == 0) ? "Create Student Account fail" : "Create Student Account done";
         System.out.println(new Result<>(status, msg, successCnt).toString());
+    }
+
+    @Test
+    void postRecordInstImportFromExcel() {
+        Integer projId = 1;
+        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output.xlsx";
+        List<RecordUnitBO> recordUnitBOList = excelService.readRecordUnitBO(filePath);
+
+        int failCnt = 0;
+        for (RecordUnitBO recordUnitBO : recordUnitBOList) {
+            RecordInst recordInst = recordService.getRecordInstByUnit(recordUnitBO, projId);
+            if (recordInst == null) {
+                ++failCnt;
+            } else {
+                RecordInst recordInst1 = recordInstMapper.selectByRcdIdAndRoleId(recordInst.getRcdId(), recordInst.getRoleId());
+                if (recordInst1 == null) {
+                    recordInst.setComments(recordUnitBO.getComments());
+                    recordInst.setContent(recordUnitBO.getGrade());
+                    recordInstMapper.insertRecordInst(recordInst);
+                } else {
+                    recordInst1.setComments(recordUnitBO.getComments());
+                    recordInst1.setContent(recordUnitBO.getGrade());
+                    recordInstMapper.updateRecordInst(recordInst1);
+                }
+            }
+        }
+        RespStatus status = (failCnt != 0) ? RespStatus.FAIL : RespStatus.SUCCESS;
+        String msg = (failCnt != 0) ? "upsert fail" : "upsert done";
+        System.out.println(new Result<>(status, msg, failCnt).toString());
     }
 }
