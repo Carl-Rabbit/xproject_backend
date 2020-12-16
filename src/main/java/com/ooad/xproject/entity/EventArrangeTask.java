@@ -13,11 +13,13 @@ public class EventArrangeTask {
 
     private String description;
 
-    private String mode;
+    private Boolean stdAdaptable;
 
     private Date createdTime;
 
     private Date dueTime;
+
+    private String status;
 
     public Integer getEaTaskId() {
         return eaTaskId;
@@ -59,12 +61,12 @@ public class EventArrangeTask {
         this.description = description == null ? null : description.trim();
     }
 
-    public String getMode() {
-        return mode;
+    public Boolean getStdAdaptable() {
+        return stdAdaptable;
     }
 
-    public void setMode(String mode) {
-        this.mode = mode == null ? null : mode.trim();
+    public void setStdAdaptable(Boolean stdAdaptable) {
+        this.stdAdaptable = stdAdaptable;
     }
 
     public Date getCreatedTime() {
@@ -81,5 +83,13 @@ public class EventArrangeTask {
 
     public void setDueTime(Date dueTime) {
         this.dueTime = dueTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
     }
 }

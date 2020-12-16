@@ -7,12 +7,14 @@
     <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="description" jdbcType="VARCHAR" property="description" />
-    <result column="mode" jdbcType="CHAR" property="mode" />
+    <result column="std_adaptable" jdbcType="BIT" property="stdAdaptable" />
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
     <result column="due_time" jdbcType="TIMESTAMP" property="dueTime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
   </resultMap>
   <sql id="Base_Column_List">
-    ea_task_id, proj_id, creator_id, title, description, mode, created_time, due_time
+    ea_task_id, proj_id, creator_id, title, description, std_adaptable, created_time, 
+    due_time, status
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -27,11 +29,11 @@
   <insert id="insert" parameterType="com.ooad.xproject.entity.EventArrangeTask"
           useGeneratedKeys="true" keyProperty="eaTaskId" keyColumn="ea_task_id">
     insert into event_arrange_tasks (proj_id, creator_id, title, 
-      description, mode, created_time, 
-      due_time)
+      description, std_adaptable, created_time, 
+      due_time, status)
     values (#{projId,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
-      #{description,jdbcType=VARCHAR}, #{mode,jdbcType=CHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
-      #{dueTime,jdbcType=TIMESTAMP})
+      #{description,jdbcType=VARCHAR}, #{stdAdaptable,jdbcType=BIT}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{dueTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ooad.xproject.entity.EventArrangeTask"
           useGeneratedKeys="true" keyProperty="eaTaskId" keyColumn="ea_task_id">
@@ -49,14 +51,17 @@
       <if test="description != null">
         description,
       </if>
-      <if test="mode != null">
-        mode,
+      <if test="stdAdaptable != null">
+        std_adaptable,
       </if>
       <if test="createdTime != null">
         created_time,
       </if>
       <if test="dueTime != null">
         due_time,
+      </if>
+      <if test="status != null">
+        status,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -72,14 +77,17 @@
       <if test="description != null">
         #{description,jdbcType=VARCHAR},
       </if>
-      <if test="mode != null">
-        #{mode,jdbcType=CHAR},
+      <if test="stdAdaptable != null">
+        #{stdAdaptable,jdbcType=BIT},
       </if>
       <if test="createdTime != null">
         #{createdTime,jdbcType=TIMESTAMP},
       </if>
       <if test="dueTime != null">
         #{dueTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -98,14 +106,17 @@
       <if test="description != null">
         description = #{description,jdbcType=VARCHAR},
       </if>
-      <if test="mode != null">
-        mode = #{mode,jdbcType=CHAR},
+      <if test="stdAdaptable != null">
+        std_adaptable = #{stdAdaptable,jdbcType=BIT},
       </if>
       <if test="createdTime != null">
         created_time = #{createdTime,jdbcType=TIMESTAMP},
       </if>
       <if test="dueTime != null">
         due_time = #{dueTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
       </if>
     </set>
     where ea_task_id = #{eaTaskId,jdbcType=INTEGER}
@@ -116,9 +127,10 @@
       creator_id = #{creatorId,jdbcType=INTEGER},
       title = #{title,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR},
-      mode = #{mode,jdbcType=CHAR},
+      std_adaptable = #{stdAdaptable,jdbcType=BIT},
       created_time = #{createdTime,jdbcType=TIMESTAMP},
-      due_time = #{dueTime,jdbcType=TIMESTAMP}
+      due_time = #{dueTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR}
     where ea_task_id = #{eaTaskId,jdbcType=INTEGER}
   </update>
 
@@ -126,7 +138,6 @@
         select
         <include refid="Base_Column_List" />
         from event_arrange_tasks
-        where proj_id = #{projId, jdbcType=INTEGER}
-        where ;
+        where proj_id = #{projId, jdbcType=INTEGER};
     </select>
 </mapper>
