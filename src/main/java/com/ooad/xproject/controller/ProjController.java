@@ -147,7 +147,7 @@ public class ProjController {
     public Result<?> getUngroupedStudents(@RequestParam(value="projId") int projId) {
         List<StudentProjDTO> stdProjDTOList = projectService.getStdProjList(projId);
         stdProjDTOList.removeIf(studentProjDTO -> studentProjDTO.getProjInstId() != null);
-        logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
+        logger.info(String.format("getUngroupedStudents -> %s", stdProjDTOList));
         return new Result<>(stdProjDTOList);
     }
 }

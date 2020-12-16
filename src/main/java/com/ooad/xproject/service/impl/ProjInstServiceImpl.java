@@ -178,4 +178,10 @@ public class ProjInstServiceImpl implements ProjInstService {
             return new SvResult<>(e.toString(), false);
         }
     }
+
+    @Override
+    public boolean quitTeam(int stdRoleId, int projInstId) {
+        int affectedRoleCnt = projectInstMapper.deleteProjInstStdRT(stdRoleId, projInstId);
+        return affectedRoleCnt == 1;
+    }
 }

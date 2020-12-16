@@ -30,4 +30,6 @@ public interface ProjectInstMapper {
     ProjectInst selectPIByProjIdAndStdRoleId(int projId, int stdRoleId);
 
     boolean insertProjInstStdRT(int projInstId, int stdRoleId, String opt);
+
+    int deleteProjInstStdRT(int stdRoleId, int projInstId);
 }

@@ -164,4 +164,8 @@
     insert into proj_inst_student_rt (proj_inst_id, std_role_id, opt)
     values (#{projInstId}, #{stdRoleId}, #{opt});
   </insert>
+  <delete id="deleteProjInstStdRT">
+    delete from proj_inst_student_rt
+    where std_role_id = #{stdRoleId} and  proj_inst_id = #{projInstId}
+  </delete>
 </mapper>

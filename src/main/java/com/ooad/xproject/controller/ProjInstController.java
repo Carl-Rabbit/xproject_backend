@@ -178,4 +178,24 @@ public class ProjInstController {
         int successCnt = successList.size();
         return new Result<>(successCnt);
     }
+
+
+    @ResponseBody
+    @PostMapping("api/student/team/quit")
+    public Result<?> postQuitTeam(@RequestParam(value="projId") int projId) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+        ProjectInst projectInst = projInstService.getPIByProjIdAndStdRoleId(projId, role.getRoleId());
+
+        if (projectInst == null) {
+            return new Result<>(RespStatus.FAIL, "No team");
+        }
+
+        boolean success = projInstService.quitTeam(role.getRoleId(), projectInst.getProjInstId());
+        if (success) {
+            return new Result<>("Quit successfully");
+        } else {
+            return new Result<>(RespStatus.FAIL, "Quit failed");
+        }
+    }
 }
