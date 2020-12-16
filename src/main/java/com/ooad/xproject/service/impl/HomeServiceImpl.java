@@ -28,25 +28,8 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
-    public List<Project> getProjectList(Role role) {
-        List<Project> projects;
-        RoleType roleType = RoleType.getRoleType(role.getRoleType());
-        switch (roleType) {
-            case Admin:
-                projects = projectMapper.selectAll();
-                break;
-            case Teacher:
-                // temp version: user relation table
-                projects = projectMapper.selectByStdId(role.getRoleId());
-                break;
-            case Student:
-                projects = projectMapper.selectByStdId(role.getRoleId());
-                break;
-            default:
-                projects = new ArrayList<>();
-                break;
-        }
-        return projects;
+    public List<Project> getProjectList(int roleId) {
+        return projectMapper.selectByRoleId(roleId);
     }
 
 

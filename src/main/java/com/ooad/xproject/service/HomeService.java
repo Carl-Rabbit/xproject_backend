@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface HomeService {
 
-    List<Project> getProjectList(Role role);
+    List<Project> getProjectList(int roleId);
 
     List<Announcement> getAnnounceList();
 

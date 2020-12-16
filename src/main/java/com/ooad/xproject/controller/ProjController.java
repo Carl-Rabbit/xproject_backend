@@ -60,7 +60,7 @@ public class ProjController {
             return new Result<>(RespStatus.UNAUTHORIZED);
         }
 
-        List<Project> projList = homeService.getProjectList(role);
+        List<Project> projList = homeService.getProjectList(role.getRoleId());
 
         boolean hasThisProj = false;
         for (Project proj: projList) {
@@ -92,7 +92,7 @@ public class ProjController {
             return new Result<>(RespStatus.UNAUTHORIZED);
         }
 
-        List<Project> projList = homeService.getProjectList(role);
+        List<Project> projList = homeService.getProjectList(role.getRoleId());
 
         boolean hasThisProj = false;
         for (Project proj: projList) {
@@ -149,5 +149,13 @@ public class ProjController {
         stdProjDTOList.removeIf(studentProjDTO -> studentProjDTO.getProjInstId() != null);
         logger.info(String.format("getUngroupedStudents -> %s", stdProjDTOList));
         return new Result<>(stdProjDTOList);
+    }
+
+    @ResponseBody
+    @GetMapping("api/all/team/stu-proj")
+    public Result<?> getStuProj(@RequestParam(value="roleId") int roleId) {
+        List<Project> projList = homeService.getProjectList(roleId);
+        logger.info(String.format("getUngroupedStudents -> %s", projList));
+        return new Result<>(projList);
     }
 }

@@ -155,13 +155,13 @@
         <include refid="Base_Column_List"/>
         from projects
     </select>
-    <select id="selectByTchId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <select id="selectByCreatorId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from projects
         where creator_id = #{tchId,jdbcType=INTEGER}
     </select>
-    <select id="selectByStdId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <select id="selectByRoleId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select p.*
         from projects p
                  join project_role_rt prr on p.proj_id = prr.proj_id

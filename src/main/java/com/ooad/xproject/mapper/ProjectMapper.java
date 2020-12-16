@@ -20,9 +20,9 @@ public interface ProjectMapper {
 
     int updateByPrimaryKey(Project record);
 
-    List<Project> selectByTchId(Integer tchId);
+    List<Project> selectByCreatorId(Integer tchId);
 
-    List<Project> selectByStdId(Integer roleId);
+    List<Project> selectByRoleId(Integer roleId);
 
     List<Project> selectAll();
 
