@@ -178,6 +178,11 @@ public class ProjInstController {
         Role role = roleService.getByUsername(username);
 
         ProjectInst projectInst = projInstService.getPIByProjIdAndStdRoleId(projId, role.getRoleId());
+
+        if (projectInst == null) {
+            return new Result<>(RespStatus.FAIL, "No team");
+        }
+
         List<StudentDTO> studentList = projInstService.getStudentDTOByProjInstId(projectInst.getProjInstId());
         TeamVO teamVO = TeamVO.createFrom(projectInst, studentList);
 

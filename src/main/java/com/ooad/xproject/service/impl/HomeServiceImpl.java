@@ -85,8 +85,8 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
-    public boolean joinProject(int roleId, int projId) {
-        projectMapper.joinProject(roleId, projId);
-        return false;
+    public boolean joinProject(int roleId, int projId, String groupMark) {
+        int affectedRowCnt = projectMapper.joinProject(roleId, projId, groupMark);
+        return affectedRowCnt == 1;
     }
 }

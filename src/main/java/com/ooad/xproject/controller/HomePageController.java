@@ -59,7 +59,8 @@ public class HomePageController {
 
     @ResponseBody
     @GetMapping("api/project/join")
-    public Result<?> joinProject(@RequestParam("projId") int projId) {
+    public Result<?> joinProject(@RequestParam("projId") int projId,
+                                 @RequestParam(value = "groupMark", required = false, defaultValue = "Default") String groupMark) {
         logger.info("joinProject");
         Subject subject = SecurityUtils.getSubject();
         String username = subject.getPrincipal().toString();
@@ -70,7 +71,7 @@ public class HomePageController {
             return new Result<>(RespStatus.FAIL,"Join project failed: Teacher account", false);
         }
 
-        boolean success = homeService.joinProject(role.getRoleId(), projId);
+        boolean success = homeService.joinProject(role.getRoleId(), projId, groupMark);
 
         if (success) {
             return new Result<>(true);

@@ -28,7 +28,7 @@ public interface ProjectMapper {
 
     List<Project> selectBySchId(Integer schId);
 
-    void joinProject(int roleId, int projId);
+    int joinProject(int roleId, int projId, String groupMark);
 
     List<RecordUnitBO> selectRecordUnitByProjId(Integer pid);
 

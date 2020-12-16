@@ -186,7 +186,8 @@
           and role_id = #{roleId};
     </select>
     <insert id="joinProject">
-        --     insert
+        insert into project_role_rt (proj_id, role_id, group_mark)
+        values (#{projId}, #{roleId}, #{groupMark});
     </insert>
     <insert id="insertProjectRoleRT">
         insert into project_role_rt (proj_id, role_id, group_mark)
