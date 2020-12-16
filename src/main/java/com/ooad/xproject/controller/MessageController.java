@@ -1,18 +1,20 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.bo.MessageFactory;
+import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.MessageDTO;
+import com.ooad.xproject.entity.Message;
+import com.ooad.xproject.entity.ProjectInst;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.service.MessageService;
 import com.ooad.xproject.service.ProjInstService;
 import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.utils.RoleUtils;
+import com.ooad.xproject.vo.InviteParamVO;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -47,41 +49,36 @@ public class MessageController {
         return new Result<>(msgList);
     }
 
-//    @ResponseBody
-//    @PostMapping("api/teacher/project/ann/modify")
-//    public Result<?> postModifyAnnouncement(@RequestBody Announcement announcement) {
-//        boolean success = annService.updateAnn(announcement);
-//        if (success) {
-//            return new Result<>(true);
-//        } else {
-//            return new Result<>(RespStatus.FAIL, "Update failed", false);
-//        }
-//    }
-//
-//    @ResponseBody
-//    @PostMapping("api/teacher/project/ann/add")
-//    public Result<?> postAddAnnouncement(@RequestBody Announcement announcement) {
-//        String username = RoleUtils.getUsername();
-//        Role role = roleService.getByUsername(username);
-//
-//        announcement.setCreatorId(role.getRoleId());
-//
-//        boolean success = annService.addAnn(announcement);
-//        if (success) {
-//            return new Result<>(true);
-//        } else {
-//            return new Result<>(RespStatus.FAIL, "Add failed", false);
-//        }
-//    }
-//
-//    @ResponseBody
-//    @GetMapping("api/teacher/project/ann/delete")
-//    public Result<?> getDeleteAnnouncement(@RequestParam("annId") int annId) {
-//        boolean success = annService.deleteAnn(annId);
-//        if (success) {
-//            return new Result<>(true);
-//        } else {
-//            return new Result<>(RespStatus.FAIL, "Delete failed", false);
-//        }
-//    }
+    @ResponseBody
+    @PostMapping("api/student/team/invite")
+    public Result<Integer> postInviteStudents(@RequestBody InviteParamVO inviteParamVO) {
+        int[] stdRoleIdList = inviteParamVO.getStdRoleIdList();
+        int projId = inviteParamVO.getProjId();
+
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        ProjectInst projInst = projInstService.getPIByProjIdAndStdRoleId(projId, role.getRoleId());
+
+        if (projInst == null) {
+            return new Result<>(RespStatus.FAIL, "No team");
+        }
+
+        int successCnt = 0;
+        int creatorRoleId = role.getRoleId();
+
+        for (int stdRoleId: stdRoleIdList) {
+            ProjectInst projInstTmp = projInstService.getPIByProjIdAndStdRoleId(projId, stdRoleId);
+            if (projInstTmp != null) {
+                logger.info(String.format("postInviteStudents: invite fail. " +
+                        "stdRoleId=%d", stdRoleId));
+                continue;   // already has a team
+            }
+            Message msg = MessageFactory.createInviteMessage(creatorRoleId, projInst, stdRoleId);
+            messageService.createMessage(msg);
+            successCnt += 1;
+        }
+
+        return new Result<>(successCnt);
+    }
 }

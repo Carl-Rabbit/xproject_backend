@@ -6,6 +6,7 @@ import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
 import com.ooad.xproject.entity.Role;
+import com.ooad.xproject.service.MessageService;
 import com.ooad.xproject.service.ProjInstService;
 import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.utils.RoleUtils;
@@ -23,11 +24,13 @@ public class ProjInstController {
 
     private final RoleService roleService;
     private final ProjInstService projInstService;
+    private final MessageService messageService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
 
-    public ProjInstController(RoleService roleService, ProjInstService projInstService) {
+    public ProjInstController(RoleService roleService, ProjInstService projInstService, MessageService messageService) {
         this.roleService = roleService;
         this.projInstService = projInstService;
+        this.messageService = messageService;
     }
 
     @ResponseBody
