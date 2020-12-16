@@ -141,4 +141,13 @@ public class ProjController {
         res.setMatchList(null);
         return new Result<>(res);
     }
+
+    @ResponseBody
+    @GetMapping("api/student/team/ungrouped")
+    public Result<?> getUngroupedStudents(@RequestParam(value="projId") int projId) {
+        List<StudentProjDTO> stdProjDTOList = projectService.getStdProjList(projId);
+        stdProjDTOList.removeIf(studentProjDTO -> studentProjDTO.getProjInstId() != null);
+        logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
+        return new Result<>(stdProjDTOList);
+    }
 }
