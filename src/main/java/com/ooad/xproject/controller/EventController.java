@@ -1,7 +1,11 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.dto.EATaskDTO;
+import com.ooad.xproject.dto.EventInstDTO;
 import com.ooad.xproject.entity.EventArrangeTask;
 import com.ooad.xproject.entity.EventInst;
+import com.ooad.xproject.entity.ProjectInst;
+import com.ooad.xproject.entity.Teacher;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,15 +25,17 @@ public class EventController {
     private final StudentService studentService;
     private final TeacherService teacherService;
     private final HomeService homeService;
+    private final ProjInstService projInstService;
     private final EATaskService eaTaskService;
 
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
 
-    public EventController(RoleService roleService, StudentService studentService, TeacherService teacherService, HomeService homeService, EATaskService eaTaskService) {
+    public EventController(RoleService roleService, StudentService studentService, TeacherService teacherService, HomeService homeService, ProjInstService projInstService, EATaskService eaTaskService) {
         this.roleService = roleService;
         this.studentService = studentService;
         this.teacherService = teacherService;
         this.homeService = homeService;
+        this.projInstService = projInstService;
         this.eaTaskService = eaTaskService;
     }
 
@@ -37,14 +44,30 @@ public class EventController {
     @GetMapping("api/all/event")
     public Result<?> getEATaskList(@RequestParam("projId") int projId) {
         List<EventArrangeTask> eaTaskList = eaTaskService.getEATaskList(projId);
-        return new Result<>(eaTaskList);
+        List<EATaskDTO> eaTaskDTOList = new ArrayList<>();
+        for (EventArrangeTask eaTask: eaTaskList) {
+            Teacher tch = teacherService.getTeacherByRoleId(eaTask.getCreatorId());
+            eaTaskDTOList.add(EATaskDTO.builder()
+                    .eaTask(eaTask)
+                    .creator(tch)
+                    .build());
+        }
+        return new Result<>(eaTaskDTOList);
     }
 
     @ResponseBody
     @GetMapping("api/all/event/inst")
     public Result<?> getEventTaskList(@RequestParam("eaTaskId") int eaTaskId) {
         List<EventInst> eventInstList = eaTaskService.getEventInstList(eaTaskId);
-        return new Result<>(eventInstList);
+        List<EventInstDTO> eventInstDTOList = new ArrayList<>();
+        for (EventInst eventInst: eventInstList) {
+            ProjectInst projInst = projInstService.getProjectInst(eventInst.getProjInstId());
+            eventInstDTOList.add(EventInstDTO.builder()
+                    .eventInst(eventInst)
+                    .projInst(projInst)
+                    .build());
+        }
+        return new Result<>(eventInstDTOList);
     }
 
 //    @ResponseBody
