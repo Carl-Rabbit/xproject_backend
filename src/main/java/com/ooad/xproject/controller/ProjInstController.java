@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class ProjInstController {
@@ -35,8 +34,12 @@ public class ProjInstController {
     @GetMapping("api/team-info-list")
     public Result<?> getTeamInfoList(@RequestParam(value="projId") int projId) {
         List<ProjectInst> projInstList = projInstService.getProInstList(projId);
-        List<SimpleTeamVO> simpleTeamVOList = projInstList.stream()
-                .map(SimpleTeamVO::createFrom).collect(Collectors.toList());
+        List<SimpleTeamVO> simpleTeamVOList = new ArrayList<>();
+        for (ProjectInst projectInst: projInstList) {
+            List<StudentDTO> studentList = projInstService.getStudentDTOByProjInstId(projectInst.getProjInstId());
+            SimpleTeamVO simpleTeamVO = SimpleTeamVO.createFrom(projectInst, studentList.size());
+            simpleTeamVOList.add(simpleTeamVO);
+        }
         logger.info("getTeamInfoList -> " + Arrays.toString(simpleTeamVOList.toArray()));
         return new Result<>(simpleTeamVOList);
     }
