@@ -63,7 +63,7 @@ public class ProjInstController {
     }
 
     @ResponseBody
-    @GetMapping("api/team/my/detail")
+    @GetMapping("api/student/team/detail")
     public Result<?> getMyTeamDetail(@RequestParam(value="projId") int projId) {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
@@ -73,6 +73,11 @@ public class ProjInstController {
         }
 
         ProjectInst projInst = projInstService.getPIByProjIdAndStdRoleId(projId, role.getRoleId());
+
+        if (projInst == null) {
+            return new Result<>(RespStatus.FAIL, "No team");
+        }
+
         List<StudentDTO> studentList = projInstService.getStudentDTOByProjInstId(projInst.getProjInstId());
         TeamVO teamVO = TeamVO.createFrom(projInst, studentList);
 
@@ -169,24 +174,5 @@ public class ProjInstController {
         }
         int successCnt = successList.size();
         return new Result<>(successCnt);
-    }
-
-    @ResponseBody
-    @GetMapping("api/student/team/detail")
-    public Result<TeamVO> getTeamDetailByProjId(@RequestParam(value="projId") int projId) {
-        String username = RoleUtils.getUsername();
-        Role role = roleService.getByUsername(username);
-
-        ProjectInst projectInst = projInstService.getPIByProjIdAndStdRoleId(projId, role.getRoleId());
-
-        if (projectInst == null) {
-            return new Result<>(RespStatus.FAIL, "No team");
-        }
-
-        List<StudentDTO> studentList = projInstService.getStudentDTOByProjInstId(projectInst.getProjInstId());
-        TeamVO teamVO = TeamVO.createFrom(projectInst, studentList);
-
-        logger.info(String.format("getTeamDetailByProjId -> %s", teamVO));
-        return new Result<>(teamVO);
     }
 }
