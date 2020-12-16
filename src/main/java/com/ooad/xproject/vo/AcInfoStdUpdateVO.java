@@ -7,5 +7,6 @@ public class AcInfoStdUpdateVO {
     private String[] skills;
     private String[] flags;
     private String bio;
+    private String email;
 }
 

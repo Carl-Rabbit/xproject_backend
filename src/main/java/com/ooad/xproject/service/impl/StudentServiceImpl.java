@@ -75,10 +75,8 @@ public class StudentServiceImpl implements StudentService {
             newStd.setSkills(newSkillsJson);
         }
 
-        if (acInfoStdUpdateVO.getBio() != null) {
-            String newBio = acInfoStdUpdateVO.getBio();
-            newStd.setBio(newBio);
-        }
+        newStd.setBio(acInfoStdUpdateVO.getBio());
+        newStd.setEmail(acInfoStdUpdateVO.getEmail());
 
         int affectedRowCnt = studentMapper.updateByPrimaryKeySelective(newStd);
 
