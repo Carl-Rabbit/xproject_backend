@@ -1,6 +1,7 @@
 package com.ooad.xproject.controller;
 
 import com.ooad.xproject.entity.EventArrangeTask;
+import com.ooad.xproject.entity.EventInst;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
@@ -34,9 +35,16 @@ public class EventController {
 
     @ResponseBody
     @GetMapping("api/all/event")
-    public Result<?> getEventTaskList(@RequestParam("projId") int projId) {
-        List<EventArrangeTask> eaTaskList = eaTaskService.getEaTaskList(projId);
+    public Result<?> getEATaskList(@RequestParam("projId") int projId) {
+        List<EventArrangeTask> eaTaskList = eaTaskService.getEATaskList(projId);
         return new Result<>(eaTaskList);
+    }
+
+    @ResponseBody
+    @GetMapping("api/all/event/inst")
+    public Result<?> getEventTaskList(@RequestParam("eaTaskId") int eaTaskId) {
+        List<EventInst> eventInstList = eaTaskService.getEventInstList(eaTaskId);
+        return new Result<>(eventInstList);
     }
 
 //    @ResponseBody

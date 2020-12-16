@@ -1,7 +1,11 @@
 package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.EventInst;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Repository
 public interface EventInstMapper {
     int deleteByPrimaryKey(Integer eventId);
 
@@ -14,4 +18,6 @@ public interface EventInstMapper {
     int updateByPrimaryKeySelective(EventInst record);
 
     int updateByPrimaryKey(EventInst record);
+
+    List<EventInst> selectByEATaskId(int eaTaskId);
 }

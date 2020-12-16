@@ -9,6 +9,9 @@ spring:
       max-file-size: 50MB
       max-request-size: 50MB
 
+  jackson:
+    time-zone: GMT+8
+
   mail:
     host: smtp.163.com
     username: xproject309@163.com

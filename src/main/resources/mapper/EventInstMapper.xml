@@ -125,4 +125,10 @@
       proj_inst_id = #{projInstId,jdbcType=INTEGER}
     where event_id = #{eventId,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByEATaskId" resultType="com.ooad.xproject.entity.EventInst">
+    select *
+    from event_insts as ei
+    where ei.ea_task_id = #{eaTaskId};
+  </select>
 </mapper>

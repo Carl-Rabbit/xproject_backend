@@ -1,7 +1,9 @@
 package com.ooad.xproject.service.impl;
 
 import com.ooad.xproject.entity.EventArrangeTask;
+import com.ooad.xproject.entity.EventInst;
 import com.ooad.xproject.mapper.EventArrangeTaskMapper;
+import com.ooad.xproject.mapper.EventInstMapper;
 import com.ooad.xproject.service.EATaskService;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +13,20 @@ import java.util.List;
 public class EATaskServiceImpl implements EATaskService {
 
     private final EventArrangeTaskMapper eaTaskMapper;
+    private final EventInstMapper eventInstMapper;
 
-    public EATaskServiceImpl(EventArrangeTaskMapper eaTaskMapper) {
+    public EATaskServiceImpl(EventArrangeTaskMapper eaTaskMapper, EventInstMapper eventInstMapper) {
         this.eaTaskMapper = eaTaskMapper;
+        this.eventInstMapper = eventInstMapper;
     }
 
     @Override
-    public List<EventArrangeTask> getEaTaskList(int projId) {
+    public List<EventArrangeTask> getEATaskList(int projId) {
         return eaTaskMapper.selectByProjId(projId);
+    }
+
+    @Override
+    public List<EventInst> getEventInstList(int eaTaskId) {
+        return eventInstMapper.selectByEATaskId(eaTaskId);
     }
 }
