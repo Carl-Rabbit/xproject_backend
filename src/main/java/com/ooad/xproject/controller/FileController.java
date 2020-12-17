@@ -65,7 +65,7 @@ public class FileController {
     }
 
     @GetMapping("api/teacher/records/export")
-    public ResponseEntity<byte[]> getRecordUnitExportToExcel(HttpServletRequest request, @RequestParam("pid") Integer projId
+    public ResponseEntity<byte[]> getRecordUnitExportToExcel(HttpServletRequest request, @RequestParam("projId") Integer projId
             , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
 
@@ -155,19 +155,30 @@ public class FileController {
     }
 
     @PostMapping("api/student/submission/upload")
-    public String postUploadSubmission(@RequestParam("file") MultipartFile[] files, @RequestParam("sbmId") int sbmId,
-                                       @RequestParam("projInstId") int projInstId, @RequestParam("submitterId") int submitterId) {
+    public Result<?> postUploadSubmission(@RequestParam("file") MultipartFile[] files,
+                                          @RequestParam("sbmId") int sbmId,
+                                          @RequestParam("projInstId") int projInstId) {
 
+        Role role = roleService.getByUsername(RoleUtils.getUsername());
         SubmissionInst submissionInst = new SubmissionInst();
         submissionInst.setSbmId(sbmId);
         submissionInst.setProjInstId(projInstId);
-        submissionInst.setSubmitterId(submitterId);
+        submissionInst.setSubmitterId(role.getRoleId());
         File studentDir = fileService.getOrCreateStudentDir(submissionInst);
 
+        fileService.deleteFilesOfFolder(studentDir);
+        return new Result<>(fileService.upload(files, studentDir.getPath()));
+    }
 
+    @GetMapping("api/teacher/submission/download")
+    public ResponseEntity<byte[]> getAllSbmFiles(HttpServletRequest request, @RequestParam("sbmId") int sbmId
+            , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
+            , @RequestParam(required = false, defaultValue = "false") boolean inline) {
 
-        fileService.deleteFolder(studentDir);
-        return fileService.upload(files, studentDir.getPath());
+        File file = fileService.getSbmDir(sbmId);
+        String realPath = fileConfig.getOutputRoot() + "\\" + "output.zip";
+        SvResult<String> svResult = fileService.compressDir(file, realPath);
+        return fileService.download(request, realPath, userAgent, filename, inline);
     }
 
 }

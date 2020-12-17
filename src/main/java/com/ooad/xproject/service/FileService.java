@@ -1,5 +1,6 @@
 package com.ooad.xproject.service;
 
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.entity.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,7 +15,11 @@ public interface FileService {
 
     String upload(MultipartFile file, String uploadPath, String fileName);
 
-    void deleteFolder(File folderPath);
+    void deleteFilesOfFolder(File folderPath);
 
     File getOrCreateStudentDir(SubmissionInst submissionInst);
+
+    File getSbmDir(int sbmId);
+
+    SvResult<String> compressDir(File dir, String output);
 }

@@ -1,11 +1,8 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.config.FileConfig;
 import com.ooad.xproject.entity.*;
-import com.ooad.xproject.mapper.ProjectInstMapper;
-import com.ooad.xproject.mapper.ProjectMapper;
-import com.ooad.xproject.mapper.SchoolMapper;
-import com.ooad.xproject.mapper.SubmissionMapper;
 import com.ooad.xproject.service.FileService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @RunWith(SpringRunner.class)
@@ -38,7 +33,16 @@ class FileControllerTest {
 
         File file = fileService.getOrCreateStudentDir(submissionInst);
 
-        fileService.deleteFolder(file);
-        fileService.upload(files, file.getPath());
+        fileService.deleteFilesOfFolder(file);
+//        fileService.upload(files, file.getPath());
+    }
+
+    @Test
+    void getAllSbmFiles() {
+        int sbmId = 1;
+        File file = fileService.getSbmDir(sbmId);
+        String realPath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output" + "\\" + "output.zip";
+        SvResult<String> svResult = fileService.compressDir(file, realPath);
+//        return fileService.download(request, realPath, userAgent, filename, inline);
     }
 }

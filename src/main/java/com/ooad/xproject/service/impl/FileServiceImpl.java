@@ -1,5 +1,6 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.config.FileConfig;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.ProjectInstMapper;
@@ -7,6 +8,7 @@ import com.ooad.xproject.mapper.ProjectMapper;
 import com.ooad.xproject.mapper.SchoolMapper;
 import com.ooad.xproject.mapper.SubmissionMapper;
 import com.ooad.xproject.service.FileService;
+import com.ooad.xproject.utils.ZipUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -113,8 +113,15 @@ public class FileServiceImpl implements FileService {
         return dir;
     }
 
+    private String getStorePath(School school, Project project, Submission submission) {
+        String dir = "\\school-" + school.getSchId() + "-" + school.getSchName() +
+                "\\project-" + project.getProjId() + "-" + project.getProjName() +
+                "\\submission-" + submission.getSbmId() + "-" + submission.getTitle();
+        return dir;
+    }
+
     @Override
-    public void deleteFolder(File folder) {
+    public void deleteFilesOfFolder(File folder) {
         if (!folder.exists()) {
             return;
         }
@@ -122,7 +129,7 @@ public class FileServiceImpl implements FileService {
         if (files != null) {
             for (File file : files) {
                 if (file.isDirectory()) {
-                    deleteFolder(file);
+                    deleteFilesOfFolder(file);
                 } else {
                     file.delete();
                 }
@@ -141,8 +148,30 @@ public class FileServiceImpl implements FileService {
         if (!file.exists()) {
             file.mkdirs();
         }
-        System.out.println(file.getPath() + "; " +  file.exists());
+//        System.out.println(file.getPath() + "; " +  file.exists());
         return file;
+    }
+
+    @Override
+    public File getSbmDir(int sbmId) {
+        Submission submission = submissionMapper.selectByPrimaryKey(sbmId);
+        Project project = projectMapper.selectByPrimaryKey(submission.getProjId());
+        School school = schoolMapper.selectByPrimaryKey(project.getSchId());
+        String sbmDir = getStorePath(school, project, submission);
+        String filePath = fileConfig.getUploadRoot() + "\\" + sbmDir;
+        return new File(filePath);
+    }
+
+    @Override
+    public SvResult<String> compressDir(File dir, String output) {
+        try {
+            OutputStream fileOutputStream = new FileOutputStream(output);
+            ZipUtils.toZip(dir.getPath(), fileOutputStream, true);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return new SvResult<>(0, "zip failed", output);
+        }
+        return new SvResult<>(1, "zip complete", output);
     }
 
 }
