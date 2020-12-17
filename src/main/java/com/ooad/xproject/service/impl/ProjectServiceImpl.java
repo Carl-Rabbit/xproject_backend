@@ -8,7 +8,6 @@ import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.ProjectService;
-import com.ooad.xproject.vo.ProjectVO;
 import org.apache.commons.math3.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -73,15 +72,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public boolean updateProject(ProjectVO projectVO) {
-        Project proj = new Project();
-        proj.setProjId(projectVO.getProjId());
-        proj.setDescription(projectVO.getDescription());
-        proj.setProjSettings(projectVO.getProjSettings());
-        proj.setTopics(projectVO.getTopics());
-
-        int affectedRowCnt = projectMapper.updateByPrimaryKeySelective(proj);
-
+    public boolean updateProject(Project project) {
+        int affectedRowCnt = projectMapper.updateByPrimaryKeySelective(project);
         return affectedRowCnt == 1;
     }
 
@@ -115,5 +107,11 @@ public class ProjectServiceImpl implements ProjectService {
         System.out.println(res.getMessage());
 
         return new SvResult<>("", res);
+    }
+
+    @Override
+    public boolean createProject(Project project) {
+        int affectedRowCnt = projectMapper.insertSelective(project);
+        return affectedRowCnt == 1;
     }
 }

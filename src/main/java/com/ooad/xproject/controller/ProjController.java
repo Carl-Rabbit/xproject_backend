@@ -13,6 +13,7 @@ import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.service.HomeService;
 import com.ooad.xproject.service.ProjectService;
 import com.ooad.xproject.service.RoleService;
+import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.AutoFormingVO;
 import com.ooad.xproject.vo.ProjectVO;
 import com.ooad.xproject.vo.Result;
@@ -96,7 +97,7 @@ public class ProjController {
 
         boolean hasThisProj = false;
         for (Project proj: projList) {
-            if (proj.getProjId() == projectVO.getProjId()) {
+            if (proj.getProjId().equals(projectVO.getProjId())) {
                 hasThisProj = true;
                 break;
             }
@@ -104,8 +105,9 @@ public class ProjController {
         if (!hasThisProj) {
             return new Result<>(RespStatus.UNAUTHORIZED);
         }
-
-        boolean success = projectService.updateProject(projectVO);
+        Project project = new Project();
+        projectVO.copyToProjUpdate(project);
+        boolean success = projectService.updateProject(project);
 
         if (success) {
             return new Result<>(true);
@@ -159,22 +161,16 @@ public class ProjController {
         return new Result<>(projList);
     }
 
-//    @ResponseBody
-//    @PostMapping("api/teacher/project/add")
-//    public Result<?> postAddProject(@RequestBody AutoFormingVO autoFormingVO) {
-//        FormingBO formContext = new FormingBO();
-//        boolean success = formContext.setStrategy(autoFormingVO.getStrategy());
-//        if (!success) {
-//            return new Result<>(RespStatus.FAIL, "No such strategy");
-//        }
-//        formContext.setProjInstList(autoFormingVO.getProjInstList());
-//        formContext.setStdList(autoFormingVO.getStuList());
-//
-//        SvResult<FormingResultBO> result = projectService.autoForming(formContext);
-//
-////        logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
-//        FormingResultBO res = result.getData();
-//        res.setMatchList(null);
-//        return new Result<>(res);
-//    }
+    @ResponseBody
+    @PostMapping("api/teacher/project/add")
+    public Result<?> postAddProject(@RequestBody ProjectVO projectVO) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        Project proj = new Project();
+        projectVO.copyToProjCreate(proj);
+        proj.setCreatorId(role.getRoleId());
+        boolean success = projectService.createProject(proj);
+        return Result.createBoolResult(success, "Create project successfully", "Create project failed");
+    }
 }
