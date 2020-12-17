@@ -120,4 +120,13 @@ public class EATaskServiceImpl implements EATaskService {
         return new SvResult<>("", successCnt);
     }
 
+    @Override
+    public int deleteEventInsts(int[] eventInstIdList) {
+        int successCnt = 0;
+        for (int eventInstId : eventInstIdList) {
+            successCnt += eventInstMapper.deleteByPrimaryKey(eventInstId);
+        }
+        return successCnt;
+    }
+
 }

@@ -1,12 +1,14 @@
 package com.ooad.xproject.vo;
 
 import com.ooad.xproject.utils.TimeUtils;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.text.ParseException;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 public class EventInstCreationVO {
     private int eaTaskId;
     private String date;        // format yyyy-MM-dd

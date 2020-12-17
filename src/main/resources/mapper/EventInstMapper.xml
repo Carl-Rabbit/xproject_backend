@@ -24,10 +24,8 @@
     delete from event_insts
     where event_id = #{eventId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ooad.xproject.entity.EventInst" >
-    <selectKey resultType="java.lang.Integer" keyProperty="eventId" order="AFTER" >
-      Postgres
-    </selectKey>
+  <insert id="insert" parameterType="com.ooad.xproject.entity.EventInst"
+          useGeneratedKeys="true" keyProperty="eventId" keyColumn="event_id">
     insert into event_insts (date, start_time, end_time, 
       ea_task_id, week, status, 
       proj_inst_id)
@@ -35,10 +33,8 @@
       #{eaTaskId,jdbcType=INTEGER}, #{week,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
       #{projInstId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.EventInst" >
-    <selectKey resultType="java.lang.Integer" keyProperty="eventId" order="AFTER" >
-      Postgres
-    </selectKey>
+  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.EventInst"
+          useGeneratedKeys="true" keyProperty="eventId" keyColumn="event_id">
     insert into event_insts
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="date != null" >

@@ -9,6 +9,7 @@ import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.EATaskCreationVO;
 import com.ooad.xproject.vo.EventInstCreationVO;
+import com.ooad.xproject.vo.EventInstDeletionVO;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -114,7 +115,16 @@ public class EventController {
         return new Result<>(svResult.getMsg(), svResult.getData());
     }
 
+    @ResponseBody
+    @PostMapping("api/teacher/event/inst/delete")
+    public Result<?> postEventInstDeletion(@RequestBody EventInstDeletionVO eventInstDeletionVO) {
+//        String username = RoleUtils.getUsername();
+//        Role role = roleService.getByUsername(username);
 
+        int[] eventInstIdList = eventInstDeletionVO.getEventInstIdList();
+        int successCnt = eaTaskService.deleteEventInsts(eventInstIdList);
+        return new Result<>("Delete " + successCnt + " event item successfully. ", successCnt);
+    }
 
     @ResponseBody
     @PostMapping("api/student/event/inst/apply")
