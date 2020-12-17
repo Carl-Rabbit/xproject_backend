@@ -13,7 +13,6 @@ public class EATaskCreationVO {
     private String description;
     private String dueTime;     // standard time format yyyy-MM-dd HH:mm:ss
     private boolean stdAdaptable;
-    private boolean autoDistribution;
 
     public void copyToEATask(EventArrangeTask eaTask, int creatorRoleId) throws ParseException {
         eaTask.setProjId(projId);

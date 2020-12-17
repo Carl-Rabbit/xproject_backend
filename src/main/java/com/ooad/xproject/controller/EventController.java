@@ -71,10 +71,6 @@ public class EventController {
 
         boolean success = eaTaskService.createEATask(eaTask);
 
-        if (eaTaskCreationVO.isAutoDistribution()) {
-            // TODO
-        }
-
         return createBoolResult(success, "Update successfully", "Update failed");
     }
 
