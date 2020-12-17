@@ -2,21 +2,19 @@ package com.ooad.xproject.controller;
 
 import com.ooad.xproject.dto.EATaskDTO;
 import com.ooad.xproject.dto.EventInstDTO;
-import com.ooad.xproject.entity.EventArrangeTask;
-import com.ooad.xproject.entity.EventInst;
-import com.ooad.xproject.entity.ProjectInst;
-import com.ooad.xproject.entity.Teacher;
+import com.ooad.xproject.entity.*;
 import com.ooad.xproject.service.*;
+import com.ooad.xproject.utils.RoleUtils;
+import com.ooad.xproject.vo.EATaskCreationVO;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.ooad.xproject.vo.Result.createBoolResult;
 
 @RestController
 public class EventController {
@@ -53,6 +51,24 @@ public class EventController {
                     .build());
         }
         return new Result<>(eaTaskDTOList);
+    }
+
+    @ResponseBody
+    @PostMapping("api/teacher/event/create")
+    public Result<?> postEventCreation(@RequestBody EATaskCreationVO eaTaskCreationVO) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        EventArrangeTask eaTask = new EventArrangeTask();
+        eaTaskCreationVO.copyToEATask(eaTask, role.getRoleId());
+
+        boolean success = eaTaskService.createEATask(eaTask);
+
+        if (eaTaskCreationVO.isAutoDistribution()) {
+            // TODO
+        }
+
+        return createBoolResult(success, "Update successfully", "Update failed");
     }
 
     @ResponseBody

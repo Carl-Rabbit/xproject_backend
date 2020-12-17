@@ -63,6 +63,14 @@ public class Result<T> {
         this.data = data;
     }
 
+    public static Result<?> createBoolResult(boolean success, String successMsg, String failMsg) {
+        if (success) {
+            return new Result<>(successMsg, true);
+        } else {
+            return new Result<>(RespStatus.FAIL, failMsg, false);
+        }
+    }
+
     @Override
     public String toString() {
         return "Result{" +
