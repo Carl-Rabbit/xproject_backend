@@ -3,10 +3,7 @@ package com.ooad.xproject.controller;
 import com.ooad.xproject.bo.*;
 import com.ooad.xproject.config.FileConfig;
 import com.ooad.xproject.constant.RespStatus;
-import com.ooad.xproject.entity.RecordInst;
-import com.ooad.xproject.entity.Role;
-import com.ooad.xproject.entity.Student;
-import com.ooad.xproject.entity.Teacher;
+import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.ProjectMapper;
 import com.ooad.xproject.mapper.RecordInstMapper;
 import com.ooad.xproject.service.*;
@@ -17,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.List;
 
 
@@ -62,7 +60,7 @@ public class FileController {
             , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
 
-        String realPath = fileConfig.getDownloadRoot() + path;
+        String realPath = fileConfig.getDownloadRoot() + "\\" + path;
         return fileService.download(request, realPath, userAgent, filename, inline);
     }
 
@@ -149,12 +147,27 @@ public class FileController {
                     projectMapper.updateProjectRoleRT(prrIdList.get(0), studentClassBO.getClsMark());
                 }
             }
-
         }
         boolean check = (successCnt == 0);
         RespStatus status = (check) ? RespStatus.FAIL : RespStatus.SUCCESS;
         String msg = (check) ? "Upsert student to project fail" : "Upsert student to project done";
         return new Result<>(status, msg, successCnt);
+    }
+
+    @PostMapping("api/student/submission/upload")
+    public String postUploadSubmission(@RequestParam("file") MultipartFile[] files, @RequestParam("sbmId") int sbmId,
+                                       @RequestParam("projInstId") int projInstId, @RequestParam("submitterId") int submitterId) {
+
+        SubmissionInst submissionInst = new SubmissionInst();
+        submissionInst.setSbmId(sbmId);
+        submissionInst.setProjInstId(projInstId);
+        submissionInst.setSubmitterId(submitterId);
+        File studentDir = fileService.getOrCreateStudentDir(submissionInst);
+
+
+
+        fileService.deleteFolder(studentDir);
+        return fileService.upload(files, studentDir.getPath());
     }
 
 }

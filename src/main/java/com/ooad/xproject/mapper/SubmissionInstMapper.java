@@ -20,4 +20,12 @@ public interface SubmissionInstMapper {
     int updateByPrimaryKey(SubmissionInst record);
 
     List<SubmissionInst> selectBySbmId(Integer sbmId);
+
+    SubmissionInst selectBySbmIdAndProjInstId(Integer sbmId, Integer projInstId);
+
+    List<SubmissionInst> selectBySbmIdAndProjId(Integer sbmId, Integer projId);
+
+    int insertSubmissionInst(SubmissionInst record);
+
+    int updateSubmissionInst(SubmissionInst record);
 }

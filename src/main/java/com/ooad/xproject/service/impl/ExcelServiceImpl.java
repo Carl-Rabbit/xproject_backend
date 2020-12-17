@@ -219,7 +219,7 @@ public class ExcelServiceImpl implements ExcelService {
     @Override
     public SvResult<String> exportRecordUnitByProjId(Integer projId) {
         FileConfig fileConfig = new FileConfig();
-        String filePath = fileConfig.getOutputRoot() + "output.xlsx";
+        String filePath = fileConfig.getOutputRoot() + "\\" + "output.xlsx";
         List<RecordUnitBO> recordUnitList = projectService.getRecordUnitList(projId);
         return generate(recordUnitList, filePath);
     }

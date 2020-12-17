@@ -50,7 +50,7 @@ class ExcelServiceImplTest {
     @Test
     void outputRecordUnitList() {
         FileConfig fileConfig = new FileConfig();
-        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output.xlsx";
+        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output\\output.xlsx";
         List<RecordUnitBO> recordUnitList = projectService.getRecordUnitList(1);
 
         excelService.generate(recordUnitList, filePath);
@@ -60,7 +60,7 @@ class ExcelServiceImplTest {
     void generateStudentImportBO() {
 
         FileConfig fileConfig = new FileConfig();
-        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output.xlsx";
+        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output\\output.xlsx";
         int clsFrom = 70, clsTo = 71; // 10 ~ 99
         int stdFrom = 10, stdTo = 11; // 10 ~ 99
 
@@ -97,7 +97,7 @@ class ExcelServiceImplTest {
     @Test
     void importExcel() {
         ExcelServiceImpl excelService = new ExcelServiceImpl(projectService);
-        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output.xlsx";
+        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output\\output.xlsx";
         List<StudentImportBO> studentImportBOList = excelService.readStudentImportBO(filePath);
         System.out.println(studentImportBOList.toString());
     }
@@ -106,7 +106,7 @@ class ExcelServiceImplTest {
     @Test
     void postStudentAcCreationFromExcel() {
 
-        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output.xlsx";
+        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output\\output.xlsx";
         System.out.println(filePath);
         List<StudentImportBO> studentImportBOList = excelService.readStudentImportBO(filePath);
 
