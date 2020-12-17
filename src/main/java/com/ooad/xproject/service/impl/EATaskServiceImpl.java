@@ -1,13 +1,19 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.bo.EventIntervalAlgo;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.entity.EventArrangeTask;
 import com.ooad.xproject.entity.EventInst;
 import com.ooad.xproject.mapper.EventArrangeTaskMapper;
 import com.ooad.xproject.mapper.EventInstMapper;
 import com.ooad.xproject.service.EATaskService;
+import com.ooad.xproject.utils.TimeUtils;
+import com.ooad.xproject.vo.EventInstCreationVO;
+import org.apache.commons.math3.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -78,6 +84,40 @@ public class EATaskServiceImpl implements EATaskService {
         boolean success = eventInstMapper.updateByPrimaryKeySelective(eventInst) == 1;
 
         return new SvResult<>("Clear finished", success);
+    }
+
+    @Override
+    public SvResult<Integer> createEventInsts(EventInstCreationVO eicVO) {
+        Date date;
+        String week;
+        try {
+            date = eicVO.getDate();
+            week = TimeUtils.getWeek(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new SvResult<>("Fail to parse date", 0);
+        }
+
+        List<Pair<Date, Date>> timeList;
+        try {
+            timeList = EventIntervalAlgo.generateTimeIntervals(eicVO);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new SvResult<>("Fail to generate time intervals", 0);
+        }
+
+        int successCnt = 0;
+        for (Pair<Date, Date> pair: timeList) {
+            EventInst ei = new EventInst();
+            ei.setEaTaskId(eicVO.getEaTaskId());
+            ei.setDate(date);
+            ei.setStartTime(pair.getFirst());
+            ei.setEndTime(pair.getSecond());
+            ei.setWeek(week);
+            successCnt += eventInstMapper.insertSelective(ei);
+        }
+
+        return new SvResult<>("", successCnt);
     }
 
 }

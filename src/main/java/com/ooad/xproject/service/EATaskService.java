@@ -3,6 +3,7 @@ package com.ooad.xproject.service;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.entity.EventArrangeTask;
 import com.ooad.xproject.entity.EventInst;
+import com.ooad.xproject.vo.EventInstCreationVO;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface EATaskService {
     SvResult<Boolean> applyEventInst(int eventInstId, Integer projInstId);
 
     SvResult<Boolean> clearEventInstStd(int eventInstId, Integer projInstId);
+
+    SvResult<Integer> createEventInsts(EventInstCreationVO eventInstCreationVO);
 }

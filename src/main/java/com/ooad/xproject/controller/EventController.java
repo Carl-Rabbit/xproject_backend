@@ -8,6 +8,7 @@ import com.ooad.xproject.entity.*;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.EATaskCreationVO;
+import com.ooad.xproject.vo.EventInstCreationVO;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -86,6 +87,8 @@ public class EventController {
         return createBoolResult(success, "Delete successfully", "Delete failed");
     }
 
+    /* EVENT INST */
+
     @ResponseBody
     @GetMapping("api/all/event/inst")
     public Result<?> getEventTaskList(@RequestParam("eaTaskId") int eaTaskId) {
@@ -100,6 +103,18 @@ public class EventController {
         }
         return new Result<>(eventInstDTOList);
     }
+
+    @ResponseBody
+    @PostMapping("api/teacher/event/inst/create")
+    public Result<?> postEventInstCreation(@RequestBody EventInstCreationVO eventInstCreationVO) {
+//        String username = RoleUtils.getUsername();
+//        Role role = roleService.getByUsername(username);
+
+        SvResult<Integer> svResult = eaTaskService.createEventInsts(eventInstCreationVO);
+        return new Result<>(svResult.getMsg(), svResult.getData());
+    }
+
+
 
     @ResponseBody
     @PostMapping("api/student/event/inst/apply")
