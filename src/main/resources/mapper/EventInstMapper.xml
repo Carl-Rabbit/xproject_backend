@@ -131,4 +131,9 @@
     from event_insts as ei
     where ei.ea_task_id = #{eaTaskId};
   </select>
+    <select id="countApplyNum" resultType="java.lang.Integer">
+      select count(*)
+      from event_insts as ei
+      where ei.proj_inst_id = #{projInstId}
+    </select>
 </mapper>

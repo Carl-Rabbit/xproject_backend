@@ -20,4 +20,6 @@ public interface EventInstMapper {
     int updateByPrimaryKey(EventInst record);
 
     List<EventInst> selectByEATaskId(int eaTaskId);
+
+    int countApplyNum(int projInstId);
 }

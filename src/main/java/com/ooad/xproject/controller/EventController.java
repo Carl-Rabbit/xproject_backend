@@ -1,5 +1,6 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.EATaskDTO;
 import com.ooad.xproject.dto.EventInstDTO;
@@ -99,6 +100,41 @@ public class EventController {
         }
         return new Result<>(eventInstDTOList);
     }
+
+    @ResponseBody
+    @PostMapping("api/student/event/inst/apply")
+    public Result<?> postEventInstApply(@RequestParam("projId") int projId,
+                                        @RequestParam("eventInstId") int eventInstId) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        ProjectInst projInst = projInstService.getPIByProjIdAndStdRoleId(projId, role.getRoleId());
+        if (projInst == null) {
+            return new Result<>(RespStatus.FAIL, "No Team yet");
+        }
+
+        SvResult<Boolean> svResult = eaTaskService.applyEventInst(eventInstId, projInst.getProjInstId());
+
+        return createBoolResult(svResult.getData(), "Apply successfully", svResult.getMsg());
+    }
+
+    @ResponseBody
+    @PostMapping("api/student/event/inst/clear")
+    public Result<?> postEventInstClearStd(@RequestParam("projId") int projId,
+                                           @RequestParam("eventInstId") int eventInstId) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        ProjectInst projInst = projInstService.getPIByProjIdAndStdRoleId(projId, role.getRoleId());
+        if (projInst == null) {
+            return new Result<>(RespStatus.FAIL, "No Team yet");
+        }
+
+        SvResult<Boolean> svResult = eaTaskService.clearEventInstStd(eventInstId, projInst.getProjInstId());
+
+        return createBoolResult(svResult.getData(), "Clear successfully", svResult.getMsg());
+    }
+
 
 //    @ResponseBody
 //    @PostMapping("api/teacher/project/ann/modify")
