@@ -10,5 +10,7 @@ public interface EATaskService {
 
     boolean createEATask(EventArrangeTask eaTask);
 
+    boolean deleteEATask(int eaTaskId);
+
     List<EventInst> getEventInstList(int eaTaskId);
 }

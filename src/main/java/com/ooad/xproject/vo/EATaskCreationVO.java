@@ -11,7 +11,7 @@ public class EATaskCreationVO {
     private int projId;
     private String title;
     private String description;
-    private String dueTime;     // standard time format
+    private String dueTime;     // standard time format yyyy-MM-dd HH:mm:ss
     private boolean stdAdaptable;
     private boolean autoDistribution;
 

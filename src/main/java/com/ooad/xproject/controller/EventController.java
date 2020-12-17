@@ -79,6 +79,13 @@ public class EventController {
     }
 
     @ResponseBody
+    @GetMapping("api/teacher/event/del")
+    public Result<?> postEventDeletion(@RequestParam("eaTaskId") int eaTaskId) {
+        boolean success = eaTaskService.deleteEATask(eaTaskId);
+        return createBoolResult(success, "Delete successfully", "Delete failed");
+    }
+
+    @ResponseBody
     @GetMapping("api/all/event/inst")
     public Result<?> getEventTaskList(@RequestParam("eaTaskId") int eaTaskId) {
         List<EventInst> eventInstList = eaTaskService.getEventInstList(eaTaskId);

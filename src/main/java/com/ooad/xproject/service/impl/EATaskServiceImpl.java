@@ -31,6 +31,11 @@ public class EATaskServiceImpl implements EATaskService {
     }
 
     @Override
+    public boolean deleteEATask(int eaTaskId) {
+        return eaTaskMapper.deleteByPrimaryKey(eaTaskId) == 1;
+    }
+
+    @Override
     public List<EventInst> getEventInstList(int eaTaskId) {
         return eventInstMapper.selectByEATaskId(eaTaskId);
     }
