@@ -9,7 +9,7 @@ import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.EATaskCreationVO;
 import com.ooad.xproject.vo.EventInstCreationVO;
-import com.ooad.xproject.vo.EventInstDeletionVO;
+import com.ooad.xproject.vo.EventInstListParamVO;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -82,7 +82,7 @@ public class EventController {
     }
 
     @ResponseBody
-    @GetMapping("api/teacher/event/del")
+    @PostMapping("api/teacher/event/del")
     public Result<?> postEventDeletion(@RequestParam("eaTaskId") int eaTaskId) {
         boolean success = eaTaskService.deleteEATask(eaTaskId);
         return createBoolResult(success, "Delete successfully", "Delete failed");
@@ -117,13 +117,15 @@ public class EventController {
 
     @ResponseBody
     @PostMapping("api/teacher/event/inst/delete")
-    public Result<?> postEventInstDeletion(@RequestBody EventInstDeletionVO eventInstDeletionVO) {
+    public Result<?> postEventInstDeletion(@RequestBody EventInstListParamVO eilParamVO) {
 //        String username = RoleUtils.getUsername();
 //        Role role = roleService.getByUsername(username);
 
-        int[] eventInstIdList = eventInstDeletionVO.getEventInstIdList();
+        int[] eventInstIdList = eilParamVO.getEventInstIdList();
         int successCnt = eaTaskService.deleteEventInsts(eventInstIdList);
-        return new Result<>("Delete " + successCnt + " event item successfully. ", successCnt);
+        String message = "Delete " + successCnt + " event item successfully. Total "
+                + eilParamVO.getEventInstIdList().length;
+        return new Result<>(message, successCnt);
     }
 
     @ResponseBody
@@ -158,6 +160,23 @@ public class EventController {
         SvResult<Boolean> svResult = eaTaskService.clearEventInstStd(eventInstId, projInst.getProjInstId());
 
         return createBoolResult(svResult.getData(), "Clear successfully", svResult.getMsg());
+    }
+
+    @ResponseBody
+    @PostMapping("api/teacher/event/inst/clear")
+    public Result<?> postEventInstClearTch(@RequestBody EventInstListParamVO eilParamVO) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        // check teacher access here
+
+        // not implemented yet
+
+        int successCnt = eaTaskService.clearEventInstTch(eilParamVO.getEventInstIdList());
+
+        String message = "Clear " + successCnt + " event item successfully. Total "
+                + eilParamVO.getEventInstIdList().length;
+        return new Result<>(message, successCnt);
     }
 
 

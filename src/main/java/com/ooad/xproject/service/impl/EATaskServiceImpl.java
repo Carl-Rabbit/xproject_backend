@@ -87,6 +87,23 @@ public class EATaskServiceImpl implements EATaskService {
     }
 
     @Override
+    public int clearEventInstTch(int[] eventInstIdList) {
+        int successCnt = 0;
+        for (int eventInstId: eventInstIdList) {
+            EventInst eventInst = eventInstMapper.selectByPrimaryKey(eventInstId);
+            if (eventInst.getProjInstId() == null) {
+                continue;
+            }
+            int affectedRowCnt = eventInstMapper.insertSelective(eventInst);
+            successCnt += affectedRowCnt;
+            if (affectedRowCnt != 0) {
+                // TODO notice all members
+            }
+        }
+        return successCnt;
+    }
+
+    @Override
     public SvResult<Integer> createEventInsts(EventInstCreationVO eicVO) {
         Date date;
         String week;

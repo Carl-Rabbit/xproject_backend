@@ -20,6 +20,8 @@ public interface EATaskService {
 
     SvResult<Boolean> clearEventInstStd(int eventInstId, Integer projInstId);
 
+    int clearEventInstTch(int[] eventInstIdList);
+
     SvResult<Integer> createEventInsts(EventInstCreationVO eventInstCreationVO);
 
     int deleteEventInsts(int[] eventInstIdList);
