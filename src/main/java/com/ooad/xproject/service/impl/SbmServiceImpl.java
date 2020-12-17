@@ -23,4 +23,10 @@ public class SbmServiceImpl implements SbmService {
     public List<Submission> getSbmListByProjId(Integer projId) {
         return submissionMapper.selectByProjId(projId);
     }
+
+    @Override
+    public boolean createSubmission(Submission sbm) {
+        int affectedRowCnt = submissionMapper.insertSelective(sbm);
+        return affectedRowCnt == 1;
+    }
 }

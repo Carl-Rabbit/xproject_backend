@@ -8,4 +8,5 @@ public interface SbmService {
 
     List<Submission> getSbmListByProjId(Integer projId);
 
+    boolean createSubmission(Submission sbm);
 }

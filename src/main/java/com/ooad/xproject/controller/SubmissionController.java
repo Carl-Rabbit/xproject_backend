@@ -1,20 +1,24 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.SbmDTO;
+import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.Submission;
 import com.ooad.xproject.entity.Teacher;
 import com.ooad.xproject.service.*;
+import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.Result;
+import com.ooad.xproject.vo.SbmCreationVO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.ooad.xproject.vo.Result.createBoolResult;
 
 @RestController
 public class SubmissionController {
@@ -48,6 +52,24 @@ public class SubmissionController {
         }
         logger.info("getSbmListByProjId -> " + Arrays.toString(sbmDTOList.toArray()));
         return new Result<>(sbmDTOList);
+    }
+
+    @ResponseBody
+    @PostMapping("api/teacher/project/sub/add")
+    public Result<?> postAddSubmission(@RequestBody SbmCreationVO sbmCreationVO) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        Submission sbm = new Submission();
+        try {
+            sbmCreationVO.copyToSubmission(sbm, role.getRoleId());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new Result<>(RespStatus.FAIL, "Format is not correct");
+        }
+        logger.info("postAddSubmission -> " + sbm);
+        boolean success = sbmService.createSubmission(sbm);
+        return createBoolResult(success, "Create submission successfully", "Fail to create");
     }
 
 }
