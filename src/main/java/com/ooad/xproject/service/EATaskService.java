@@ -4,6 +4,7 @@ import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.entity.EventArrangeTask;
 import com.ooad.xproject.entity.EventInst;
 import com.ooad.xproject.vo.EventInstCreationVO;
+import com.ooad.xproject.vo.EventInstManageParamVO;
 
 import java.util.List;
 
@@ -25,4 +26,6 @@ public interface EATaskService {
     SvResult<Integer> createEventInsts(EventInstCreationVO eventInstCreationVO);
 
     int deleteEventInsts(int[] eventInstIdList);
+
+    int manageEventInsts(EventInstManageParamVO eimParamVO);
 }

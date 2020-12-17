@@ -7,10 +7,7 @@ import com.ooad.xproject.dto.EventInstDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
-import com.ooad.xproject.vo.EATaskCreationVO;
-import com.ooad.xproject.vo.EventInstCreationVO;
-import com.ooad.xproject.vo.EventInstListParamVO;
-import com.ooad.xproject.vo.Result;
+import com.ooad.xproject.vo.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
@@ -176,6 +173,16 @@ public class EventController {
 
         String message = "Clear " + successCnt + " event item successfully. Total "
                 + eilParamVO.getEventInstIdList().length;
+        return new Result<>(message, successCnt);
+    }
+
+    @ResponseBody
+    @PostMapping("api/teacher/event/inst/manage")
+    public Result<?> postAutoForming(@RequestBody EventInstManageParamVO eimParamVO) {
+//        logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
+        int successCnt = eaTaskService.manageEventInsts(eimParamVO);
+        String message = "Manage " + successCnt + " event item successfully. Total "
+                + eimParamVO.getEventInstIdList().length;
         return new Result<>(message, successCnt);
     }
 

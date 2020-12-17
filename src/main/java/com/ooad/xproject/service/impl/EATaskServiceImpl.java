@@ -9,6 +9,7 @@ import com.ooad.xproject.mapper.EventInstMapper;
 import com.ooad.xproject.service.EATaskService;
 import com.ooad.xproject.utils.TimeUtils;
 import com.ooad.xproject.vo.EventInstCreationVO;
+import com.ooad.xproject.vo.EventInstManageParamVO;
 import org.apache.commons.math3.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -142,6 +143,25 @@ public class EATaskServiceImpl implements EATaskService {
         int successCnt = 0;
         for (int eventInstId : eventInstIdList) {
             successCnt += eventInstMapper.deleteByPrimaryKey(eventInstId);
+        }
+        return successCnt;
+    }
+
+    @Override
+    public int manageEventInsts(EventInstManageParamVO eimParamVO) {
+        int[] eventInstIdList = eimParamVO.getEventInstIdList();
+        int[] projInstIdList = eimParamVO.getProjInstIdList();
+
+        int successCnt = 0;
+        for (int i = 0; i < eventInstIdList.length; i++) {
+            int eventInstId = eventInstIdList[i];
+            int projInstId = projInstIdList[i];
+            SvResult<Boolean> svResult = applyEventInst(eventInstId, projInstId);
+            if (svResult.getData()) {
+                successCnt += 1;
+            } else {
+                System.out.println(svResult.getMsg());
+            }
         }
         return successCnt;
     }
