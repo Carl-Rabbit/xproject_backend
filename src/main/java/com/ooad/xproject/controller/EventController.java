@@ -1,5 +1,6 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.EATaskDTO;
 import com.ooad.xproject.dto.EventInstDTO;
 import com.ooad.xproject.entity.*;
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +62,12 @@ public class EventController {
         Role role = roleService.getByUsername(username);
 
         EventArrangeTask eaTask = new EventArrangeTask();
-        eaTaskCreationVO.copyToEATask(eaTask, role.getRoleId());
+        try {
+            eaTaskCreationVO.copyToEATask(eaTask, role.getRoleId());
+        } catch (ParseException e) {
+            logger.info("postEventCreation fail: date format incorrect");
+            return new Result<>(RespStatus.FAIL, "Date format must be yyyy-MM-dd HH:mm:ss");
+        }
 
         boolean success = eaTaskService.createEATask(eaTask);
 
