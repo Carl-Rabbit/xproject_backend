@@ -34,7 +34,7 @@ public class GradeController {
 
 
     @ResponseBody
-    @GetMapping("api/grade-list")
+    @GetMapping("api/student/grade/list")
     public Result<?> getGradeList(@RequestParam(value="projId") int projId) {
         Subject subject = SecurityUtils.getSubject();
         String username = subject.getPrincipal().toString();

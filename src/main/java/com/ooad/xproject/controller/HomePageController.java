@@ -39,14 +39,14 @@ public class HomePageController {
     }
 
     @ResponseBody
-    @GetMapping("api/home-page-info")
+    @GetMapping("api/all/home-page/info")
     public Result<?> getHomePageInfo() {
         logger.info("getHomePageInfo");
         return new Result<>(RespStatus.NOT_IMPLEMENTED, "Use account-info instead");
     }
 
     @ResponseBody
-    @GetMapping("api/project-list")
+    @GetMapping("api/all/project/list")
     public Result<?> getProjectList() {
         logger.info("getProjectList");
         Subject subject = SecurityUtils.getSubject();
@@ -58,7 +58,7 @@ public class HomePageController {
     }
 
     @ResponseBody
-    @GetMapping("api/project/join")
+    @GetMapping("api/student/project/join")
     public Result<?> joinProject(@RequestParam("projId") int projId,
                                  @RequestParam(value = "groupMark", required = false, defaultValue = "Default") String groupMark) {
         logger.info("joinProject");
@@ -81,7 +81,7 @@ public class HomePageController {
     }
 
     @ResponseBody
-    @GetMapping("api/project-list/school")
+    @GetMapping("api/all/project/by-sch")
     public Result<?> getProjectListBySch() {
         logger.info("getProjectList");
         Subject subject = SecurityUtils.getSubject();

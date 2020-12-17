@@ -29,7 +29,7 @@ public class RoleController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "api/login", method = RequestMethod.POST)
+    @RequestMapping(value = "api/visitor/login", method = RequestMethod.POST)
     public Result<?> login(@RequestBody RoleVO requestRoleVO, HttpSession session) {
         String username = requestRoleVO.getUsername();
         username = HtmlUtils.htmlEscape(username);
@@ -62,7 +62,7 @@ public class RoleController {
     }
 
     @ResponseBody
-    @PostMapping("api/register")
+    @PostMapping("api/visitor/register")
     public Result<?> register(@RequestBody RoleVO requestRoleVO) {
         String type = requestRoleVO.getType();
         String username = requestRoleVO.getUsername();

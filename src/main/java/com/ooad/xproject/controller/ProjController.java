@@ -14,7 +14,7 @@ import com.ooad.xproject.service.HomeService;
 import com.ooad.xproject.service.ProjectService;
 import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.vo.AutoFormingVO;
-import com.ooad.xproject.vo.ProjectUpdateVO;
+import com.ooad.xproject.vo.ProjectVO;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +39,7 @@ public class ProjController {
     }
 
     @ResponseBody
-    @GetMapping("api/proj-topic")
+    @GetMapping("api/all/project/topic")
     public Result<?> getProjTopics(@RequestParam(value="projId") int projId) {
         Project project = projectService.getProject(projId);
         List<TopicBO> topicList = JSON.parseArray(project.getTopics(), TopicBO.class);
@@ -47,7 +47,7 @@ public class ProjController {
     }
 
     @ResponseBody
-    @GetMapping("api/project/overview")
+    @GetMapping("api/all/project/overview")
     public Result<Project> getProject(@RequestParam("projId") int projId) {
         logger.info("getProject");
 
@@ -80,7 +80,7 @@ public class ProjController {
 
     @ResponseBody
     @PostMapping("api/teacher/update-overview")
-    public Result<Boolean> updateProject(@RequestBody ProjectUpdateVO projectUpdateVO) {
+    public Result<Boolean> updateProject(@RequestBody ProjectVO projectVO) {
         logger.info("updateProject");
 
         Subject subject = SecurityUtils.getSubject();
@@ -96,7 +96,7 @@ public class ProjController {
 
         boolean hasThisProj = false;
         for (Project proj: projList) {
-            if (proj.getProjId() == projectUpdateVO.getProjId()) {
+            if (proj.getProjId() == projectVO.getProjId()) {
                 hasThisProj = true;
                 break;
             }
@@ -105,7 +105,7 @@ public class ProjController {
             return new Result<>(RespStatus.UNAUTHORIZED);
         }
 
-        boolean success = projectService.updateProject(projectUpdateVO);
+        boolean success = projectService.updateProject(projectVO);
 
         if (success) {
             return new Result<>(true);
@@ -124,7 +124,7 @@ public class ProjController {
     }
 
     @ResponseBody
-    @PostMapping("api/team/teacher/auto-forming")
+    @PostMapping("api/teacher/team/auto-forming")
     public Result<?> postAutoForming(@RequestBody AutoFormingVO autoFormingVO) {
         FormingBO formContext = new FormingBO();
         boolean success = formContext.setStrategy(autoFormingVO.getStrategy());
@@ -158,4 +158,23 @@ public class ProjController {
         logger.info(String.format("getUngroupedStudents -> %s", projList));
         return new Result<>(projList);
     }
+
+//    @ResponseBody
+//    @PostMapping("api/teacher/project/add")
+//    public Result<?> postAddProject(@RequestBody AutoFormingVO autoFormingVO) {
+//        FormingBO formContext = new FormingBO();
+//        boolean success = formContext.setStrategy(autoFormingVO.getStrategy());
+//        if (!success) {
+//            return new Result<>(RespStatus.FAIL, "No such strategy");
+//        }
+//        formContext.setProjInstList(autoFormingVO.getProjInstList());
+//        formContext.setStdList(autoFormingVO.getStuList());
+//
+//        SvResult<FormingResultBO> result = projectService.autoForming(formContext);
+//
+////        logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
+//        FormingResultBO res = result.getData();
+//        res.setMatchList(null);
+//        return new Result<>(res);
+//    }
 }

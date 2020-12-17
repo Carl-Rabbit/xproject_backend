@@ -36,7 +36,7 @@ public class AccountController {
     }
 
     @ResponseBody
-    @GetMapping("api/account-info")
+    @GetMapping("api/all/account/info")
     public Result<?> getAccountInfo() {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
@@ -55,7 +55,7 @@ public class AccountController {
     }
 
     @ResponseBody
-    @GetMapping("api/team/stu-info")
+    @GetMapping("api/all/team/stu-info")
     public Result<?> getStuInfo(@RequestParam("roleId") int roleId) {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
@@ -93,7 +93,7 @@ public class AccountController {
     }
 
     @ResponseBody
-    @PostMapping("api/self-intro")
+    @PostMapping("api/student/self-intro")
     public Result<?> updateAccountInfo(@RequestBody AcInfoStdUpdateVO acInfoStdUpdateVO) {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);

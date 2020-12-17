@@ -8,7 +8,7 @@ import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.ProjectService;
-import com.ooad.xproject.vo.ProjectUpdateVO;
+import com.ooad.xproject.vo.ProjectVO;
 import org.apache.commons.math3.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -73,12 +73,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public boolean updateProject(ProjectUpdateVO projectUpdateVO) {
+    public boolean updateProject(ProjectVO projectVO) {
         Project proj = new Project();
-        proj.setProjId(projectUpdateVO.getProjId());
-        proj.setDescription(projectUpdateVO.getDescription());
-        proj.setProjSettings(projectUpdateVO.getProjSettings());
-        proj.setTopics(projectUpdateVO.getTopics());
+        proj.setProjId(projectVO.getProjId());
+        proj.setDescription(projectVO.getDescription());
+        proj.setProjSettings(projectVO.getProjSettings());
+        proj.setTopics(projectVO.getTopics());
 
         int affectedRowCnt = projectMapper.updateByPrimaryKeySelective(proj);
 

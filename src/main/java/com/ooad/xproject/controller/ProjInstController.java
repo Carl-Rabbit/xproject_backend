@@ -34,7 +34,7 @@ public class ProjInstController {
     }
 
     @ResponseBody
-    @GetMapping("api/team-info-list")
+    @GetMapping("api/all/team/list")
     public Result<?> getTeamInfoList(@RequestParam(value="projId") int projId) {
         List<ProjectInst> projInstList = projInstService.getProInstList(projId);
         List<SimpleTeamVO> simpleTeamVOList = new ArrayList<>();
@@ -48,7 +48,7 @@ public class ProjInstController {
     }
 
     @ResponseBody
-    @GetMapping("api/team-detail")
+    @GetMapping("api/all/team/info/detail")
     public Result<?> getTeamDetail(@RequestParam(value="teamId") int projInstId) {
         ProjectInst projectInst = projInstService.getProjectInst(projInstId);
         List<StudentDTO> studentList = projInstService.getStudentDTOByProjInstId(projInstId);
@@ -89,13 +89,13 @@ public class ProjInstController {
     }
 
     @ResponseBody
-    @PostMapping("api/team-apply")
+    @PostMapping("api/student/team/apply")
     public Result<?> postTeamApply(@RequestParam(value="teamId") int projInstId) {
         return new Result<>(RespStatus.SUCCESS, "Just a fake interface");
     }
 
     @ResponseBody
-    @PostMapping("api/team-creation")
+    @PostMapping("api/all/team/creation")
     public Result<Integer> postTeamCreation(@RequestBody ProjInstCreationVO projInstCreationVO) {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
@@ -141,7 +141,7 @@ public class ProjInstController {
     }
 
     @ResponseBody
-    @PostMapping("api/team-deletion")
+    @PostMapping("api/teacher/team/deletion")
     public Result<Integer> postTeamDeletion(@RequestBody ProjInstIdListVO projInstIdListVO) {
         List<Integer> successList = new ArrayList<>();
         for (int projInstId : projInstIdListVO.getProjInstIdList()) {
@@ -162,7 +162,7 @@ public class ProjInstController {
     }
 
     @ResponseBody
-    @PostMapping("api/team-confirm")
+    @PostMapping("api/all/team/confirm")
     public Result<Integer> postTeamConfirm(@RequestParam(value="teamIdList") int[] projInstIdList) {
         List<Integer> successList = new ArrayList<>();
         for (int projInstId : projInstIdList) {

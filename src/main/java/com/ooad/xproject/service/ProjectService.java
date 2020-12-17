@@ -6,7 +6,7 @@ import com.ooad.xproject.bo.forming.FormingBO;
 import com.ooad.xproject.bo.forming.FormingResultBO;
 import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.*;
-import com.ooad.xproject.vo.ProjectUpdateVO;
+import com.ooad.xproject.vo.ProjectVO;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public interface ProjectService {
     // select by project id, return the Team form task of project
     TeamFormTask getTeamFormTask(Integer pid);
 
-    boolean updateProject(ProjectUpdateVO projectUpdateVO);
+    boolean updateProject(ProjectVO projectVO);
 
     List<RecordUnitBO> getRecordUnitList(Integer pid);
 
