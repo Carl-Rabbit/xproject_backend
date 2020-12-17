@@ -9,4 +9,8 @@ public interface SbmService {
     List<Submission> getSbmListByProjId(Integer projId);
 
     boolean createSubmission(Submission sbm);
+
+    boolean deleteSubmission(int sbmId);
+
+    boolean modifySubmission(Submission sbm);
 }

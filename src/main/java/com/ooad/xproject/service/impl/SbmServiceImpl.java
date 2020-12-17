@@ -26,7 +26,20 @@ public class SbmServiceImpl implements SbmService {
 
     @Override
     public boolean createSubmission(Submission sbm) {
+        sbm.setSbmId(null);
         int affectedRowCnt = submissionMapper.insertSelective(sbm);
+        return affectedRowCnt == 1;
+    }
+
+    @Override
+    public boolean deleteSubmission(int sbmId) {
+        int affectedRowCnt = submissionMapper.deleteByPrimaryKey(sbmId);
+        return affectedRowCnt == 1;
+    }
+
+    @Override
+    public boolean modifySubmission(Submission sbm) {
+        int affectedRowCnt = submissionMapper.updateByPrimaryKeySelective(sbm);
         return affectedRowCnt == 1;
     }
 }

@@ -8,7 +8,7 @@ import com.ooad.xproject.entity.Teacher;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.Result;
-import com.ooad.xproject.vo.SbmCreationVO;
+import com.ooad.xproject.vo.SubmissionVO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
@@ -56,13 +56,13 @@ public class SubmissionController {
 
     @ResponseBody
     @PostMapping("api/teacher/project/sub/add")
-    public Result<?> postAddSubmission(@RequestBody SbmCreationVO sbmCreationVO) {
+    public Result<?> postAddSubmission(@RequestBody SubmissionVO submissionVO) {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
         Submission sbm = new Submission();
         try {
-            sbmCreationVO.copyToSubmission(sbm, role.getRoleId());
+            submissionVO.copyToSubmission(sbm, role.getRoleId());
         } catch (ParseException e) {
             e.printStackTrace();
             return new Result<>(RespStatus.FAIL, "Format is not correct");
@@ -70,6 +70,31 @@ public class SubmissionController {
         logger.info("postAddSubmission -> " + sbm);
         boolean success = sbmService.createSubmission(sbm);
         return createBoolResult(success, "Create submission successfully", "Fail to create");
+    }
+
+    @ResponseBody
+    @GetMapping("api/teacher/project/sub/delete")
+    public Result<?> getDeleteSubmission(@RequestParam(value="sbmId") int sbmId) {
+        boolean success = sbmService.deleteSubmission(sbmId);
+        return createBoolResult(success, "Delete submission successfully", "Fail to delete");
+    }
+
+    @ResponseBody
+    @PostMapping("api/teacher/project/sub/modify")
+    public Result<?> postModifySubmission(@RequestBody SubmissionVO submissionVO) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        Submission sbm = new Submission();
+        try {
+            submissionVO.copyToSubmission(sbm, null);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new Result<>(RespStatus.FAIL, "Format is not correct");
+        }
+        logger.info("postModifySubmission -> " + sbm);
+        boolean success = sbmService.modifySubmission(sbm);
+        return createBoolResult(success, "Modify submission successfully", "Fail to create");
     }
 
 }

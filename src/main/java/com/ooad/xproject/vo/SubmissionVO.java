@@ -7,7 +7,9 @@ import lombok.Data;
 import java.text.ParseException;
 
 @Data
-public class SbmCreationVO {
+public class SubmissionVO {
+    private int sbmId;      // used when update
+
     private int projId;
     private String title;
     private String description;
@@ -16,7 +18,7 @@ public class SbmCreationVO {
     private int maxSbm;
     private String status;
 
-    public void copyToSubmission(Submission submission, int creatorRoleId) throws ParseException {
+    public void copyToSubmission(Submission submission, Integer creatorRoleId) throws ParseException {
         submission.setProjId(projId);
         submission.setTitle(title);
         submission.setDescription(description);
