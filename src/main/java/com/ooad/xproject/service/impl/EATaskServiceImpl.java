@@ -27,7 +27,7 @@ public class EATaskServiceImpl implements EATaskService {
 
     @Override
     public boolean createEATask(EventArrangeTask eaTask) {
-        return eaTaskMapper.insert(eaTask) == 1;
+        return eaTaskMapper.insertSelective(eaTask) == 1;
     }
 
     @Override
