@@ -33,4 +33,20 @@ public class MessageFactory {
 
         return msg;
     }
+
+    public static Message createApplyTeamMsg(ProjectInst projInst, Integer applyRoleId, String message) {
+        Message msg = new Message();
+        msg.setProjId(projInst.getProjId());
+        msg.setProjInstId(projInst.getProjInstId());
+        msg.setType(MsgType.Apply.name());
+        msg.setTitle(titleMap.get(MsgType.Apply));
+
+        msg.setContent(message);
+
+        msg.setCreatorRoleId(applyRoleId);
+        msg.setConfirmed(false);
+        msg.setDecided(false);
+
+        return msg;
+    }
 }

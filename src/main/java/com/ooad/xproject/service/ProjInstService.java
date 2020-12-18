@@ -6,6 +6,7 @@ import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
 import com.ooad.xproject.entity.RecordInst;
 import com.ooad.xproject.entity.SubmissionInst;
+import com.ooad.xproject.vo.ApplyTeamParamVO;
 import com.ooad.xproject.vo.ProjInstCreationVO;
 
 import java.util.List;
@@ -43,4 +44,6 @@ public interface ProjInstService {
     boolean quitTeam(int stdRoleId, int projInstId);
 
     boolean updateProjInst(ProjectInst projectInst);
+
+    SvResult<Boolean> applyTeam(Integer roleId, ApplyTeamParamVO atpVO);
 }

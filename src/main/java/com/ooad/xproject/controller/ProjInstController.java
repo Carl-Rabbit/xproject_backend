@@ -97,8 +97,12 @@ public class ProjInstController {
 
     @ResponseBody
     @PostMapping("api/student/team/apply")
-    public Result<?> postTeamApply(@RequestParam(value="teamId") int projInstId) {
-        return new Result<>(RespStatus.SUCCESS, "Just a fake interface");
+    public Result<?> postTeamApply(@RequestBody ApplyTeamParamVO atpVO) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        SvResult<Boolean> svResult = projInstService.applyTeam(role.getRoleId(), atpVO);
+        return new Result<>(svResult.getMsg(), svResult.getData());
     }
 
     @ResponseBody

@@ -1,15 +1,14 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.bo.MessageFactory;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.ProjInstStatus;
 import com.ooad.xproject.dto.RecordInstDTO;
 import com.ooad.xproject.dto.StudentDTO;
-import com.ooad.xproject.entity.ProjInstStudentRT;
-import com.ooad.xproject.entity.ProjectInst;
-import com.ooad.xproject.entity.RecordInst;
-import com.ooad.xproject.entity.SubmissionInst;
+import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.ProjInstService;
+import com.ooad.xproject.vo.ApplyTeamParamVO;
 import com.ooad.xproject.vo.ProjInstCreationVO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,14 +23,16 @@ public class ProjInstServiceImpl implements ProjInstService {
     private final ProjectInstMapper projectInstMapper;
     private final RecordInstMapper recordInstMapper;
     private final SubmissionInstMapper submissionInstMapper;
+    private final MessageMapper msgMapper;
 
     private final ProjInstStudentRTMapper pisRTMapper;
 
-    public ProjInstServiceImpl(ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, RecordInstMapper recordInstMapper, SubmissionInstMapper submissionInstMapper, ProjInstStudentRTMapper pisRTMapper) {
+    public ProjInstServiceImpl(ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, RecordInstMapper recordInstMapper, SubmissionInstMapper submissionInstMapper, MessageMapper msgMapper, ProjInstStudentRTMapper pisRTMapper) {
         this.projectMapper = projectMapper;
         this.projectInstMapper = projectInstMapper;
         this.recordInstMapper = recordInstMapper;
         this.submissionInstMapper = submissionInstMapper;
+        this.msgMapper = msgMapper;
         this.pisRTMapper = pisRTMapper;
     }
 
@@ -189,5 +190,23 @@ public class ProjInstServiceImpl implements ProjInstService {
     public boolean updateProjInst(ProjectInst projectInst) {
         int affectedRoleCnt = projectInstMapper.updateByPrimaryKeySelective(projectInst);
         return affectedRoleCnt == 1;
+    }
+
+    @Override
+    public SvResult<Boolean> applyTeam(Integer roleId, ApplyTeamParamVO atpVO) {
+        int projInstId = atpVO.getProjInstId();
+        List<StudentDTO> teamMemList = projectInstMapper.selectStudentByProjInstId(projInstId);
+        if (teamMemList.isEmpty()) {
+            // add this role directly
+            projectInstMapper.insertProjInstStdRT(projInstId, roleId, null);
+            // TODO send email
+            return new SvResult<>("Apply successfully. You are the first member!", true);
+        } else {
+            ProjectInst projInst = projectInstMapper.selectByPrimaryKey(projInstId);
+            Message msg = MessageFactory.createApplyTeamMsg(projInst, roleId, atpVO.getMessage());
+            msgMapper.insertSelective(msg);
+            // TODO send email to all members
+            return new SvResult<>("Apply successfully. Please wait for result!", true);
+        }
     }
 }
