@@ -41,4 +41,6 @@ public interface ProjInstService {
     SvResult<Boolean> createProjInstAndLink(int stdRoleId, ProjInstCreationVO projectCreationVO);
 
     boolean quitTeam(int stdRoleId, int projInstId);
+
+    boolean updateProjInst(ProjectInst projectInst);
 }

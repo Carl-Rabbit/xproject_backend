@@ -55,14 +55,21 @@ public class ProjInstController {
         TeamVO teamVO = TeamVO.createFrom(projectInst, studentList);
         logger.info(String.format("getTeamDetail -> %s", teamVO));
         return new Result<>(teamVO);
+    }
 
-//        Subject subject = SecurityUtils.getSubject();
-//        String username = subject.getPrincipal().toString();
-//        Role role = roleService.getByUsername(username);
-//        SvRoleInfo roleInfo = roleService.getRoleInfo(role);
-//        List<Project> projList = homeService.getProjectList(roleInfo);
-//        logger.info(String.format("getProjectList -> username: %s, projList: %s",
-//                username, );
+    @ResponseBody
+    @PostMapping("api/student/team/change/info")
+    public Result<?> postEditedTeamInfo(@RequestBody ProjInstUpdateVO piuVO) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        ProjectInst projectInst = projInstService.getPIByProjIdAndStdRoleId(piuVO.getProjId(), role.getRoleId());
+        if (projectInst == null) {
+            return new Result<>(RespStatus.FAIL, "No team");
+        }
+        piuVO.copyToProjInst(projectInst);
+        boolean success = projInstService.updateProjInst(projectInst);
+        return Result.createBoolResult(success, "Update successfully", "Update failed");
     }
 
     @ResponseBody

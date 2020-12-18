@@ -184,4 +184,10 @@ public class ProjInstServiceImpl implements ProjInstService {
         int affectedRoleCnt = projectInstMapper.deleteProjInstStdRT(stdRoleId, projInstId);
         return affectedRoleCnt == 1;
     }
+
+    @Override
+    public boolean updateProjInst(ProjectInst projectInst) {
+        int affectedRoleCnt = projectInstMapper.updateByPrimaryKeySelective(projectInst);
+        return affectedRoleCnt == 1;
+    }
 }
