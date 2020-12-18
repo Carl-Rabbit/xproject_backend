@@ -16,7 +16,7 @@ import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.service.SubmissionInstService;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.AutoFormingVO;
-import com.ooad.xproject.vo.RoleIdListParamVO;
+import com.ooad.xproject.vo.ProjAddStdVO;
 import com.ooad.xproject.vo.ProjectVO;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
@@ -186,13 +186,13 @@ public class ProjController {
 
     @ResponseBody
     @PostMapping("api/teacher/project/add/std")
-    public Result<?> postAddStdIntoProj(@RequestBody RoleIdListParamVO rlpVO) {
+    public Result<?> postAddStdIntoProj(@RequestBody ProjAddStdVO pasVO) {
 //        String username = RoleUtils.getUsername();
 //        Role role = roleService.getByUsername(username);
 
         int successCnt = 0;
-        for (int stdRoleId: rlpVO.getStdRoleIdList()) {
-            boolean success = homeService.joinProject(stdRoleId, rlpVO.getProjId(), rlpVO.getGroupMark());
+        for (int stdRoleId: pasVO.getStdRoleIdList()) {
+            boolean success = homeService.joinProject(stdRoleId, pasVO.getProjId(), pasVO.getGroupMark());
             successCnt += success ? 1 : 0;
         }
 
