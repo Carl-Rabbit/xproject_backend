@@ -24,4 +24,6 @@ public interface PermissionMapper {
     List<Permission> getAllPmsByUsername(String username);
 
     boolean containPmsUrl(String requestAPI);
+
+    void insertRolePmsRoleRT(Integer roleId, int psmRoleId);
 }

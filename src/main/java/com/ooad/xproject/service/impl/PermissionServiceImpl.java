@@ -1,6 +1,8 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.entity.Permission;
+import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.mapper.PermissionMapper;
 import com.ooad.xproject.service.PermissionService;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class PermissionServiceImpl implements PermissionService {
+
+    private final int PSM_ROLE_ID_ADMIN = 1;
+    private final int PSM_ROLE_ID_TEACHER = 2;
+    private final int PSM_ROLE_ID_STUDENT = 3;
 
     private final PermissionMapper permissionMapper;
 
@@ -27,5 +33,22 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public boolean needFilter(String requestAPI) {
         return permissionMapper.containPmsUrl(requestAPI);
+    }
+
+    @Override
+    public void appendPmsRoleToNewRole(Role newRole) {
+        switch (RoleType.getRoleType(newRole.getRoleType())) {
+            case Admin:
+                permissionMapper.insertRolePmsRoleRT(newRole.getRoleId(), PSM_ROLE_ID_ADMIN);
+                break;
+            case Teacher:
+                permissionMapper.insertRolePmsRoleRT(newRole.getRoleId(), PSM_ROLE_ID_TEACHER);
+                break;
+            case Student:
+                permissionMapper.insertRolePmsRoleRT(newRole.getRoleId(), PSM_ROLE_ID_STUDENT);
+                break;
+            case Null:
+                break;
+        }
     }
 }

@@ -37,7 +37,10 @@ public class ShiroConfiguration {
         customizedFilter.put("url", getURLPathMatchingFilter());
 
         // 对管理接口的访问启用自定义拦截（url 规则），即执行 URLPathMatchingFilter 中定义的过滤方法
+        filterChainDefinitionMap.put("/api/all/**", "url");
         filterChainDefinitionMap.put("/api/admin/**", "url");
+        filterChainDefinitionMap.put("/api/teacher/**", "url");
+        filterChainDefinitionMap.put("/api/student/**", "url");
 
         // 启用自定义过滤器
         shiroFilterFactoryBean.setFilters(customizedFilter);

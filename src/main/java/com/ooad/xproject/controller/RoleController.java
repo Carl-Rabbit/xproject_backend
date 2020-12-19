@@ -3,6 +3,7 @@ package com.ooad.xproject.controller;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.entity.Role;
+import com.ooad.xproject.service.PermissionService;
 import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.vo.Result;
 import com.ooad.xproject.vo.RoleVO;
@@ -22,10 +23,12 @@ import javax.servlet.http.HttpSession;
 public class RoleController {
 
     private final RoleService roleService;
+    private final PermissionService permissionService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
 
-    public RoleController(RoleService testService) {
+    public RoleController(RoleService testService, PermissionService permissionService) {
         this.roleService = testService;
+        this.permissionService = permissionService;
     }
 
     @ResponseBody
@@ -73,27 +76,28 @@ public class RoleController {
         if (role != null) {
             String msg = "Username already exists";
             logger.info(msg);
-            return new Result<Null>(RespStatus.FAIL, msg);
+            return new Result<>(RespStatus.FAIL, msg);
         }
 
         if (!roleService.validUsername(username)) {
             String msg = "The username must have at least 8 characters and 24 at most. " +
                     "Don't start with a number.";
             logger.info(msg);
-            return new Result<Null>(RespStatus.FAIL, msg);
+            return new Result<>(RespStatus.FAIL, msg);
         }
         if (!roleService.validPassword(password)) {
             String msg = "The password must have at least 8 characters and 32 at most." +
                     "It must contain letters and numbers.";
             logger.info(msg);
-            return new Result<Null>(RespStatus.FAIL, msg);
+            return new Result<>(RespStatus.FAIL, msg);
         }
 
         RespStatus status;
         String msg;
 
         if (RoleType.Student.match(type) || RoleType.Teacher.match(type)) {
-            roleService.createUser(type, username, password);
+            Role newRole = roleService.createUser(type, username, password);
+            permissionService.appendPmsRoleToNewRole(newRole);
             msg = "User created";
             status = RespStatus.SUCCESS;
             logger.info(msg);
@@ -103,7 +107,7 @@ public class RoleController {
             logger.warn(msg);
         }
 
-        return new Result<Null>(status, msg);
+        return new Result<>(status, msg);
     }
 
     @ResponseBody

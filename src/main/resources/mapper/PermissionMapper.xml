@@ -96,5 +96,9 @@
             from permissions
             where url = #{requestAPI}) as q
     </select>
+  <insert id="insertRolePmsRoleRT">
+    insert into role_pms_role_rt (role_id, pms_role_id)
+    values (#{roleId}, #{pmsRoleId})
+  </insert>
 
 </mapper>
