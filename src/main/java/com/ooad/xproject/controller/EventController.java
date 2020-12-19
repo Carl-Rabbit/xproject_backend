@@ -174,11 +174,13 @@ public class EventController {
 
     @ResponseBody
     @PostMapping("api/teacher/event/inst/manage")
-    public Result<?> postEventInstAuto(@RequestBody EventInstManageParamVO eimParamVO) {
+    public Result<?> postEventInstAuto(@RequestBody EventInstManageParamVO eventInstManageParamVO) {
 //        logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
-        int successCnt = eaTaskService.manageEventInsts(eimParamVO);
-        String message = "Manage " + successCnt + " event item successfully. Total "
-                + eimParamVO.getEventInstIdList().length;
+        int successCnt = eaTaskService.manageEventInsts(eventInstManageParamVO);
+        String message = String.format("Manage %d event items successfully. Total event item %d. Remain %d teams.",
+                successCnt,
+                eventInstManageParamVO.getEventInstIdList().length,
+                eventInstManageParamVO.getProjInstIdList().length - successCnt);
         return new Result<>(message, successCnt);
     }
 

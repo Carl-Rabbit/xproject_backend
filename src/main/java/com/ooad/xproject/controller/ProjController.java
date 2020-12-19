@@ -186,13 +186,13 @@ public class ProjController {
 
     @ResponseBody
     @PostMapping("api/teacher/project/add/std")
-    public Result<?> postAddStdIntoProj(@RequestBody ProjAddStdVO pasVO) {
+    public Result<?> postAddStdIntoProj(@RequestBody ProjAddStdVO projAddStdVO) {
 //        String username = RoleUtils.getUsername();
 //        Role role = roleService.getByUsername(username);
 
         int successCnt = 0;
-        for (int stdRoleId: pasVO.getStdRoleIdList()) {
-            boolean success = homeService.joinProject(stdRoleId, pasVO.getProjId(), pasVO.getGroupMark());
+        for (int stdRoleId: projAddStdVO.getStdRoleIdList()) {
+            boolean success = homeService.joinProject(stdRoleId, projAddStdVO.getProjId(), projAddStdVO.getGroupMark());
             successCnt += success ? 1 : 0;
         }
 

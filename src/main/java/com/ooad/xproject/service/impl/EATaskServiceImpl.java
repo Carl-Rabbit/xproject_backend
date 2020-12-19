@@ -153,14 +153,16 @@ public class EATaskServiceImpl implements EATaskService {
         int[] projInstIdList = eimParamVO.getProjInstIdList();
 
         int successCnt = 0;
-        for (int i = 0; i < eventInstIdList.length; i++) {
+        for (int i = 0; i < eventInstIdList.length && i < projInstIdList.length; i++) {
             int eventInstId = eventInstIdList[i];
             int projInstId = projInstIdList[i];
             SvResult<Boolean> svResult = applyEventInst(eventInstId, projInstId);
             if (svResult.getData()) {
                 successCnt += 1;
+                System.out.printf("Manage event item (event_id = %d) to team %d successfully%n", eventInstId, projInstId);
             } else {
-                System.out.println(svResult.getMsg());
+                System.out.printf("Manage event item (event_id = %d) to team %d failed%n", eventInstId, projInstId);
+                System.out.println("Reason: " + svResult.getMsg());
             }
         }
         return successCnt;
