@@ -280,7 +280,7 @@ public class ProjInstServiceImpl implements ProjInstService {
             ProjectInst projInstApplicant = projectInstMapper.selectPIByProjIdAndStdRoleId(projInst.getProjId(), msg.getCreatorRoleId());
             if (projInstApplicant != null) {
                 // already has a team
-                msg.setResult("In other team");
+                msg.setResult("Fail to join");
             }
 
             // update message
