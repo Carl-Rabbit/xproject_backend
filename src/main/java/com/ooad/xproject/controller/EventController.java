@@ -157,7 +157,7 @@ public class EventController {
 
     @ResponseBody
     @PostMapping("api/teacher/event/inst/clear")
-    public Result<?> postEventInstClearTch(@RequestBody EventInstListParamVO eilParamVO) {
+    public Result<?> postEventInstClearTch(@RequestBody EventInstListParamVO eventInstListParamVO) {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
@@ -165,10 +165,10 @@ public class EventController {
 
         // not implemented yet
 
-        int successCnt = eaTaskService.clearEventInstTch(eilParamVO.getEventInstIdList());
+        int successCnt = eaTaskService.clearEventInstTch(eventInstListParamVO.getEventInstIdList());
 
         String message = "Clear " + successCnt + " event item successfully. Total "
-                + eilParamVO.getEventInstIdList().length;
+                + eventInstListParamVO.getEventInstIdList().length;
         return new Result<>(message, successCnt);
     }
 

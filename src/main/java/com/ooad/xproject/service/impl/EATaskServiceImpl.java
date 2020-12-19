@@ -82,7 +82,7 @@ public class EATaskServiceImpl implements EATaskService {
             return new SvResult<>("Can only clear selected event item of your own team", false);
         }
         eventInst.setProjInstId(null);
-        boolean success = eventInstMapper.updateByPrimaryKeySelective(eventInst) == 1;
+        boolean success = eventInstMapper.updateByPrimaryKey(eventInst) == 1;
 
         return new SvResult<>("Clear finished", success);
     }
@@ -95,7 +95,8 @@ public class EATaskServiceImpl implements EATaskService {
             if (eventInst.getProjInstId() == null) {
                 continue;
             }
-            int affectedRowCnt = eventInstMapper.insertSelective(eventInst);
+            eventInst.setProjInstId(null);
+            int affectedRowCnt = eventInstMapper.updateByPrimaryKey(eventInst);
             successCnt += affectedRowCnt;
             if (affectedRowCnt != 0) {
                 // TODO notice all members
