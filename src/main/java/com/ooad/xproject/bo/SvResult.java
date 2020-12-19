@@ -1,5 +1,8 @@
 package com.ooad.xproject.bo;
 
+import lombok.Builder;
+
+@Builder
 public class SvResult<T> {
     private int code;
     private String msg;
