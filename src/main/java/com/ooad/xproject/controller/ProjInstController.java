@@ -97,11 +97,23 @@ public class ProjInstController {
 
     @ResponseBody
     @PostMapping("api/student/team/apply")
-    public Result<?> postTeamApply(@RequestBody ApplyTeamParamVO atpVO) {
+    public Result<?> postTeamApply(@RequestBody ApplyTeamParamVO applyTeamParamVO) {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
-        SvResult<Boolean> svResult = projInstService.applyTeam(role.getRoleId(), atpVO);
+        SvResult<Boolean> svResult = projInstService.applyTeam(role.getRoleId(), applyTeamParamVO);
+        return new Result<>(svResult.getMsg(), svResult.getData());
+    }
+
+    @ResponseBody
+    @PostMapping("api/student/team/reply/application")
+    public Result<?> postReplyApplication(@RequestBody ApplyReplyParamVO applyReplyParamVO) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        // TODO check access here
+
+        SvResult<Boolean> svResult = projInstService.applyTeamReply(role.getRoleId(), applyReplyParamVO);
         return new Result<>(svResult.getMsg(), svResult.getData());
     }
 

@@ -6,6 +6,7 @@ import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
 import com.ooad.xproject.entity.RecordInst;
 import com.ooad.xproject.entity.SubmissionInst;
+import com.ooad.xproject.vo.ApplyReplyParamVO;
 import com.ooad.xproject.vo.ApplyTeamParamVO;
 import com.ooad.xproject.vo.ProjInstCreationVO;
 
@@ -46,4 +47,6 @@ public interface ProjInstService {
     boolean updateProjInst(ProjectInst projectInst);
 
     SvResult<Boolean> applyTeam(Integer roleId, ApplyTeamParamVO atpVO);
+
+    SvResult<Boolean> applyTeamReply(Integer roleId, ApplyReplyParamVO applyReplyParamVO);
 }

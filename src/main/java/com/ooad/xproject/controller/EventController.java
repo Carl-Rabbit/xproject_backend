@@ -167,7 +167,7 @@ public class EventController {
 
         int successCnt = eaTaskService.clearEventInstTch(eventInstListParamVO.getEventInstIdList());
 
-        String message = "Clear " + successCnt + " event item successfully. Total "
+        String message = "Clear " + successCnt + " event items. Total "
                 + eventInstListParamVO.getEventInstIdList().length;
         return new Result<>(message, successCnt);
     }
@@ -177,7 +177,7 @@ public class EventController {
     public Result<?> postEventInstAuto(@RequestBody EventInstManageParamVO eventInstManageParamVO) {
 //        logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
         int successCnt = eaTaskService.manageEventInsts(eventInstManageParamVO);
-        String message = String.format("Manage %d event items successfully. Total event item %d. Remain %d teams.",
+        String message = String.format("Manage %d event items. Total event item %d. Remain %d teams.",
                 successCnt,
                 eventInstManageParamVO.getEventInstIdList().length,
                 eventInstManageParamVO.getProjInstIdList().length - successCnt);

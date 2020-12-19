@@ -8,6 +8,7 @@ import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.ProjInstService;
+import com.ooad.xproject.vo.ApplyReplyParamVO;
 import com.ooad.xproject.vo.ApplyTeamParamVO;
 import com.ooad.xproject.vo.ProjInstCreationVO;
 import org.springframework.stereotype.Service;
@@ -207,6 +208,23 @@ public class ProjInstServiceImpl implements ProjInstService {
             msgMapper.insertSelective(msg);
             // TODO send email to all members
             return new SvResult<>("Apply successfully. Please wait for result!", true);
+        }
+    }
+
+    @Override
+    public SvResult<Boolean> applyTeamReply(Integer roleId, ApplyReplyParamVO applyReplyParamVO) {
+        Message msg = msgMapper.selectByPrimaryKey(applyReplyParamVO.getMsgId());
+        if (msg.getDecided()) {
+            return new SvResult<>("This message has been processed", false);
+        }
+        msg.setDecided(true);
+        msg.setContent(applyReplyParamVO.getMessage());
+        msg.setResult(applyReplyParamVO.isAccepted() ? "Accept" : "Reject");
+        int affectedRowCnt = msgMapper.updateByPrimaryKey(msg);
+        if (affectedRowCnt == 1) {
+            return new SvResult<>("Application accepted", true);
+        } else {
+            return new SvResult<>("Application rejected", true);
         }
     }
 }
