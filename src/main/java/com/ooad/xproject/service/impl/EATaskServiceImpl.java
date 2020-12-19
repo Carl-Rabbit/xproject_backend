@@ -172,6 +172,6 @@ public class EATaskServiceImpl implements EATaskService {
     @Override
     public boolean checkTeamArrangeState(int eaTaskId, Integer projInstId) {
         int takeCnt = eventInstMapper.countApplyNum(eaTaskId, projInstId);
-        return takeCnt == 0;
+        return takeCnt == 1;
     }
 }
