@@ -239,7 +239,7 @@
       join project_role_rt as prr on std.role_id = prr.role_id
       left join proj_inst_student_rt as pisr on pisr.std_role_id = r.role_id
       left join project_insts pi on pisr.proj_inst_id = pi.proj_inst_id
-    where prr.proj_id = 1;
+    where prr.proj_id = #{projId};
   </select>
     <select id="selectByStdNo" resultType="com.ooad.xproject.entity.Student">
       select *

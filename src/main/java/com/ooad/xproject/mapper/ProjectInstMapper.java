@@ -1,6 +1,7 @@
 package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.dto.StudentDTO;
+import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.ProjectInst;
 import org.springframework.stereotype.Repository;
 
@@ -32,4 +33,6 @@ public interface ProjectInstMapper {
     boolean insertProjInstStdRT(int projInstId, int stdRoleId, String opt);
 
     int deleteProjInstStdRT(int stdRoleId, int projInstId);
+
+    List<StudentProjDTO> selectStdProjDTOByProjInstId(int projInstId);
 }

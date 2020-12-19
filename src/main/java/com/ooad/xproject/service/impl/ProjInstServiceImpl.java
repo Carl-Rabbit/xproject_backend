@@ -1,10 +1,13 @@
 package com.ooad.xproject.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.ooad.xproject.bo.MessageFactory;
+import com.ooad.xproject.bo.ProjSettingsBO;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.ProjInstStatus;
 import com.ooad.xproject.dto.RecordInstDTO;
 import com.ooad.xproject.dto.StudentDTO;
+import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.ProjInstService;
@@ -89,18 +92,62 @@ public class ProjInstServiceImpl implements ProjInstService {
 
     @Transactional
     @Override
-    public SvResult<Boolean> confirmProjInst(int projInstId) {
+    public SvResult<Boolean> confirmProjInst(int projInstId, boolean isForce) {
+        if (!isForce) {
+            // check proj inst validate
+            SvResult<Boolean> svResult = checkProjInst(projInstId);
+            if (!svResult.getData()) {
+                return svResult;
+            }
+        }
+
         ProjectInst record = new ProjectInst();
         record.setProjInstId(projInstId);
         record.setStatus(ProjInstStatus.Confirm.toString());
-
         int affectedRowCnt = projectInstMapper.updateByPrimaryKeySelective(record);
 
         if (affectedRowCnt == 1) {
-            return new SvResult<>(0, true);
+            return new SvResult<>("Confirm successfully", true);
         } else {
-            return new SvResult<>(0, false);
+            return new SvResult<>("Confirm failed", false);
         }
+    }
+
+    private SvResult<Boolean> checkProjInst(int projInstId) {
+        ProjectInst projInst = projectInstMapper.selectByPrimaryKey(projInstId);
+        Project project = projectMapper.selectByPrimaryKey(projInst.getProjId());
+
+        ProjSettingsBO settings = JSON.parseObject(project.getProjSettings(), ProjSettingsBO.class);
+
+        // check recruit system
+        if (!settings.isUseRecruitSystem()) {
+            return new SvResult<>("Recruit system is not open now", false);
+        }
+
+        List<StudentProjDTO> stdProjDTOList = projectInstMapper.selectStdProjDTOByProjInstId(projInstId);
+
+        // check size
+        if (stdProjDTOList.size() > settings.getMaxSize()) {
+            String msg = String.format("Your team is over-sized. Current: %d. Max size: %d",
+                    stdProjDTOList.size(), settings.getMaxSize());
+            return new SvResult<>(msg, false);
+        } else if (stdProjDTOList.size() < settings.getMinSize()) {
+            String msg = String.format("Your team has no enough members. Current: %d. Min size: %d",
+                stdProjDTOList.size(), settings.getMinSize());
+            return new SvResult<>(msg, false);
+        }
+
+        // check group mark
+        if (!stdProjDTOList.isEmpty() && !settings.isAllowCrossMark()) {
+            String groupMark = stdProjDTOList.get(0).getGroupMark();
+            for (int i = 1; i < stdProjDTOList.size(); i++) {
+                if (!groupMark.equals(stdProjDTOList.get(i).getGroupMark())) {
+                    return new SvResult<>("Across group is not allowed", false);
+                }
+            }
+        }
+
+        return new SvResult<>("", true);
     }
 
     @Override

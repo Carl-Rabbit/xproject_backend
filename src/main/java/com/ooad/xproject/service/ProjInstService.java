@@ -34,7 +34,7 @@ public interface ProjInstService {
 
     SvResult<Boolean> deleteProjInst(int projInstId);
 
-    SvResult<Boolean> confirmProjInst(int projInstId);
+    SvResult<Boolean> confirmProjInst(int projInstId, boolean isForce);
 
     ProjectInst getPIByProjIdAndStdRoleId(int projId, int stdRoleId);
 
