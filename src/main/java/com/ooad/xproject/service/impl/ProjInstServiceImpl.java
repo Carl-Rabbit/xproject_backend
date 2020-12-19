@@ -211,20 +211,55 @@ public class ProjInstServiceImpl implements ProjInstService {
         }
     }
 
+    @Transactional
     @Override
     public SvResult<Boolean> applyTeamReply(Integer roleId, ApplyReplyParamVO applyReplyParamVO) {
-        Message msg = msgMapper.selectByPrimaryKey(applyReplyParamVO.getMsgId());
-        if (msg.getDecided()) {
-            return new SvResult<>("This message has been processed", false);
-        }
-        msg.setDecided(true);
-        msg.setContent(applyReplyParamVO.getMessage());
-        msg.setResult(applyReplyParamVO.isAccepted() ? "Accept" : "Reject");
-        int affectedRowCnt = msgMapper.updateByPrimaryKey(msg);
-        if (affectedRowCnt == 1) {
-            return new SvResult<>("Application accepted", true);
-        } else {
-            return new SvResult<>("Application rejected", true);
+        try {
+            Message msg = msgMapper.selectByPrimaryKey(applyReplyParamVO.getMsgId());
+            if (msg.getDecided()) {
+                return new SvResult<>("This message has been processed", false);
+            }
+
+            // update message
+
+            msg.setDecided(true);
+            msg.setContent(applyReplyParamVO.getMessage());
+            msg.setResult(applyReplyParamVO.isAccepted() ? "Accept" : "Reject");
+            msg.setHandlerRoleId(roleId);
+
+            int affectedRowCnt = msgMapper.updateByPrimaryKey(msg);
+            if (affectedRowCnt == 1) {
+                if (!applyReplyParamVO.isAccepted()) {
+                    // reject
+                    return new SvResult<>("Application rejected", true);
+                }
+            } else {
+                return new SvResult<>("Error occur when update message", false);
+            }
+
+            // check applicant
+
+            // can't use projId in msg here
+            ProjectInst projInst = projectInstMapper.selectByPrimaryKey(msg.getProjInstId());
+            ProjectInst projInstApplicant = projectInstMapper.selectPIByProjIdAndStdRoleId(projInst.getProjId(), msg.getCreatorRoleId());
+            if (projInstApplicant != null) {
+                // already has a team
+                return new SvResult<>("Application accepted. Applicant has been in anther team.", true);
+            }
+
+            boolean success = projectInstMapper.insertProjInstStdRT(msg.getProjInstId(), msg.getCreatorRoleId(), "Join");
+
+            if (success) {
+                return new SvResult<>("Application accepted", true);
+            } else {
+                return new SvResult<>("Error occur when update team info", false);
+            }
+
+        } catch (Exception e) {
+            // roll back
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            e.printStackTrace();
+            return new SvResult<>("Error occur", false);
         }
     }
 }
