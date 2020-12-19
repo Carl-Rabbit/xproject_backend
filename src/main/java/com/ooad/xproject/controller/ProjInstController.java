@@ -16,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -43,7 +42,7 @@ public class ProjInstController {
             SimpleTeamVO simpleTeamVO = SimpleTeamVO.createFrom(projectInst, studentList.size());
             simpleTeamVOList.add(simpleTeamVO);
         }
-        logger.info("getTeamInfoList -> " + Arrays.toString(simpleTeamVOList.toArray()));
+//        logger.info("getTeamInfoList -> " + Arrays.toString(simpleTeamVOList.toArray()));
         return new Result<>(simpleTeamVOList);
     }
 
