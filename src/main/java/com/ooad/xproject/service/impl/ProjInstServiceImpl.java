@@ -199,6 +199,7 @@ public class ProjInstServiceImpl implements ProjInstService {
         List<StudentDTO> teamMemList = projectInstMapper.selectStudentByProjInstId(projInstId);
         if (teamMemList.isEmpty()) {
             // add this role directly
+            System.out.printf("%d, %d", projInstId, roleId);
             projectInstMapper.insertProjInstStdRT(projInstId, roleId, null);
             // TODO send email
             return new SvResult<>("Apply successfully. You are the first member!", true);

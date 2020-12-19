@@ -21,5 +21,5 @@ public interface EventInstMapper {
 
     List<EventInst> selectByEATaskId(int eaTaskId);
 
-    int countApplyNum(int projInstId);
+    int countApplyNum(int eaTaskId, int projInstId);
 }

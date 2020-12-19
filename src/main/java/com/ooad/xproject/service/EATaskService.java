@@ -28,4 +28,6 @@ public interface EATaskService {
     int deleteEventInsts(int[] eventInstIdList);
 
     int manageEventInsts(EventInstManageParamVO eimParamVO);
+
+    boolean checkTeamArrangeState(int eaTaskId, Integer projInstId);
 }

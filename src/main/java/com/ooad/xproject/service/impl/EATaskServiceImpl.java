@@ -50,13 +50,13 @@ public class EATaskServiceImpl implements EATaskService {
 
     @Override
     public SvResult<Boolean> applyEventInst(int eventInstId, Integer projInstId) {
-        int takeCnt = eventInstMapper.countApplyNum(projInstId);
+        EventInst eventInst = eventInstMapper.selectByPrimaryKey(eventInstId);
 
-        if (takeCnt >= 1) {
+        boolean isArranged = checkTeamArrangeState(eventInst.getEaTaskId(), projInstId);
+        if (isArranged) {
             return new SvResult<>("Can only apply one event inst", false);
         }
 
-        EventInst eventInst = eventInstMapper.selectByPrimaryKey(eventInstId);
         if (eventInst.getProjInstId() != null) {
             return new SvResult<>("This time slot has been taken", false);
         }
@@ -68,13 +68,13 @@ public class EATaskServiceImpl implements EATaskService {
 
     @Override
     public SvResult<Boolean> clearEventInstStd(int eventInstId, Integer projInstId) {
-        int takeCnt = eventInstMapper.countApplyNum(projInstId);
+        EventInst eventInst = eventInstMapper.selectByPrimaryKey(eventInstId);
 
-        if (takeCnt == 0) {
+        boolean isArranged = checkTeamArrangeState(eventInst.getEaTaskId(), projInstId);
+        if (!isArranged) {
             return new SvResult<>("Can only clear selected event item", false);
         }
 
-        EventInst eventInst = eventInstMapper.selectByPrimaryKey(eventInstId);
         if (eventInst.getProjInstId() == null) {
             return new SvResult<>("This time slot has not been taken yet", false);
         }
@@ -169,4 +169,9 @@ public class EATaskServiceImpl implements EATaskService {
         return successCnt;
     }
 
+    @Override
+    public boolean checkTeamArrangeState(int eaTaskId, Integer projInstId) {
+        int takeCnt = eventInstMapper.countApplyNum(eaTaskId, projInstId);
+        return takeCnt == 0;
+    }
 }

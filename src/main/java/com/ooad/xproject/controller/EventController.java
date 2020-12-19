@@ -4,6 +4,7 @@ import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.EATaskDTO;
 import com.ooad.xproject.dto.EventInstDTO;
+import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
@@ -185,41 +186,23 @@ public class EventController {
     }
 
 
-//    @ResponseBody
-//    @PostMapping("api/teacher/project/ann/modify")
-//    public Result<?> postModifyAnnouncement(@RequestBody Announcement announcement) {
-//        boolean success = annService.updateAnn(announcement);
-//        if (success) {
-//            return new Result<>(true);
-//        } else {
-//            return new Result<>(RespStatus.FAIL, "Update failed", false);
-//        }
-//    }
-//
-//    @ResponseBody
-//    @PostMapping("api/teacher/project/ann/add")
-//    public Result<?> postAddAnnouncement(@RequestBody Announcement announcement) {
-//        String username = RoleUtils.getUsername();
-//        Role role = roleService.getByUsername(username);
-//
-//        announcement.setCreatorId(role.getRoleId());
-//
-//        boolean success = annService.addAnn(announcement);
-//        if (success) {
-//            return new Result<>(true);
-//        } else {
-//            return new Result<>(RespStatus.FAIL, "Add failed", false);
-//        }
-//    }
-//
-//    @ResponseBody
-//    @GetMapping("api/teacher/project/ann/delete")
-//    public Result<?> getDeleteAnnouncement(@RequestParam("annId") int annId) {
-//        boolean success = annService.deleteAnn(annId);
-//        if (success) {
-//            return new Result<>(true);
-//        } else {
-//            return new Result<>(RespStatus.FAIL, "Delete failed", false);
-//        }
-//    }
+    @ResponseBody
+    @GetMapping("api/teacher/event/team/no-arrange")
+    public Result<?> getTeamsNoArrange(@RequestParam("projId") int projId,
+                                       @RequestParam("eaTaskId") int eaTaskId) {
+        List<ProjectInst> projInstList = projInstService.getProInstList(projId);
+        List<SimpleTeamVO> simpleTeamVOList = new ArrayList<>();
+        for (ProjectInst projectInst: projInstList) {
+            // check arrange state
+            boolean isArranged = eaTaskService.checkTeamArrangeState(eaTaskId, projectInst.getProjInstId());
+            if (!isArranged) {
+                continue;
+            }
+            List<StudentDTO> studentList = projInstService.getStudentDTOByProjInstId(projectInst.getProjInstId());
+            SimpleTeamVO simpleTeamVO = SimpleTeamVO.createFrom(projectInst, studentList.size());
+            simpleTeamVOList.add(simpleTeamVO);
+        }
+//        logger.info("getTeamsNoArrange -> " + Arrays.toString(simpleTeamVOList.toArray()));
+        return new Result<>(simpleTeamVOList);
+    }
 }

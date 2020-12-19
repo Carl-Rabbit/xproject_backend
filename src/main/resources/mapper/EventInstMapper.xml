@@ -129,7 +129,7 @@
   </select>
     <select id="countApplyNum" resultType="java.lang.Integer">
       select count(*)
-      from event_insts as ei
-      where ei.proj_inst_id = #{projInstId}
+      from event_insts
+      where ea_task_id = #{eaTaskId} and proj_inst_id = #{projInstId}
     </select>
 </mapper>
