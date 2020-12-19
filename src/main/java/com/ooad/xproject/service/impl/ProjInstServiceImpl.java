@@ -268,13 +268,22 @@ public class ProjInstServiceImpl implements ProjInstService {
                 return new SvResult<>("This message has been processed", false);
             }
 
-            // update message
-
+            // change the basic message info
             msg.setDecided(true);
             msg.setContent(applyReplyParamVO.getMessage());
             msg.setResult(applyReplyParamVO.isAccepted() ? "Accept" : "Reject");
             msg.setHandlerRoleId(roleId);
 
+            // check applicant
+            // can't use projId in msg here
+            ProjectInst projInst = projectInstMapper.selectByPrimaryKey(msg.getProjInstId());
+            ProjectInst projInstApplicant = projectInstMapper.selectPIByProjIdAndStdRoleId(projInst.getProjId(), msg.getCreatorRoleId());
+            if (projInstApplicant != null) {
+                // already has a team
+                msg.setResult("In other team");
+            }
+
+            // update message
             int affectedRowCnt = msgMapper.updateByPrimaryKey(msg);
             if (affectedRowCnt == 1) {
                 if (!applyReplyParamVO.isAccepted()) {
@@ -285,15 +294,11 @@ public class ProjInstServiceImpl implements ProjInstService {
                 return new SvResult<>("Error occur when update message", false);
             }
 
-            // check applicant
-
-            // can't use projId in msg here
-            ProjectInst projInst = projectInstMapper.selectByPrimaryKey(msg.getProjInstId());
-            ProjectInst projInstApplicant = projectInstMapper.selectPIByProjIdAndStdRoleId(projInst.getProjId(), msg.getCreatorRoleId());
             if (projInstApplicant != null) {
                 // already has a team
                 return new SvResult<>("Application accepted. Applicant has been in anther team.", true);
             }
+
 
             boolean success = projectInstMapper.insertProjInstStdRT(msg.getProjInstId(), msg.getCreatorRoleId(), "Join");
 
