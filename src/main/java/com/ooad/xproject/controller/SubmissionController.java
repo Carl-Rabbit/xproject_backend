@@ -2,12 +2,11 @@ package com.ooad.xproject.controller;
 
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.SbmDTO;
-import com.ooad.xproject.entity.Role;
-import com.ooad.xproject.entity.Submission;
-import com.ooad.xproject.entity.Teacher;
+import com.ooad.xproject.entity.*;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.Result;
+import com.ooad.xproject.vo.SbmInstVO;
 import com.ooad.xproject.vo.SubmissionVO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,6 +51,22 @@ public class SubmissionController {
         }
         logger.info("getSbmListByProjId -> " + Arrays.toString(sbmDTOList.toArray()));
         return new Result<>(sbmDTOList);
+    }
+
+    @ResponseBody
+    @GetMapping("api/student/project/submission/inst")
+    public Result<?> getSbmInstByProjId(@RequestParam("sbmId") int sbmId) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        SubmissionInst sbmInst = sbmService.getSbmInstByStdRoleIdAndSbmId(role.getRoleId(), sbmId);
+        Student submitter = studentService.getStudentByRoleId(role.getRoleId());
+
+        SbmInstVO sbmInstVO = SbmInstVO.builder()
+                .submissionInst(sbmInst)
+                .submitter(submitter)
+                .build();
+        return new Result<>(sbmInstVO);
     }
 
     @ResponseBody

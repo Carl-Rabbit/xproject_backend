@@ -1,6 +1,9 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.entity.ProjectInst;
 import com.ooad.xproject.entity.Submission;
+import com.ooad.xproject.entity.SubmissionInst;
+import com.ooad.xproject.mapper.ProjectInstMapper;
 import com.ooad.xproject.mapper.SubmissionInstMapper;
 import com.ooad.xproject.mapper.SubmissionMapper;
 import com.ooad.xproject.service.SbmService;
@@ -13,10 +16,12 @@ public class SbmServiceImpl implements SbmService {
 
     private final SubmissionMapper submissionMapper;
     private final SubmissionInstMapper sbmInstMapper;
+    private final ProjectInstMapper projInstMapper;
 
-    public SbmServiceImpl(SubmissionMapper submissionMapper, SubmissionInstMapper sbmInstMapper) {
+    public SbmServiceImpl(SubmissionMapper submissionMapper, SubmissionInstMapper sbmInstMapper, ProjectInstMapper projInstMapper) {
         this.submissionMapper = submissionMapper;
         this.sbmInstMapper = sbmInstMapper;
+        this.projInstMapper = projInstMapper;
     }
 
     @Override
@@ -41,5 +46,12 @@ public class SbmServiceImpl implements SbmService {
     public boolean modifySubmission(Submission sbm) {
         int affectedRowCnt = submissionMapper.updateByPrimaryKeySelective(sbm);
         return affectedRowCnt == 1;
+    }
+
+    @Override
+    public SubmissionInst getSbmInstByStdRoleIdAndSbmId(int roleId, int sbmId) {
+        Submission sbm = submissionMapper.selectByPrimaryKey(sbmId);
+        ProjectInst projInst = projInstMapper.selectPIByProjIdAndStdRoleId(sbm.getProjId(), roleId);
+        return sbmInstMapper.selectBySbmIdAndProjInstId(sbmId, projInst.getProjInstId());
     }
 }

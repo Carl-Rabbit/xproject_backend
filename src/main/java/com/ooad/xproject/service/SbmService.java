@@ -1,6 +1,7 @@
 package com.ooad.xproject.service;
 
 import com.ooad.xproject.entity.Submission;
+import com.ooad.xproject.entity.SubmissionInst;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ public interface SbmService {
     boolean deleteSubmission(int sbmId);
 
     boolean modifySubmission(Submission sbm);
+
+    SubmissionInst getSbmInstByStdRoleIdAndSbmId(int roleId, int sbmId);
 }
