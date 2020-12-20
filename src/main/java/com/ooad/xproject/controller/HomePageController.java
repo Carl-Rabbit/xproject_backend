@@ -16,10 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -78,7 +75,7 @@ public class HomePageController {
     }
 
     @ResponseBody
-    @GetMapping("api/student/proj/quit")
+    @PostMapping("api/student/proj/quit")
     public Result<?> postProjQuit(@RequestParam("projId") int projId) {
         logger.info("postProjQuit");
         Role role = roleService.getByUsername(RoleUtils.getUsername());
@@ -88,7 +85,7 @@ public class HomePageController {
         if (success) {
             return new Result<>("Quit project successfully", true);
         } else {
-            return new Result<>(RespStatus.FAIL,"Quit project failed", false);
+            return new Result<>(RespStatus.FAIL, "Quit project failed", false);
         }
     }
 
