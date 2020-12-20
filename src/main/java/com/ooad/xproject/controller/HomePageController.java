@@ -10,6 +10,7 @@ import com.ooad.xproject.service.HomeService;
 import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.service.StudentService;
 import com.ooad.xproject.service.TeacherService;
+import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -59,7 +60,7 @@ public class HomePageController {
 
     @ResponseBody
     @GetMapping("api/student/project/join")
-    public Result<?> joinProject(@RequestParam("projId") int projId,
+    public Result<?> getJoinProject(@RequestParam("projId") int projId,
                                  @RequestParam(value = "groupMark", required = false, defaultValue = "Default") String groupMark) {
         logger.info("joinProject");
         Subject subject = SecurityUtils.getSubject();
@@ -67,11 +68,22 @@ public class HomePageController {
 
         Role role = roleService.getByUsername(username);
 
-        if (!RoleType.Student.match(role.getRoleType())) {
-            return new Result<>(RespStatus.FAIL,"Join project failed: Teacher account", false);
-        }
-
         boolean success = homeService.joinProject(role.getRoleId(), projId, groupMark);
+
+        if (success) {
+            return new Result<>(true);
+        } else {
+            return new Result<>(RespStatus.FAIL,"Join project failed", false);
+        }
+    }
+
+    @ResponseBody
+    @GetMapping("api/student/proj/quit")
+    public Result<?> postProjQuit(@RequestParam("projId") int projId) {
+        logger.info("postProjQuit");
+        Role role = roleService.getByUsername(RoleUtils.getUsername());
+
+        boolean success = homeService.quitProject(role.getRoleId(), projId);
 
         if (success) {
             return new Result<>(true);

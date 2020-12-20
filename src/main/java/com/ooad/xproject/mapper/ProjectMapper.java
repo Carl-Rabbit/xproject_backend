@@ -37,4 +37,6 @@ public interface ProjectMapper {
     int updateProjectRoleRT(Integer prrId, String groupMark);
 
     int insertProjectRoleRT(Integer projId, Integer roleId, String groupMark);
+
+    int quitProject(Integer roleId, int projId);
 }

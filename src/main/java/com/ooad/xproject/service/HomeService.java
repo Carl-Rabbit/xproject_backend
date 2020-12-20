@@ -18,4 +18,6 @@ public interface HomeService {
     List<Project> getProjectListBySch(Role role);
 
     boolean joinProject(int roleId, int projId, String groupMark);
+
+    boolean quitProject(Integer roleId, int projId);
 }
