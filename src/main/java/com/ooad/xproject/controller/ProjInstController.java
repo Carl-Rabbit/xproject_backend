@@ -231,4 +231,18 @@ public class ProjInstController {
             return new Result<>(RespStatus.FAIL, "Quit failed");
         }
     }
+
+    @ResponseBody
+    @GetMapping("api/all/teammates/by/id")
+    public Result<?> getTeammatesByRoleId(@RequestParam(value="projId") int projId,
+                                          @RequestParam("roleId") int roleId) {
+
+        ProjectInst projectInst = projInstService.getPIByProjIdAndStdRoleId(projId, roleId);
+        if (projectInst == null) {
+            return new Result<>(RespStatus.FAIL, "No team");
+        }
+
+        List<StudentDTO> stdDTOList = projInstService.getStudentDTOByProjInstId(projectInst.getProjInstId());
+        return new Result<>(stdDTOList);
+    }
 }
