@@ -86,9 +86,9 @@ public class HomePageController {
         boolean success = homeService.quitProject(role.getRoleId(), projId);
 
         if (success) {
-            return new Result<>(true);
+            return new Result<>("Quit project successfully", true);
         } else {
-            return new Result<>(RespStatus.FAIL,"Join project failed", false);
+            return new Result<>(RespStatus.FAIL,"Quit project failed", false);
         }
     }
 
