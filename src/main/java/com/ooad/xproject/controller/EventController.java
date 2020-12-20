@@ -195,7 +195,7 @@ public class EventController {
         for (ProjectInst projectInst: projInstList) {
             // check arrange state
             boolean isArranged = eaTaskService.checkTeamArrangeState(eaTaskId, projectInst.getProjInstId());
-            if (!isArranged) {
+            if (isArranged) {
                 continue;
             }
             List<StudentDTO> studentList = projInstService.getStudentDTOByProjInstId(projectInst.getProjInstId());
