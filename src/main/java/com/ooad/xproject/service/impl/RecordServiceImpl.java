@@ -1,10 +1,12 @@
 package com.ooad.xproject.service.impl;
 
 import com.ooad.xproject.bo.RecordUnitBO;
+import com.ooad.xproject.entity.Record;
 import com.ooad.xproject.entity.RecordInst;
 import com.ooad.xproject.mapper.RecordMapper;
 import com.ooad.xproject.mapper.StudentMapper;
 import com.ooad.xproject.service.RecordService;
+import com.ooad.xproject.vo.RecordCreationVO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,5 +32,13 @@ public class RecordServiceImpl implements RecordService {
         }
 
         return recordInst;
+    }
+
+    @Override
+    public boolean createNewRecord(Integer roleId, RecordCreationVO recordCreationVO) {
+        Record record = new Record();
+        recordCreationVO.copyToRecord(record);
+        int affectedRowCnt = recordMapper.insertSelective(record);
+        return affectedRowCnt == 1;
     }
 }
