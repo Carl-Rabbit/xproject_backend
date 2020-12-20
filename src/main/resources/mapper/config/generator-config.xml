@@ -154,6 +154,14 @@
 <!--            <generatedKey column="rcd_id" sqlStatement="Postgres" identity="true"/>-->
 <!--        </table>-->
 
+<!--        <table tableName="resources" domainObjectName="Resource" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false">-->
+<!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            &lt;!&ndash; 数据库表主键 &ndash;&gt;-->
+<!--            <generatedKey column="src_id" sqlStatement="Postgres" identity="true"/>-->
+<!--        </table>-->
+
 <!--        <table tableName="role_groups" domainObjectName="RoleGroup" enableCountByExample="false"-->
 <!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
 <!--               enableSelectByExample="false" selectByExampleQueryId="false">-->
