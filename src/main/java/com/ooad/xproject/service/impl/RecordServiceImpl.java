@@ -9,6 +9,8 @@ import com.ooad.xproject.service.RecordService;
 import com.ooad.xproject.vo.RecordCreationVO;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RecordServiceImpl implements RecordService {
 
@@ -40,5 +42,10 @@ public class RecordServiceImpl implements RecordService {
         recordCreationVO.copyToRecord(record);
         int affectedRowCnt = recordMapper.insertSelective(record);
         return affectedRowCnt == 1;
+    }
+
+    @Override
+    public List<Record> getRecordList(int projId) {
+        return recordMapper.selectByProjId(projId);
     }
 }

@@ -49,3 +49,19 @@ where std_no = '11816401';
 select rcd_id
 from records
 where proj_id = 1 and rcd_name = 'assignment1';
+
+-- GradeDTO
+
+select *
+from records as rcd
+    join project_insts pi on rcd.proj_id = pi.proj_id;
+
+select
+std_id, std.role_id,icon_url, std_no, std_name, rcd_inst_id, rcd.type, ri.modified_time, rcd.derived, ri.content, rcd.base_content, ri.comments, tch_name, tch.email
+from project_insts as pi
+    join records as rcd on pi.proj_id = rcd.proj_id
+    join teachers as tch on tch.role_id = rcd.creator_id
+    join proj_inst_student_rt pisr on pi.proj_inst_id = pisr.proj_inst_id
+    join students as std on std.role_id = pisr.std_role_id
+    left join record_insts ri on std.role_id = ri.role_id and rcd.rcd_id = ri.rcd_id
+where pi.proj_inst_id = 9 and rcd.rcd_id = 1;
