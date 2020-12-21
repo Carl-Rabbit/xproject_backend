@@ -19,17 +19,13 @@
     delete from schools
     where sch_id = #{schId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ooad.xproject.entity.School">
-    <selectKey keyProperty="schId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insert" parameterType="com.ooad.xproject.entity.School"
+          useGeneratedKeys="true" keyProperty="schId" keyColumn="sch_id">
     insert into schools (sch_name, location)
     values (#{schName,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.School">
-    <selectKey keyProperty="schId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.School"
+          useGeneratedKeys="true" keyProperty="schId" keyColumn="sch_id">
     insert into schools
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="schName != null">

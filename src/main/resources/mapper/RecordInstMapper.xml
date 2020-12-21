@@ -22,19 +22,15 @@
     delete from record_insts
     where rcd_inst_id = #{rcdInstId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ooad.xproject.entity.RecordInst">
-    <selectKey keyProperty="rcdInstId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insert" parameterType="com.ooad.xproject.entity.RecordInst"
+          useGeneratedKeys="true" keyProperty="rcdInstId" keyColumn="rcd_inst_id">
     insert into record_insts (rcd_id, role_id, modified_time, 
       content, comments)
     values (#{rcdId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{modifiedTime,jdbcType=TIMESTAMP}, 
       #{content,jdbcType=VARCHAR}, #{comments,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.RecordInst">
-    <selectKey keyProperty="rcdInstId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
+  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.RecordInst"
+          useGeneratedKeys="true" keyProperty="rcdInstId" keyColumn="rcd_inst_id">
     insert into record_insts
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="rcdId != null">
