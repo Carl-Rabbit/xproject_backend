@@ -41,7 +41,9 @@ public class FileController {
     private final ProjectMapper projectMapper;
     private final SubmissionInstService submissionInstService;
 
-    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper, ProjectMapper projectMapper, SubmissionInstService submissionInstService) {
+    private final PermissionService permissionService;
+
+    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper, ProjectMapper projectMapper, SubmissionInstService submissionInstService, PermissionService permissionService) {
         this.fileConfig = fileConfig;
         this.fileService = fileService;
         this.excelService = excelService;
@@ -52,6 +54,7 @@ public class FileController {
         this.recordInstMapper = recordInstMapper;
         this.projectMapper = projectMapper;
         this.submissionInstService = submissionInstService;
+        this.permissionService = permissionService;
     }
 
     @PostMapping("api/upload")
@@ -105,9 +108,10 @@ public class FileController {
         int successCnt = 0;
         for (StudentImportBO studentImportBO :
                 studentImportBOList) {
-            SvResult<Boolean> svResult = studentService.creatRoleAndStudent(teacher.getSchId(), studentImportBO);
-            if (svResult.getData()) {
+            SvResult<Role> svResult = studentService.creatRoleAndStudent(teacher.getSchId(), studentImportBO);
+            if (svResult.getData() != null) {
                 successCnt++;
+                permissionService.appendPmsRoleToNewRole(svResult.getData());
             }
         }
         RespStatus status = (successCnt == 0) ? RespStatus.FAIL : RespStatus.SUCCESS;

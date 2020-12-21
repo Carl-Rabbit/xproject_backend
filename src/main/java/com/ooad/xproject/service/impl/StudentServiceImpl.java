@@ -107,9 +107,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Transactional
     @Override
-    public SvResult<Boolean> creatRoleAndStudent(int schId, StudentImportBO studentImportBO) {
+    public SvResult<Role> creatRoleAndStudent(int schId, StudentImportBO studentImportBO) {
         if (roleMapper.selectByUsername(studentImportBO.getUsername()) != null) {
-            return new SvResult<>("User already exist", false);
+            return new SvResult<>("User already exist", null);
         }
 
         try{
@@ -145,12 +145,12 @@ public class StudentServiceImpl implements StudentService {
             if (affectedRowCnt == 0) {
                 throw new Exception("Error when insert Student");
             }
-            return new SvResult<>("Create a new Student account", true);
+            return new SvResult<>("Create a new Student account", newRole);
         }catch (Exception e){
             // roll back
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             e.printStackTrace();
-            return new SvResult<>(e.toString(), false);
+            return new SvResult<>(e.toString(), null);
         }
     }
 
