@@ -80,6 +80,17 @@ public class FileController {
         return fileService.download(request, realPath, userAgent, filename, inline);
     }
 
+    @GetMapping("api/teacher/team/excel")
+    public ResponseEntity<byte[]> getTeamExcel(HttpServletRequest request, @RequestParam("projId") Integer projId
+            , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
+            , @RequestParam(required = false, defaultValue = "false") boolean inline) {
+
+        SvResult<String> svResult = excelService.exportTeamByProjId(projId);
+
+        String realPath = svResult.getData();
+        return fileService.download(request, realPath, userAgent, filename, inline);
+    }
+
     @PostMapping("api/teacher/students/excel")
     public Result<Integer> postStudentAcCreationFromExcel(@RequestParam("file") MultipartFile[] files) {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");

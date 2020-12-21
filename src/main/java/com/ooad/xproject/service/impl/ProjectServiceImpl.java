@@ -2,6 +2,7 @@ package com.ooad.xproject.service.impl;
 
 import com.ooad.xproject.bo.RecordUnitBO;
 import com.ooad.xproject.bo.SvResult;
+import com.ooad.xproject.bo.TeamBO;
 import com.ooad.xproject.bo.forming.FormingBO;
 import com.ooad.xproject.bo.forming.FormingResultBO;
 import com.ooad.xproject.dto.StudentProjDTO;
@@ -85,6 +86,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<StudentProjDTO> getStdProjList(int projId) {
         return studentMapper.selectProjStudents(projId);
+    }
+
+    @Override
+    public List<TeamBO> getTeamList(int projId) {
+        return projectInstMapper.selectTeamByProjId(projId);
     }
 
     @Override

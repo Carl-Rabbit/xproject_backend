@@ -42,5 +42,5 @@ ooad:
     path:
       upload-root: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\temp"
       download-root: "C:\\LocalDocument\\LocalCode\\XProject_backend\\xproject_backend\\business"
-      output-root: "C:\\LocalDocument\\LocalCode\\XProject_backend\\xproject_backend\\business"
+      output-root: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output"
       input-root: "C:\\LocalDocument\\LocalCode\\XProject_backend\\xproject_backend\\business"

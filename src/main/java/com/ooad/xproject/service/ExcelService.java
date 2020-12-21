@@ -25,4 +25,6 @@ public interface ExcelService {
     List<StudentClassBO> readStudentClassBO(String filePath);
 
     SvResult<String> exportRecordUnitByProjId(Integer projId);
+
+    SvResult<String> exportTeamByProjId(Integer projId);
 }

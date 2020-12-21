@@ -1,9 +1,6 @@
 package com.ooad.xproject.service.impl;
 
-import com.ooad.xproject.bo.RecordUnitBO;
-import com.ooad.xproject.bo.StudentClassBO;
-import com.ooad.xproject.bo.StudentImportBO;
-import com.ooad.xproject.bo.SvResult;
+import com.ooad.xproject.bo.*;
 import com.ooad.xproject.config.FileConfig;
 import com.ooad.xproject.service.ExcelService;
 import com.ooad.xproject.service.ProjectService;
@@ -24,9 +21,12 @@ import java.util.Objects;
 @Service
 public class ExcelServiceImpl implements ExcelService {
 
+    private final FileConfig fileConfig;
+
     private final ProjectService projectService;
 
-    public ExcelServiceImpl(ProjectService projectService) {
+    public ExcelServiceImpl(FileConfig fileConfig, ProjectService projectService) {
+        this.fileConfig = fileConfig;
         this.projectService = projectService;
     }
 
@@ -218,9 +218,15 @@ public class ExcelServiceImpl implements ExcelService {
 
     @Override
     public SvResult<String> exportRecordUnitByProjId(Integer projId) {
-        FileConfig fileConfig = new FileConfig();
         String filePath = fileConfig.getOutputRoot() + "\\" + "output.xlsx";
         List<RecordUnitBO> recordUnitList = projectService.getRecordUnitList(projId);
+        return generate(recordUnitList, filePath);
+    }
+
+    @Override
+    public SvResult<String> exportTeamByProjId(Integer projId) {
+        String filePath = fileConfig.getOutputRoot() + "\\" + "output.xlsx";
+        List<TeamBO> recordUnitList = projectService.getTeamList(projId);
         return generate(recordUnitList, filePath);
     }
 

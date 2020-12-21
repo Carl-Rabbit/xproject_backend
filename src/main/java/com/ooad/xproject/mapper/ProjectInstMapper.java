@@ -1,5 +1,6 @@
 package com.ooad.xproject.mapper;
 
+import com.ooad.xproject.bo.TeamBO;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.ProjectInst;
@@ -35,4 +36,6 @@ public interface ProjectInstMapper {
     int deleteProjInstStdRT(int stdRoleId, int projInstId);
 
     List<StudentProjDTO> selectStdProjDTOByProjInstId(int projInstId);
+
+    List<TeamBO> selectTeamByProjId(int projId);
 }
