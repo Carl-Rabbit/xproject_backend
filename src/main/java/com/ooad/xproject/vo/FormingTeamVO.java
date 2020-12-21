@@ -9,6 +9,7 @@ public class FormingTeamVO {
     private String name;    // teamName
     private String topic;
     private int targetMemNum;
+    private int curMem;
     private String status;
 
     public ProjectInst toProjectInst() {
