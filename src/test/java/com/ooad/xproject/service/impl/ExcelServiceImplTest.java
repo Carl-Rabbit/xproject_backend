@@ -3,21 +3,21 @@ package com.ooad.xproject.service.impl;
 import com.ooad.xproject.bo.*;
 import com.ooad.xproject.config.FileConfig;
 import com.ooad.xproject.constant.RespStatus;
-import com.ooad.xproject.entity.Admin;
-import com.ooad.xproject.entity.RecordInst;
-import com.ooad.xproject.entity.Student;
+import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.ProjectMapper;
 import com.ooad.xproject.mapper.RecordInstMapper;
-import com.ooad.xproject.service.ExcelService;
-import com.ooad.xproject.service.ProjectService;
-import com.ooad.xproject.service.RecordService;
-import com.ooad.xproject.service.StudentService;
+import com.ooad.xproject.mapper.ResourceMapper;
+import com.ooad.xproject.mapper.SchoolMapper;
+import com.ooad.xproject.service.*;
 import com.ooad.xproject.vo.Result;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +27,9 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class ExcelServiceImplTest {
+    @Autowired
+    private FileService fileService;
+
     @Autowired
     private ProjectService projectService;
 
@@ -201,6 +204,17 @@ class ExcelServiceImplTest {
     }
 
     @Test
-    void testGetField() {
+    void resourceUpload() {
+        int projId, creatorId;
+        projId = 1;
+        creatorId = 1;
+
+        byte[] cont = new byte[10];
+        MultipartFile file = new MockMultipartFile("mockFile.txt", cont);
+
+        System.out.println(fileService.uploadResource(file, projId, creatorId));
+
+
+//        upload(file, filePath, file.getName());
     }
 }

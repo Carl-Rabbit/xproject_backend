@@ -3,10 +3,7 @@ package com.ooad.xproject.service.impl;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.config.FileConfig;
 import com.ooad.xproject.entity.*;
-import com.ooad.xproject.mapper.ProjectInstMapper;
-import com.ooad.xproject.mapper.ProjectMapper;
-import com.ooad.xproject.mapper.SchoolMapper;
-import com.ooad.xproject.mapper.SubmissionMapper;
+import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.FileService;
 import com.ooad.xproject.utils.ZipUtils;
 import org.apache.commons.io.FileUtils;
@@ -23,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 
 @Service
 public class FileServiceImpl implements FileService {
+    private final ResourceMapper resourceMapper;
     private final ProjectMapper projectMapper;
 
     private final ProjectInstMapper projectInstMapper;
@@ -33,7 +31,8 @@ public class FileServiceImpl implements FileService {
 
     private final FileConfig fileConfig;
 
-    public FileServiceImpl(ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, SubmissionMapper submissionMapper, SchoolMapper schoolMapper, FileConfig fileConfig) {
+    public FileServiceImpl(ResourceMapper resourceMapper, ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, SubmissionMapper submissionMapper, SchoolMapper schoolMapper, FileConfig fileConfig) {
+        this.resourceMapper = resourceMapper;
         this.projectMapper = projectMapper;
         this.projectInstMapper = projectInstMapper;
         this.submissionMapper = submissionMapper;
@@ -105,6 +104,28 @@ public class FileServiceImpl implements FileService {
         return filePath;
     }
 
+    @Override
+    public int uploadResource(MultipartFile file, int projId, int creatorId) {
+        Resource resource = new Resource();
+        resource.setProjId(projId);
+        resource.setCreatorRoleId(creatorId);
+        resource.setSize(String.valueOf(file.getSize()));
+        resource.setFileName(file.getName());
+        int ret = resourceMapper.insert(resource);
+        if (ret == 0)
+            return 0;
+        Resource res = resourceMapper.selectByPrimaryKey(ret);
+
+        Project project = projectMapper.selectByPrimaryKey(projId);
+        School school = schoolMapper.selectByPrimaryKey(project.getSchId());
+
+        String resDir = getResourcePath(school, project, resource);
+        String filePath = fileConfig.getResourceRoot() + "\\" + resDir;
+
+        upload(file, filePath, file.getName());
+        return ret;
+    }
+
     private String getStorePath(School school, Project project, Submission submission, ProjectInst projectInst) {
         String dir = "\\school-" + school.getSchId() + "-" + school.getSchName() +
                 "\\project-" + project.getProjId() + "-" + project.getProjName() +
@@ -117,6 +138,13 @@ public class FileServiceImpl implements FileService {
         String dir = "\\school-" + school.getSchId() + "-" + school.getSchName() +
                 "\\project-" + project.getProjId() + "-" + project.getProjName() +
                 "\\submission-" + submission.getSbmId() + "-" + submission.getTitle();
+        return dir;
+    }
+
+    private String getResourcePath(School school, Project project, Resource resource) {
+        String dir = "\\school-" + school.getSchId() + "-" + school.getSchName() +
+                "\\project-" + project.getProjId() + "-" + project.getProjName() +
+                "\\resource-" + resource.getSrcId();
         return dir;
     }
 

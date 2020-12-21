@@ -19,4 +19,7 @@ public class FileConfig {
 
     @Value("${ooad.file.path.input-root}")
     private String inputRoot;
+
+    @Value("${ooad.file.path.resource-root}")
+    private String resourceRoot;
 }

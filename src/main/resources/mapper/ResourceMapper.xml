@@ -25,10 +25,10 @@
   </delete>
   <insert id="insert" parameterType="com.ooad.xproject.entity.Resource"
           useGeneratedKeys="true" keyColumn="src_id" keyProperty="srcId">
-    insert into resources (proj_id, creator_role_id, created_time, 
+    insert into resources (proj_id, creator_role_id,
       file_name, location, size
       )
-    values (#{projId,jdbcType=INTEGER}, #{creatorRoleId,jdbcType=INTEGER}, #{createdTime,jdbcType=TIMESTAMP}, 
+    values (#{projId,jdbcType=INTEGER}, #{creatorRoleId,jdbcType=INTEGER},
       #{fileName,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, #{size,jdbcType=VARCHAR}
       )
   </insert>

@@ -15,6 +15,8 @@ public interface FileService {
 
     String upload(MultipartFile file, String uploadPath, String fileName);
 
+    int uploadResource(MultipartFile file, int projId, int creatorId);
+
     void deleteFilesOfFolder(File folderPath);
 
     File getOrCreateStudentDir(SubmissionInst submissionInst);
