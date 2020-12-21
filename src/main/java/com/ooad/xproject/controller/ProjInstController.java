@@ -193,21 +193,8 @@ public class ProjInstController {
             SvResult<Boolean> svResult = projInstService.confirmProjInst(projInstId, false);
             return new Result<>(svResult.getMsg(), svResult.getData() ? 1 : 0);
         } else {
-            List<Integer> successList = new ArrayList<>();
-            boolean isForce = teamConfirmParamVO.isForce();
-            for (int projInstId : teamConfirmParamVO.getProjInstIdList()) {
-                SvResult<Boolean> svResult = projInstService.confirmProjInst(projInstId, isForce);
-                if (svResult.getData()) {
-                    // true
-                    successList.add(projInstId);
-                } else {
-                    // false
-                    logger.debug(String.format("postTeamConfirm -> Fail to confirm projInst %d%n", projInstId));
-                }
-            }
-            int successCnt = successList.size();
-            String message = String.format("Confirm %d teams. Total %d.", successCnt,
-                    teamConfirmParamVO.getProjInstIdList().length);
+            String message = projInstService.confirmBatchTch(teamConfirmParamVO.getProjInstIdList(),
+                    teamConfirmParamVO.isForce());
             return new Result<>(message);
         }
     }

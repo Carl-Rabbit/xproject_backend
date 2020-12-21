@@ -10,22 +10,22 @@ import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.Project;
 import com.ooad.xproject.entity.Role;
-import com.ooad.xproject.service.HomeService;
-import com.ooad.xproject.service.ProjectService;
-import com.ooad.xproject.service.RoleService;
-import com.ooad.xproject.service.SubmissionInstService;
+import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.AutoFormingVO;
 import com.ooad.xproject.vo.ProjAddStdVO;
 import com.ooad.xproject.vo.ProjectVO;
 import com.ooad.xproject.vo.Result;
+import org.apache.commons.math3.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class ProjController {
@@ -34,13 +34,15 @@ public class ProjController {
     private final HomeService homeService;
     private final ProjectService projectService;
     private final SubmissionInstService submissionInstService;
+    private final ProjInstService projInstService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
 
-    public ProjController(RoleService roleService, HomeService homeService, ProjectService projectService, SubmissionInstService submissionInstService) {
+    public ProjController(RoleService roleService, HomeService homeService, ProjectService projectService, SubmissionInstService submissionInstService, ProjInstService projInstService) {
         this.roleService = roleService;
         this.homeService = homeService;
         this.projectService = projectService;
         this.submissionInstService = submissionInstService;
+        this.projInstService = projInstService;
     }
 
     @ResponseBody
@@ -140,12 +142,24 @@ public class ProjController {
         formContext.setProjInstList(autoFormingVO.getProjInstList());
         formContext.setStdList(autoFormingVO.getStuList());
 
-        SvResult<FormingResultBO> result = projectService.autoForming(formContext);
+        SvResult<FormingResultBO> formingRes = projectService.autoForming(formContext);
+        FormingResultBO res = formingRes.getData();
+
+        // handle auto confirm
+        String autoConfirmMsg = null;
+        if (autoFormingVO.isAutoConfirm()) {
+            List<Pair<Integer, Integer>> matchList = res.getMatchList();
+            Set<Integer> projInstIdSet = matchList.stream()
+                    .mapToInt(Pair::getFirst)
+                    .collect(HashSet::new, (set, item) -> ((Set<Integer>) set).add(item), null);
+            int[] projInstIdList = projInstIdSet.stream().mapToInt(Integer::valueOf).toArray();
+            autoConfirmMsg = projInstService.confirmBatchTch(projInstIdList, false);
+        }
 
 //        logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
-        FormingResultBO res = result.getData();
         res.setMatchList(null);
-        return new Result<>(res);
+        String retMsg = formingRes.getMsg() + ((autoConfirmMsg == null) ? "" : "\r\n" + autoConfirmMsg);
+        return new Result<>(retMsg, res);
     }
 
     @ResponseBody

@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Builder
 public class FormingResultBO {
-    private List<Pair<Integer, Integer>> matchList;
+    private List<Pair<Integer, Integer>> matchList;     // first: projInstId, second: stdRoleId
     private String message;
     private int successCnt;
     private int failCnt;

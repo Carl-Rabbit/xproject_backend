@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -320,5 +321,24 @@ public class ProjInstServiceImpl implements ProjInstService {
     @Override
     public List<GradeDTO> getTeamRecordInstList(int projInstId, int rcdId) {
         return recordInstMapper.selectByProjInstIdAndRcdId(projInstId, rcdId);
+    }
+
+    @Override
+    public String confirmBatchTch(int[] projInstIdList, boolean isForce) {
+        List<Integer> successList = new ArrayList<>();
+        for (int projInstId : projInstIdList) {
+            SvResult<Boolean> svResult = confirmProjInst(projInstId, isForce);
+            if (svResult.getData()) {
+                // true
+                successList.add(projInstId);
+            } else {
+                // false
+                System.out.printf("postTeamConfirm -> Fail to confirm projInst %d%n", projInstId);
+            }
+        }
+        int successCnt = successList.size();
+        String message = String.format("Confirm %d teams. Total %d.", successCnt,
+                projInstIdList.length);
+        return message;
     }
 }
