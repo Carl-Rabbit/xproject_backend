@@ -1,5 +1,6 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.dto.GradeDTO;
 import com.ooad.xproject.dto.RecordInstDTO;
 import com.ooad.xproject.entity.Record;
@@ -8,6 +9,7 @@ import com.ooad.xproject.entity.Teacher;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.RecordCreationVO;
+import com.ooad.xproject.vo.RecordDeletionVO;
 import com.ooad.xproject.vo.RecordVO;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
@@ -96,5 +98,16 @@ public class GradeController {
         return new Result<>(recordVOList);
     }
 
+    @ResponseBody
+    @PostMapping("api/teacher/grade/delete/record")
+    public Result<?> postDeleteRecord(@RequestBody RecordDeletionVO recordDeletionVO) {
+        Subject subject = SecurityUtils.getSubject();
+        String username = subject.getPrincipal().toString();
+        Role role = roleService.getByUsername(username);
 
+        // TODO check access
+
+        SvResult<Integer> svResult = recordService.deleteRecords(recordDeletionVO);
+        return new Result<>(svResult.getMsg(), svResult.getData());
+    }
 }
