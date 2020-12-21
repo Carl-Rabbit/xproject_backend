@@ -75,7 +75,7 @@ public class HomePageController {
     }
 
     @ResponseBody
-    @PostMapping("api/student/proj/quit")
+    @PostMapping("api/all/proj/quit")
     public Result<?> postProjQuit(@RequestParam("projId") int projId) {
         logger.info("postProjQuit");
         Role role = roleService.getByUsername(RoleUtils.getUsername());
