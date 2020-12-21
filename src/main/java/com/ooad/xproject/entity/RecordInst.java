@@ -15,6 +15,8 @@ public class RecordInst {
 
     private String comments;
 
+    private Integer modifiedRoleId;
+
     public Integer getRcdInstId() {
         return rcdInstId;
     }
@@ -61,5 +63,13 @@ public class RecordInst {
 
     public void setComments(String comments) {
         this.comments = comments == null ? null : comments.trim();
+    }
+
+    public Integer getModifiedRoleId() {
+        return modifiedRoleId;
+    }
+
+    public void setModifiedRoleId(Integer modifiedRoleId) {
+        this.modifiedRoleId = modifiedRoleId;
     }
 }
