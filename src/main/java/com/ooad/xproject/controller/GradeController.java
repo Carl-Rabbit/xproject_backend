@@ -87,7 +87,7 @@ public class GradeController {
         List<Record> recordList = recordService.getRecordList(projId);
         List<RecordVO> recordVOList = new ArrayList<>(recordList.size());
         for (Record rcd : recordList) {
-            Teacher teacher = teacherService.getTeacherByRoleId(role.getRoleId());
+            Teacher teacher = teacherService.getTeacherByRoleId(rcd.getCreatorId());
             recordVOList.add(RecordVO.builder()
                     .record(rcd)
                     .creator(teacher)
