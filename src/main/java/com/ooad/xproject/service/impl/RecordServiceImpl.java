@@ -1,13 +1,17 @@
 package com.ooad.xproject.service.impl;
 
 import com.ooad.xproject.bo.RecordUnitBO;
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.entity.Record;
 import com.ooad.xproject.entity.RecordInst;
 import com.ooad.xproject.mapper.RecordMapper;
 import com.ooad.xproject.mapper.StudentMapper;
 import com.ooad.xproject.service.RecordService;
 import com.ooad.xproject.vo.RecordCreationVO;
+import com.ooad.xproject.vo.RecordDeletionVO;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class RecordServiceImpl implements RecordService {
@@ -40,5 +44,22 @@ public class RecordServiceImpl implements RecordService {
         recordCreationVO.copyToRecord(record);
         int affectedRowCnt = recordMapper.insertSelective(record);
         return affectedRowCnt == 1;
+    }
+
+    @Override
+    public List<Record> getRecordList(int projId) {
+        return recordMapper.selectByProjId(projId);
+    }
+
+    @Override
+    public SvResult<Integer> deleteRecords(RecordDeletionVO recordDeletionVO) {
+        int success = 0;
+        for (int rcdId: recordDeletionVO.getRcdIdList()) {
+            success += recordMapper.deleteByPrimaryKey(rcdId);
+        }
+        String message = String.format("Delete %d records. Give: %d.",
+                success,
+                recordDeletionVO.getRcdIdList().length);
+        return new SvResult<>(message, success);
     }
 }

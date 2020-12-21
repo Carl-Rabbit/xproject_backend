@@ -1,6 +1,7 @@
 package com.ooad.xproject.service;
 
 import com.ooad.xproject.bo.SvResult;
+import com.ooad.xproject.dto.GradeDTO;
 import com.ooad.xproject.dto.RecordInstDTO;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.ProjectInst;
@@ -49,4 +50,6 @@ public interface ProjInstService {
     SvResult<Boolean> applyTeam(Integer roleId, ApplyTeamParamVO atpVO);
 
     SvResult<Boolean> applyTeamReply(Integer roleId, ApplyReplyParamVO applyReplyParamVO);
+
+    List<GradeDTO> getTeamRecordInstList(int projInstId, int rcdId);
 }

@@ -1,8 +1,6 @@
 package com.ooad.xproject.mapper;
 
 import com.ooad.xproject.entity.Record;
-import com.ooad.xproject.entity.RecordInst;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
