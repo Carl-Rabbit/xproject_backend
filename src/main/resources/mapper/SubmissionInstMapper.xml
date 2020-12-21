@@ -26,10 +26,10 @@
     </delete>
     <insert id="insert" parameterType="com.ooad.xproject.entity.SubmissionInst"
             useGeneratedKeys="true" keyColumn="sbm_inst_id" keyProperty="sbmInstId">
-        insert into submission_insts (sbm_id, proj_inst_id, submit_time,
+        insert into submission_insts (sbm_id, proj_inst_id,
         submitter_id, sbm_left, attachments
         )
-        values (#{sbmId,jdbcType=INTEGER}, #{projInstId,jdbcType=INTEGER}, #{submitTime,jdbcType=TIME},
+        values (#{sbmId,jdbcType=INTEGER}, #{projInstId,jdbcType=INTEGER},
         #{submitterId,jdbcType=INTEGER}, #{sbmLeft,jdbcType=INTEGER}, #{attachments,jdbcType=VARCHAR}
         )
     </insert>

@@ -45,11 +45,11 @@ class ExcelServiceImplTest {
     @Autowired
     private ProjectMapper projectMapper;
 
-
+    @Autowired
+    private FileConfig fileConfig;
 
     @Test
     void outputRecordUnitList() {
-        FileConfig fileConfig = new FileConfig();
         String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output\\output.xlsx";
         List<RecordUnitBO> recordUnitList = projectService.getRecordUnitList(1);
 
@@ -59,7 +59,6 @@ class ExcelServiceImplTest {
     @Test
     void generateStudentImportBO() {
 
-        FileConfig fileConfig = new FileConfig();
         String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output\\output.xlsx";
         int clsFrom = 70, clsTo = 71; // 10 ~ 99
         int stdFrom = 10, stdTo = 11; // 10 ~ 99
@@ -88,7 +87,7 @@ class ExcelServiceImplTest {
         Admin admin = new Admin();
         admin.setAdminId(1);
         admin.setRoleId(1);
-        ExcelServiceImpl excelService = new ExcelServiceImpl(projectService);
+        ExcelServiceImpl excelService = new ExcelServiceImpl(fileConfig, projectService);
 
         String[] strings = excelService.getField(admin.getClass());
         System.out.println(Arrays.toString(strings));
@@ -96,7 +95,7 @@ class ExcelServiceImplTest {
 
     @Test
     void importExcel() {
-        ExcelServiceImpl excelService = new ExcelServiceImpl(projectService);
+        ExcelServiceImpl excelService = new ExcelServiceImpl(fileConfig, projectService);
         String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output\\output.xlsx";
         List<StudentImportBO> studentImportBOList = excelService.readStudentImportBO(filePath);
         System.out.println(studentImportBOList.toString());
@@ -193,5 +192,15 @@ class ExcelServiceImplTest {
         RespStatus status = (check) ? RespStatus.FAIL : RespStatus.SUCCESS;
         String msg = (check) ? "Upsert student to project fail" : "Upsert student to project done";
         System.out.println(new Result<>(status, msg, successCnt).toString());
+    }
+
+    @Test
+    void exportTeamByProjId() {
+        SvResult<String> svResult = excelService.exportTeamByProjId(1);
+        System.out.println(svResult.getData());
+    }
+
+    @Test
+    void testGetField() {
     }
 }

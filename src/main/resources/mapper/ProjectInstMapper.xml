@@ -181,4 +181,13 @@
       left join project_insts pi on pisr.proj_inst_id = pi.proj_inst_id
     where pi.proj_inst_id = #{projInstId}
   </select>
+    <select id="selectTeamByProjId" resultType="com.ooad.xproject.bo.TeamBO">
+      select p.proj_name, pi.status, pi.topic_str topic, pi.team_name, s.std_no, s.std_name
+      from project_insts pi
+             join projects p on pi.proj_id = p.proj_id
+             left join proj_inst_student_rt pisr on pi.proj_inst_id = pisr.proj_inst_id
+             left join students s on pisr.std_role_id = s.role_id
+      where p.proj_id = #{projId}
+      order by (pi.status, topic_str, team_name);
+    </select>
 </mapper>
