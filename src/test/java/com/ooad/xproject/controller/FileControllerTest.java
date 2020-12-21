@@ -35,8 +35,8 @@ class FileControllerTest {
     void uploadToDir() {
         SubmissionInst submissionInst = new SubmissionInst();
         submissionInst.setSbmId(3);
-        submissionInst.setProjInstId(40);
-        submissionInst.setSubmitterId(1);
+        submissionInst.setProjInstId(42);
+        submissionInst.setSubmitterId(3);
         MultipartFile[] files = new MultipartFile[1];
 
         if (submissionInstService.upsertSubmissionInst(submissionInst) == 0){

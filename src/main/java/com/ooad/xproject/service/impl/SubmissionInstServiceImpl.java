@@ -34,7 +34,7 @@ public class SubmissionInstServiceImpl implements SubmissionInstService {
             sbmInst.setSbmId(sbmId);
             sbmInst.setProjInstId(projInstId);
             sbmInst.setSubmitterId(submitterId);
-            sbmInst.setSbmLeft(sbm.getMaxSbm());
+            sbmInst.setSbmLeft(sbm.getMaxSbm() - 1);
             return submissionInstMapper.insert(sbmInst);
         } else {
             if (sbmInst.getSbmLeft() <= 0) {
