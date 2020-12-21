@@ -1,5 +1,6 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.dto.GradeDTO;
 import com.ooad.xproject.dto.RecordInstDTO;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.service.ProjInstService;
@@ -53,5 +54,21 @@ public class GradeController {
         Role role = roleService.getByUsername(RoleUtils.getUsername());
         boolean success = recordService.createNewRecord(role.getRoleId(), recordCreationVO);
         return Result.createBoolResult(success, "Create record successfully", "Create record failed");
+    }
+
+    @ResponseBody
+    @GetMapping("api/teacher/record/inst")
+    public Result<?> getRecordInst(@RequestParam("projInstId") int projInstId,
+                                   @RequestParam("rcdId") int rcdId) {
+        Subject subject = SecurityUtils.getSubject();
+        String username = subject.getPrincipal().toString();
+        Role role = roleService.getByUsername(username);
+
+        // TODO check access
+
+        List<GradeDTO> recordInstDTOList = projInstService.getTeamRecordInstList(projInstId, rcdId);
+
+//        logger.info("getTeamInfoList -> " + Arrays.toString(recordInstDTOList.toArray()));
+        return new Result<>(recordInstDTOList);
     }
 }

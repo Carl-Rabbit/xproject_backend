@@ -5,6 +5,7 @@ import com.ooad.xproject.bo.MessageFactory;
 import com.ooad.xproject.bo.ProjSettingsBO;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.ProjInstStatus;
+import com.ooad.xproject.dto.GradeDTO;
 import com.ooad.xproject.dto.RecordInstDTO;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.dto.StudentProjDTO;
@@ -314,5 +315,10 @@ public class ProjInstServiceImpl implements ProjInstService {
             e.printStackTrace();
             return new SvResult<>("Error occur", false);
         }
+    }
+
+    @Override
+    public List<GradeDTO> getTeamRecordInstList(int projInstId, int rcdId) {
+        return recordInstMapper.selectByProjInstIdAndRcdId(projInstId, rcdId);
     }
 }
