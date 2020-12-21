@@ -76,6 +76,15 @@
       </if>
     </trim>
   </insert>
+  <insert id="insertRecordInst" parameterType="com.ooad.xproject.entity.RecordInst">
+    <selectKey keyProperty="rcdInstId" order="AFTER" resultType="java.lang.Integer">
+      Postgres
+    </selectKey>
+    insert into record_insts (rcd_id, role_id, modified_time,
+    content, comments)
+    values (#{rcdId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, now(),
+    #{content,jdbcType=VARCHAR}, #{comments,jdbcType=VARCHAR})
+  </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.ooad.xproject.entity.RecordInst">
     update record_insts
     <set>
@@ -110,6 +119,14 @@
       modified_role_id = #{modifiedRoleId,jdbcType=INTEGER}
     where rcd_inst_id = #{rcdInstId,jdbcType=INTEGER}
   </update>
+  <update id="updateRecordInst" parameterType="com.ooad.xproject.entity.RecordInst">
+      update record_insts
+      set modified_time = now(),
+          content = #{content,jdbcType=VARCHAR},
+          comments = #{comments,jdbcType=VARCHAR}
+      where rcd_inst_id = #{rcdInstId,jdbcType=INTEGER}
+  </update>
+
 
   <select id="selectByRcdId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
@@ -125,16 +142,18 @@
              created_time,
              modified_time,
              r.derived,
-             t.tch_name,
-             t.email,
              ri.content,
              r.base_content,
-             comments
+             comments,
+             t1.tch_name,
+             t1.email,
+             t2.tch_name,
+             t2.email
       from records as r
-             join record_insts ri on r.rcd_id = ri.rcd_id
-             join teachers t on r.creator_id = t.role_id
+             join teachers t1 on r.creator_id = t1.role_id
+             left join record_insts ri on r.rcd_id = ri.rcd_id and ri.role_id = #{stdRoleId}
+             left join teachers t2 on ri.modified_role_id = t2.role_id
       where proj_id = #{projId}
-        and ri.role_id = #{stdRoleId}
       order by rcd_id;
     </select>
   <select id="selectByRcdIdAndRoleId" resultType="com.ooad.xproject.entity.RecordInst">
