@@ -9,15 +9,20 @@ import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.ProjectMapper;
 import com.ooad.xproject.mapper.RecordInstMapper;
+import com.ooad.xproject.mapper.ResourceMapper;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
+import com.ooad.xproject.vo.ResourceVO;
 import com.ooad.xproject.vo.Result;
+import com.ooad.xproject.vo.SbmInstVO;
+import org.apache.poi.poifs.crypt.dsig.services.RevocationData;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -43,7 +48,9 @@ public class FileController {
 
     private final PermissionService permissionService;
 
-    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper, ProjectMapper projectMapper, SubmissionInstService submissionInstService, PermissionService permissionService) {
+    private final ResourceMapper resourceMapper;
+
+    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper, ProjectMapper projectMapper, SubmissionInstService submissionInstService, PermissionService permissionService, ResourceMapper resourceMapper) {
         this.fileConfig = fileConfig;
         this.fileService = fileService;
         this.excelService = excelService;
@@ -55,6 +62,7 @@ public class FileController {
         this.projectMapper = projectMapper;
         this.submissionInstService = submissionInstService;
         this.permissionService = permissionService;
+        this.resourceMapper = resourceMapper;
     }
 
     @PostMapping("api/upload")
@@ -187,7 +195,7 @@ public class FileController {
         submissionInst.setSbmId(sbmId);
         submissionInst.setProjInstId(projInstId);
         submissionInst.setSubmitterId(role.getRoleId());
-        if (submissionInstService.upsertSubmissionInst(submissionInst) == 0){
+        if (submissionInstService.upsertSubmissionInst(submissionInst) == 0) {
             return new Result<>(RespStatus.FAIL);
         }
         File studentDir = fileService.getOrCreateStudentDir(submissionInst);
@@ -209,13 +217,13 @@ public class FileController {
 
     @PostMapping("api/teacher/resource/upload")
     public Result<?> postResources(@RequestParam("file") MultipartFile[] files,
-                                          @RequestParam("projId") int projId) {
+                                   @RequestParam("projId") int projId) {
 
         Role role = roleService.getByUsername(RoleUtils.getUsername());
         int creatorId = role.getRoleId();
         int successCnt = 0;
         for (MultipartFile file : files) {
-            if (fileService.uploadResource(file, projId, creatorId) > 0){
+            if (fileService.uploadResource(file, projId, creatorId) > 0) {
                 ++successCnt;
             }
         }
@@ -233,5 +241,22 @@ public class FileController {
 
         File file = fileService.getResDir(srcId);
         return fileService.download(request, file.getPath(), userAgent, filename, inline);
+    }
+
+    @ResponseBody
+    @GetMapping("api/all/resource/list")
+    public Result<?> getResourceList(@RequestParam("projId") int projId) {
+
+        List<Resource> resources = resourceMapper.selectByProjId(projId);
+
+        List<ResourceVO> resourceVOS = new ArrayList<>();
+
+        for (Resource resource : resources) {
+            Teacher teacher = teacherService.getTeacherByRoleId(resource.getCreatorRoleId());
+            ResourceVO resourceVO = ResourceVO.builder().resource(resource).creator(teacher).build();
+            resourceVOS.add(resourceVO);
+        }
+
+        return new Result<>(resourceVOS);
     }
 }
