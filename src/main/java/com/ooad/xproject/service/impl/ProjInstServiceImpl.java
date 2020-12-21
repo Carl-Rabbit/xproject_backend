@@ -352,7 +352,14 @@ public class ProjInstServiceImpl implements ProjInstService {
             // no team yet
             return recordInstMapper.selectByStdRoleIdAndRcdId(stdRoleId, rcdId);
         } else {
-            return recordInstMapper.selectByProjInstIdAndRcdId(projInst.getProjInstId(), rcdId);
+            List<GradeDTO> gradeList = recordInstMapper.selectByProjInstIdAndRcdId(projInst.getProjInstId(), rcdId);
+            for (int idx = 0; idx < gradeList.size(); ++idx) {
+                if (gradeList.get(idx).getRoleId() == stdRoleId) {
+                    GradeDTO temp = gradeList.remove(idx);
+                    gradeList.add(0, temp);
+                }
+            }
+            return gradeList;
         }
     }
 }
