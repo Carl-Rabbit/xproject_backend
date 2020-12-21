@@ -2,8 +2,12 @@ package com.ooad.xproject.controller;
 
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.config.FileConfig;
+import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.service.FileService;
+import com.ooad.xproject.service.SubmissionInstService;
+import com.ooad.xproject.utils.RoleUtils;
+import com.ooad.xproject.vo.Result;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +28,20 @@ class FileControllerTest {
     @Autowired
     private FileConfig fileConfig;
 
+    @Autowired
+    private SubmissionInstService submissionInstService;
+
     @Test
     void uploadToDir() {
         SubmissionInst submissionInst = new SubmissionInst();
-        submissionInst.setSbmId(1);
-        submissionInst.setProjInstId(9);
+        submissionInst.setSbmId(3);
+        submissionInst.setProjInstId(40);
+        submissionInst.setSubmitterId(1);
         MultipartFile[] files = new MultipartFile[1];
 
+        if (submissionInstService.upsertSubmissionInst(submissionInst) == 0){
+            System.out.println("fail");
+        }
         File file = fileService.getOrCreateStudentDir(submissionInst);
 
         fileService.deleteFilesOfFolder(file);

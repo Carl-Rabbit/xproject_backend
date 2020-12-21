@@ -39,8 +39,9 @@ public class FileController {
 
     private final RecordInstMapper recordInstMapper;
     private final ProjectMapper projectMapper;
+    private final SubmissionInstService submissionInstService;
 
-    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper, ProjectMapper projectMapper) {
+    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper, ProjectMapper projectMapper, SubmissionInstService submissionInstService) {
         this.fileConfig = fileConfig;
         this.fileService = fileService;
         this.excelService = excelService;
@@ -50,6 +51,7 @@ public class FileController {
         this.recordService = recordService;
         this.recordInstMapper = recordInstMapper;
         this.projectMapper = projectMapper;
+        this.submissionInstService = submissionInstService;
     }
 
     @PostMapping("api/upload")
@@ -157,6 +159,7 @@ public class FileController {
         return new Result<>(status, msg, successCnt);
     }
 
+    // todo: upsert database
     @PostMapping("api/student/submission/upload")
     public Result<?> postUploadSubmission(@RequestParam("file") MultipartFile[] files,
                                           @RequestParam("sbmId") int sbmId,
@@ -167,6 +170,9 @@ public class FileController {
         submissionInst.setSbmId(sbmId);
         submissionInst.setProjInstId(projInstId);
         submissionInst.setSubmitterId(role.getRoleId());
+        if (submissionInstService.upsertSubmissionInst(submissionInst) == 0){
+            return new Result<>(RespStatus.FAIL);
+        }
         File studentDir = fileService.getOrCreateStudentDir(submissionInst);
 
         fileService.deleteFilesOfFolder(studentDir);

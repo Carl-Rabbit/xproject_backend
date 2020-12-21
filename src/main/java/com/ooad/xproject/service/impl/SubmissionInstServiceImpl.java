@@ -21,7 +21,12 @@ public class SubmissionInstServiceImpl implements SubmissionInstService {
     }
 
     @Override
-    public int upsertSubmissionInst(int sbmId, int projInstId, int submitterId) {
+    public int upsertSubmissionInst(SubmissionInst submissionInst) {
+        int sbmId, projInstId, submitterId;
+        sbmId = submissionInst.getSbmId();
+        projInstId = submissionInst.getProjInstId();
+        submitterId = submissionInst.getSubmitterId();
+
         SubmissionInst sbmInst = submissionInstMapper.selectBySbmIdAndProjInstId(sbmId, projInstId);
         if (sbmInst == null) {
             Submission sbm = submissionMapper.selectByPrimaryKey(sbmId);
@@ -35,6 +40,7 @@ public class SubmissionInstServiceImpl implements SubmissionInstService {
             if (sbmInst.getSbmLeft() <= 0) {
                 return 0;
             } else {
+                sbmInst.setSubmitterId(submissionInst.getSubmitterId());
                 sbmInst.setSbmLeft(sbmInst.getSbmLeft() - 1);
                 return submissionInstMapper.updateSubmissionInst(sbmInst);
             }

@@ -25,7 +25,5 @@ public interface SubmissionInstMapper {
 
     List<SubmissionInst> selectBySbmIdAndProjId(Integer sbmId, Integer projId);
 
-    int insertSubmissionInst(SubmissionInst record);
-
     int updateSubmissionInst(SubmissionInst record);
 }
