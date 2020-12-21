@@ -8,7 +8,7 @@ import java.util.Arrays;
 @Data
 public class AutoFormingVO {
     private FormingTeamVO[] teamList;
-    private int[] stuList;
+    private int[] stdRoleIdList;
     private String strategy;
     private boolean autoConfirm;
 

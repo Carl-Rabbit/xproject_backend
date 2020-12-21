@@ -140,7 +140,7 @@ public class ProjController {
             return new Result<>(RespStatus.FAIL, "No such strategy");
         }
         formContext.setProjInstList(autoFormingVO.getProjInstList());
-        formContext.setStdList(autoFormingVO.getStuList());
+        formContext.setStdRoleIdList(autoFormingVO.getStdRoleIdList());
 
         SvResult<FormingResultBO> formingRes = projectService.autoForming(formContext);
         FormingResultBO res = formingRes.getData();
