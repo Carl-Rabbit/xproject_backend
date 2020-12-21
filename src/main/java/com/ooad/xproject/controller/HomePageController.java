@@ -12,6 +12,7 @@ import com.ooad.xproject.service.StudentService;
 import com.ooad.xproject.service.TeacherService;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.Result;
+import com.ooad.xproject.vo.QuitProjParamVO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -88,6 +89,22 @@ public class HomePageController {
             return new Result<>(RespStatus.FAIL, "Quit project failed", false);
         }
     }
+
+    @ResponseBody
+    @PostMapping("api/teacher/project/delete/std")
+    public Result<?> postDeleteStdIntoProj(@RequestBody QuitProjParamVO quitProjParamVO) {
+        logger.info("postDeleteStdIntoProj");
+        Role role = roleService.getByUsername(RoleUtils.getUsername());
+
+        int successCnt = 0;
+        for (int roleId : quitProjParamVO.getRoleIdList()) {
+            boolean success = homeService.quitProject(roleId, quitProjParamVO.getProjId());
+            successCnt += success ? 1 : 0;
+        }
+
+        return new Result<>("Delete " + successCnt + " student from project successfully", true);
+    }
+
 
     @ResponseBody
     @GetMapping("api/all/project/by-sch")
