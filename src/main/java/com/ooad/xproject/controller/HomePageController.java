@@ -56,8 +56,8 @@ public class HomePageController {
     }
 
     @ResponseBody
-    @GetMapping("api/student/project/join")
-    public Result<?> getJoinProject(@RequestParam("projId") int projId,
+    @PostMapping("api/all/project/join")
+    public Result<?> postJoinProject(@RequestParam("projId") int projId,
                                     @RequestParam(value = "groupMark", required = false, defaultValue = "Default") String groupMark) {
         logger.info("joinProject");
         Subject subject = SecurityUtils.getSubject();
