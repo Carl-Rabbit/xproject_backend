@@ -32,14 +32,16 @@ public class ProjInstServiceImpl implements ProjInstService {
     private final MessageMapper msgMapper;
 
     private final ProjInstStudentRTMapper pisRTMapper;
+    private final RecordMapper recordMapper;
 
-    public ProjInstServiceImpl(ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, RecordInstMapper recordInstMapper, SubmissionInstMapper submissionInstMapper, MessageMapper msgMapper, ProjInstStudentRTMapper pisRTMapper) {
+    public ProjInstServiceImpl(ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, RecordInstMapper recordInstMapper, SubmissionInstMapper submissionInstMapper, MessageMapper msgMapper, ProjInstStudentRTMapper pisRTMapper, RecordMapper recordMapper) {
         this.projectMapper = projectMapper;
         this.projectInstMapper = projectInstMapper;
         this.recordInstMapper = recordInstMapper;
         this.submissionInstMapper = submissionInstMapper;
         this.msgMapper = msgMapper;
         this.pisRTMapper = pisRTMapper;
+        this.recordMapper = recordMapper;
     }
 
     @Override
@@ -340,5 +342,17 @@ public class ProjInstServiceImpl implements ProjInstService {
         String message = String.format("Confirm %d teams. Total %d.", successCnt,
                 projInstIdList.length);
         return message;
+    }
+
+    @Override
+    public List<GradeDTO> getTeamRecordInstListStd(int stdRoleId, int rcdId) {
+        Record record = recordMapper.selectByPrimaryKey(rcdId);
+        ProjectInst projInst = projectInstMapper.selectPIByProjIdAndStdRoleId(record.getProjId(), stdRoleId);
+        if (projInst == null) {
+            // no team yet
+            return recordInstMapper.selectByStdRoleIdAndRcdId(stdRoleId, rcdId);
+        } else {
+            return recordInstMapper.selectByProjInstIdAndRcdId(projInst.getProjInstId(), rcdId);
+        }
     }
 }

@@ -78,11 +78,22 @@ from records as rcd
     join project_insts pi on rcd.proj_id = pi.proj_id;
 
 select
-std_id, std.role_id,icon_url, std_no, std_name, rcd_inst_id, rcd.type, ri.modified_time, rcd.derived, ri.content, rcd.base_content, ri.comments, tch_name, tch.email
+std_id, std.role_id, r.icon_url, std_no, std_name, rcd_inst_id, rcd.type, ri.modified_time, rcd.derived, ri.content, rcd.base_content, ri.comments, tch_name, tch.email
 from project_insts as pi
     join records as rcd on pi.proj_id = rcd.proj_id
     join proj_inst_student_rt pisr on pi.proj_inst_id = pisr.proj_inst_id
     join students as std on std.role_id = pisr.std_role_id
+    join roles as r on std.role_id = r.role_id
     left join record_insts ri on std.role_id = ri.role_id and rcd.rcd_id = ri.rcd_id
     left join teachers as tch on tch.role_id = ri.modified_role_id
 where pi.proj_inst_id = 9 and rcd.rcd_id = 8;
+
+
+select
+std_id, std.role_id, r.icon_url, std_no, std_name, rcd_inst_id, rcd.type, ri.modified_time, rcd.derived, ri.content, rcd.base_content, ri.comments, tch_name, tch.email
+from students as std
+    left join record_insts as ri on std.role_id = ri.role_id and ri.rcd_id = 1
+    cross join records as rcd
+    join roles as r on std.role_id = r.role_id
+    join teachers as tch on tch.role_id = rcd.creator_id
+where std.role_id = 1 and rcd.rcd_id = 1;

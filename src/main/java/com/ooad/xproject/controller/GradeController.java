@@ -75,6 +75,23 @@ public class GradeController {
     }
 
     @ResponseBody
+    @GetMapping("api/teacher/record/inst/student")
+    public Result<?> getRecordInstStudent(@RequestParam("stdRoleId") int stdRoleId,
+                                          @RequestParam("rcdId") int rcdId) {
+        Subject subject = SecurityUtils.getSubject();
+        String username = subject.getPrincipal().toString();
+        Role role = roleService.getByUsername(username);
+
+        // TODO check access
+
+        List<GradeDTO> recordInstDTOList = projInstService.getTeamRecordInstListStd(stdRoleId, rcdId);
+
+//        logger.info("getRecordInst -> " + Arrays.toString(recordInstDTOList.toArray()));
+        return new Result<>(recordInstDTOList);
+    }
+
+
+    @ResponseBody
     @GetMapping("api/all/record")
     public Result<?> getAllRecord(@RequestParam(value="projId") int projId) {
         Subject subject = SecurityUtils.getSubject();

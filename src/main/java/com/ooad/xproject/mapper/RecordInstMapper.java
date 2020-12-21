@@ -34,4 +34,6 @@ public interface RecordInstMapper {
     int updateRecordInst(RecordInst recordInst);
 
     List<GradeDTO> selectByProjInstIdAndRcdId(int projInstId, int rcdId);
+
+    List<GradeDTO> selectByStdRoleIdAndRcdId(int stdRoleId, int rcdId);
 }
