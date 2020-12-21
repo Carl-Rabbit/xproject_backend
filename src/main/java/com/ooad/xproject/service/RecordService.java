@@ -6,6 +6,8 @@ import com.ooad.xproject.entity.Record;
 import com.ooad.xproject.entity.RecordInst;
 import com.ooad.xproject.vo.RecordCreationVO;
 import com.ooad.xproject.vo.RecordDeletionVO;
+import com.ooad.xproject.vo.RecordInstUpdateParamVO;
+import com.ooad.xproject.vo.RecordInstUpdateRetVO;
 
 import java.util.List;
 
@@ -18,4 +20,6 @@ public interface RecordService {
     List<Record> getRecordList(int projId);
 
     SvResult<Integer> deleteRecords(RecordDeletionVO recordDeletionVO);
+
+    SvResult<RecordInstUpdateRetVO> updateRecordInsts(int roleId, RecordInstUpdateParamVO recordInstUpdateParamVO);
 }

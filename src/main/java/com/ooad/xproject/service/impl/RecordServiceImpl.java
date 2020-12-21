@@ -4,11 +4,11 @@ import com.ooad.xproject.bo.RecordUnitBO;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.entity.Record;
 import com.ooad.xproject.entity.RecordInst;
+import com.ooad.xproject.mapper.RecordInstMapper;
 import com.ooad.xproject.mapper.RecordMapper;
 import com.ooad.xproject.mapper.StudentMapper;
 import com.ooad.xproject.service.RecordService;
-import com.ooad.xproject.vo.RecordCreationVO;
-import com.ooad.xproject.vo.RecordDeletionVO;
+import com.ooad.xproject.vo.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +17,12 @@ import java.util.List;
 public class RecordServiceImpl implements RecordService {
 
     private final RecordMapper recordMapper;
-
+    private final RecordInstMapper recordInstMapper;
     private final StudentMapper studentMapper;
 
-    public RecordServiceImpl(RecordMapper recordMapper, StudentMapper studentMapper) {
+    public RecordServiceImpl(RecordMapper recordMapper, RecordInstMapper recordInstMapper, StudentMapper studentMapper) {
         this.recordMapper = recordMapper;
+        this.recordInstMapper = recordInstMapper;
         this.studentMapper = studentMapper;
     }
 
@@ -42,6 +43,7 @@ public class RecordServiceImpl implements RecordService {
     public boolean createNewRecord(Integer roleId, RecordCreationVO recordCreationVO) {
         Record record = new Record();
         recordCreationVO.copyToRecord(record);
+        record.setCreatorId(roleId);
         int affectedRowCnt = recordMapper.insertSelective(record);
         return affectedRowCnt == 1;
     }
@@ -61,5 +63,41 @@ public class RecordServiceImpl implements RecordService {
                 success,
                 recordDeletionVO.getRcdIdList().length);
         return new SvResult<>(message, success);
+    }
+
+    @Override
+    public SvResult<RecordInstUpdateRetVO> updateRecordInsts(int roleId, RecordInstUpdateParamVO recordInstUpdateParamVO) {
+        GradeUpdate[] gradeUpdateList = recordInstUpdateParamVO.getGradeList();
+        int rcdId = recordInstUpdateParamVO.getRcdId();
+
+        // check rcd
+        Record rcd = recordMapper.selectByPrimaryKey(recordInstUpdateParamVO.getRcdId());
+        if (rcd == null) {
+            return new SvResult<>("No such record", null);
+        }
+
+        RecordInstUpdateRetVO rcdInstUpdateRetVO = new RecordInstUpdateRetVO();
+        rcdInstUpdateRetVO.setTotal(gradeUpdateList.length);
+        for (GradeUpdate grade: gradeUpdateList) {
+            RecordInst recordInst = recordInstMapper.selectByRcdIdAndRoleId(rcdId, grade.getRoleId());
+            if (recordInst == null) {
+                // create it
+                recordInst = new RecordInst();
+                recordInst.setRcdId(rcdId);
+                recordInst.setRoleId(grade.getRoleId());
+                recordInst.setContent(grade.getContent());
+                recordInst.setComments(grade.getComments());
+                int affectedRowCnt = recordInstMapper.insertSelective(recordInst);
+                rcdInstUpdateRetVO.updateSuccessOrFail(affectedRowCnt == 1);
+                rcdInstUpdateRetVO.incrCreate();
+            } else {
+                // update it
+                grade.copyToRecordInst(recordInst);
+                int affectedRowCnt = recordInstMapper.updateByPrimaryKey(recordInst);
+                rcdInstUpdateRetVO.updateSuccessOrFail(affectedRowCnt == 1);
+                rcdInstUpdateRetVO.incrModify();
+            }
+        }
+        return new SvResult<>(rcdInstUpdateRetVO.generateMessage(), rcdInstUpdateRetVO);
     }
 }

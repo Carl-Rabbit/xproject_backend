@@ -8,10 +8,7 @@ import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.Teacher;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
-import com.ooad.xproject.vo.RecordCreationVO;
-import com.ooad.xproject.vo.RecordDeletionVO;
-import com.ooad.xproject.vo.RecordVO;
-import com.ooad.xproject.vo.Result;
+import com.ooad.xproject.vo.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -108,6 +105,19 @@ public class GradeController {
         // TODO check access
 
         SvResult<Integer> svResult = recordService.deleteRecords(recordDeletionVO);
+        return new Result<>(svResult.getMsg(), svResult.getData());
+    }
+
+    @ResponseBody
+    @PostMapping("api/teacher/grade/new/grade")
+    public Result<?> postNewGrade(@RequestBody RecordInstUpdateParamVO recordInstUpdateParamVO) {
+        Subject subject = SecurityUtils.getSubject();
+        String username = subject.getPrincipal().toString();
+        Role role = roleService.getByUsername(username);
+
+        // TODO check access
+
+        SvResult<RecordInstUpdateRetVO> svResult = recordService.updateRecordInsts(role.getRoleId(), recordInstUpdateParamVO);
         return new Result<>(svResult.getMsg(), svResult.getData());
     }
 }
