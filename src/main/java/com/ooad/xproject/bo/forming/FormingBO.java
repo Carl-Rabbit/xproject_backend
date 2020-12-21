@@ -1,6 +1,5 @@
 package com.ooad.xproject.bo.forming;
 
-import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.ProjectInst;
 import lombok.Setter;
 
@@ -11,7 +10,7 @@ public class FormingBO {
 
     private FormingStrategy strategy;
     private @Setter ProjectInst[] projInstList;
-    private @Setter StudentProjDTO[] stdList;
+    private @Setter int[] stdRoleIdList;
 
     public static String[] getStrategyList() {
         return new String[]{RAND, TEAM_FIRST, SIZE_BALANCE};
@@ -28,9 +27,9 @@ public class FormingBO {
     }
 
     public FormingResultBO executeForming() {
-        if (projInstList == null || stdList == null) {
+        if (projInstList == null || stdRoleIdList == null) {
             throw new NullPointerException("Forming params have not set");
         }
-        return this.strategy.forming(projInstList, stdList);
+        return this.strategy.forming(projInstList, stdRoleIdList);
     }
 }

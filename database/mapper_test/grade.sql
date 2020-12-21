@@ -23,6 +23,27 @@ where proj_id = 1
   and ri.role_id = 1
 order by rcd_id;
 
+select r.rcd_id,
+     ri.rcd_inst_id,
+     rcd_name,
+     r.type,
+     created_time,
+     modified_time,
+     r.derived,
+     ri.content,
+     r.base_content,
+     comments,
+     t1.tch_name,
+     t1.email,
+     t2.tch_name,
+     t2.email
+from records as r
+     join teachers t1 on r.creator_id = t1.role_id
+     left join record_insts ri on r.rcd_id = ri.rcd_id and ri.role_id = 1
+     left join teachers t2 on ri.modified_role_id = t2.role_id
+where proj_id = 1
+order by rcd_id;
+
 
 select string_agg(coe || '#' || name, ',' order by derived_id) as derived
 from (select r.rcd_id as result_id, r2.rcd_id as derived_id, r2.rcd_name as name, coefficient as coe
@@ -60,8 +81,8 @@ select
 std_id, std.role_id,icon_url, std_no, std_name, rcd_inst_id, rcd.type, ri.modified_time, rcd.derived, ri.content, rcd.base_content, ri.comments, tch_name, tch.email
 from project_insts as pi
     join records as rcd on pi.proj_id = rcd.proj_id
-    join teachers as tch on tch.role_id = rcd.creator_id
     join proj_inst_student_rt pisr on pi.proj_inst_id = pisr.proj_inst_id
     join students as std on std.role_id = pisr.std_role_id
     left join record_insts ri on std.role_id = ri.role_id and rcd.rcd_id = ri.rcd_id
-where pi.proj_inst_id = 9 and rcd.rcd_id = 1;
+    left join teachers as tch on tch.role_id = ri.modified_role_id
+where pi.proj_inst_id = 9 and rcd.rcd_id = 8;
