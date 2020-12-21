@@ -23,5 +23,9 @@ public interface FileService {
 
     File getSbmDir(int sbmId);
 
+    File getOrCreateResourceDir(int projId, int srcId);
+
+    File getResDir(int srcId);
+
     SvResult<String> compressDir(File dir, String output);
 }

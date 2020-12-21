@@ -74,7 +74,6 @@ public class FileServiceImpl implements FileService {
         return (ResponseEntity<byte[]>) ResponseEntity.badRequest();
     }
 
-
     @Override
     public String upload(MultipartFile[] files, String uploadPath) {
         String filePath = "";
@@ -95,7 +94,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String upload(MultipartFile file, String uploadPath, String fileName) {
-        String filePath = uploadPath + fileName;
+        String filePath = uploadPath + "\\" + fileName;
         try {
             file.transferTo(new File(filePath));
         } catch (IOException e) {
@@ -105,12 +104,12 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public int uploadResource(MultipartFile file, int projId, int creatorId) {
+    public int uploadResource(MultipartFile multipartFile, int projId, int creatorId) {
         Resource resource = new Resource();
         resource.setProjId(projId);
         resource.setCreatorRoleId(creatorId);
-        resource.setSize(String.valueOf(file.getSize()));
-        resource.setFileName(file.getName());
+        resource.setSize(String.valueOf(multipartFile.getSize()));
+        resource.setFileName(multipartFile.getName());
         int ret = resourceMapper.insert(resource);
         if (ret == 0)
             return 0;
@@ -119,12 +118,13 @@ public class FileServiceImpl implements FileService {
         Project project = projectMapper.selectByPrimaryKey(projId);
         School school = schoolMapper.selectByPrimaryKey(project.getSchId());
 
-        String resDir = getResourcePath(school, project, resource);
-        String filePath = fileConfig.getResourceRoot() + "\\" + resDir;
+        String filePath = getOrCreateResourceDir(projId, resource.getSrcId()).getPath();
 
-        upload(file, filePath, file.getName());
+        upload(multipartFile, filePath, multipartFile.getName());
         return ret;
     }
+
+
 
     private String getStorePath(School school, Project project, Submission submission, ProjectInst projectInst) {
         String dir = "\\school-" + school.getSchId() + "-" + school.getSchName() +
@@ -141,10 +141,10 @@ public class FileServiceImpl implements FileService {
         return dir;
     }
 
-    private String getResourcePath(School school, Project project, Resource resource) {
+    private String getResourcePath(School school, Project project, int srcId) {
         String dir = "\\school-" + school.getSchId() + "-" + school.getSchName() +
                 "\\project-" + project.getProjId() + "-" + project.getProjName() +
-                "\\resource-" + resource.getSrcId();
+                "\\resource-" + srcId;
         return dir;
     }
 
@@ -165,6 +165,7 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    @Override
     public File getOrCreateStudentDir(SubmissionInst submissionInst) {
         ProjectInst projectInst = projectInstMapper.selectByPrimaryKey(submissionInst.getProjInstId());
         Submission submission = submissionMapper.selectByPrimaryKey(submissionInst.getSbmId());
@@ -191,6 +192,32 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public File getOrCreateResourceDir(int projId, int srcId) {
+        Project project = projectMapper.selectByPrimaryKey(projId);
+        School school = schoolMapper.selectByPrimaryKey(project.getSchId());
+
+        String resDir = getResourcePath(school, project, srcId);
+        String filePath = fileConfig.getResourceRoot() + "\\" + resDir;
+
+        File file = new File(filePath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file;
+    }
+
+
+    public File getResDir(int srcId) {
+        Resource resource = resourceMapper.selectByPrimaryKey(srcId);
+        Project project = projectMapper.selectByPrimaryKey(resource.getProjId());
+        School school = schoolMapper.selectByPrimaryKey(project.getSchId());
+
+        String resDir = getResourcePath(school, project, srcId);
+        String filePath = fileConfig.getResourceRoot() + "\\" + resDir;
+        return new File(filePath);
+    }
+
+    @Override
     public SvResult<String> compressDir(File dir, String output) {
         try {
             OutputStream fileOutputStream = new FileOutputStream(output);
@@ -201,5 +228,6 @@ public class FileServiceImpl implements FileService {
         }
         return new SvResult<>(1, "zip complete", output);
     }
+
 
 }

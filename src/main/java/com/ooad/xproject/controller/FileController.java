@@ -201,4 +201,31 @@ public class FileController {
         return fileService.download(request, realPath, userAgent, filename, inline);
     }
 
+    @PostMapping("api/teacher/resource/upload")
+    public Result<?> postResources(@RequestParam("file") MultipartFile[] files,
+                                          @RequestParam("projId") int projId) {
+
+        Role role = roleService.getByUsername(RoleUtils.getUsername());
+        int creatorId = role.getRoleId();
+        int successCnt = 0;
+        for (MultipartFile file : files) {
+            if (fileService.uploadResource(file, projId, creatorId) > 0){
+                ++successCnt;
+            }
+        }
+
+        boolean check = (successCnt == 0);
+        RespStatus status = (check) ? RespStatus.FAIL : RespStatus.SUCCESS;
+        String msg = (check) ? "Upload resource fail" : "Upload resource done";
+        return new Result<>(status, msg, successCnt);
+    }
+
+    @GetMapping("api/all/resource/download")
+    public ResponseEntity<byte[]> getRecource(HttpServletRequest request, @RequestParam("srcId") int srcId
+            , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
+            , @RequestParam(required = false, defaultValue = "false") boolean inline) {
+
+        File file = fileService.getResDir(srcId);
+        return fileService.download(request, file.getPath(), userAgent, filename, inline);
+    }
 }
