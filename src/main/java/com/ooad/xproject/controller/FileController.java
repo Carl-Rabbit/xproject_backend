@@ -110,8 +110,10 @@ public class FileController {
                 studentImportBOList) {
             SvResult<Role> svResult = studentService.creatRoleAndStudent(teacher.getSchId(), studentImportBO);
             if (svResult.getData() != null) {
-                successCnt++;
-                permissionService.appendPmsRoleToNewRole(svResult.getData());
+                boolean success = permissionService.appendPmsRoleToNewRole(svResult.getData());
+                if (success) {
+                    successCnt++;
+                }
             }
         }
         RespStatus status = (successCnt == 0) ? RespStatus.FAIL : RespStatus.SUCCESS;

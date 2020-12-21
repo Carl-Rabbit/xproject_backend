@@ -17,6 +17,7 @@ public class PermissionServiceImpl implements PermissionService {
     private final int PSM_ROLE_ID_ADMIN = 1;
     private final int PSM_ROLE_ID_TEACHER = 2;
     private final int PSM_ROLE_ID_STUDENT = 3;
+    private final int PSM_ROLE_ID_ALL = 3;
 
     private final PermissionMapper permissionMapper;
 
@@ -36,19 +37,21 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public void appendPmsRoleToNewRole(Role newRole) {
+    public boolean appendPmsRoleToNewRole(Role newRole) {
+        int affectedRowCnt = 0;
         switch (RoleType.getRoleType(newRole.getRoleType())) {
             case Admin:
-                permissionMapper.insertRolePmsRoleRT(newRole.getRoleId(), PSM_ROLE_ID_ADMIN);
+                affectedRowCnt = permissionMapper.insertRolePmsRoleRT(newRole.getRoleId(), PSM_ROLE_ID_ADMIN);
                 break;
             case Teacher:
-                permissionMapper.insertRolePmsRoleRT(newRole.getRoleId(), PSM_ROLE_ID_TEACHER);
+                affectedRowCnt = permissionMapper.insertRolePmsRoleRT(newRole.getRoleId(), PSM_ROLE_ID_TEACHER);
                 break;
             case Student:
-                permissionMapper.insertRolePmsRoleRT(newRole.getRoleId(), PSM_ROLE_ID_STUDENT);
+                affectedRowCnt = permissionMapper.insertRolePmsRoleRT(newRole.getRoleId(), PSM_ROLE_ID_STUDENT);
                 break;
             case Null:
                 break;
         }
+        return affectedRowCnt == 1;
     }
 }

@@ -9,5 +9,5 @@ public interface PermissionService {
 
     boolean needFilter(String requestAPI);
 
-    void appendPmsRoleToNewRole(Role newRole);
+    boolean appendPmsRoleToNewRole(Role newRole);
 }

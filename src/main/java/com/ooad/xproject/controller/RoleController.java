@@ -101,6 +101,9 @@ public class RoleController {
             msg = "User created";
             status = RespStatus.SUCCESS;
             logger.info(msg);
+
+            permissionService.appendPmsRoleToNewRole(newRole);
+
         } else {
             msg = "Role type error";
             status = RespStatus.FAIL;
