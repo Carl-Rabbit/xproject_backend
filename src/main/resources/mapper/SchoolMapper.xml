@@ -63,5 +63,8 @@
     where sch_id = #{schId,jdbcType=INTEGER}
   </update>
 
-
+  <select id="selectAll" resultType="com.ooad.xproject.entity.School">
+    select *
+    from schools;
+  </select>
 </mapper>

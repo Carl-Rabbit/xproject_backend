@@ -3,6 +3,8 @@ package com.ooad.xproject.mapper;
 import com.ooad.xproject.entity.School;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface SchoolMapper {
     int deleteByPrimaryKey(Integer schId);
@@ -16,4 +18,6 @@ public interface SchoolMapper {
     int updateByPrimaryKeySelective(School record);
 
     int updateByPrimaryKey(School record);
+
+    List<School> selectAll();
 }
