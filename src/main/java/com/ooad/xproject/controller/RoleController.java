@@ -3,6 +3,7 @@ package com.ooad.xproject.controller;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.entity.Role;
+import com.ooad.xproject.entity.School;
 import com.ooad.xproject.service.PermissionService;
 import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.utils.RoleUtils;
@@ -148,5 +149,12 @@ public class RoleController {
     public Result<?> postChangeStatus(@RequestParam("roleId") int roleId){
         boolean success = roleService.changeStatus(roleId);
         return Result.createBoolResult(success, "Change password successfully", "Change password failed");
+    }
+
+    @ResponseBody
+    @PostMapping("api/admin/school/edit")
+    public Result<?> postEditSchool(@RequestBody School school){
+        boolean success = roleService.updateSchool(school);
+        return Result.createBoolResult(success, "Update school successfully", "Update school failed");
     }
 }
