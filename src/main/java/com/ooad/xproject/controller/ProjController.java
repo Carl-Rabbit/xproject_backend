@@ -10,6 +10,7 @@ import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.Project;
 import com.ooad.xproject.entity.Role;
+import com.ooad.xproject.entity.Teacher;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.AutoFormingVO;
@@ -36,13 +37,15 @@ public class ProjController {
     private final SubmissionInstService submissionInstService;
     private final ProjInstService projInstService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
+    private final TeacherService teacherService;
 
-    public ProjController(RoleService roleService, HomeService homeService, ProjectService projectService, SubmissionInstService submissionInstService, ProjInstService projInstService) {
+    public ProjController(RoleService roleService, HomeService homeService, ProjectService projectService, SubmissionInstService submissionInstService, ProjInstService projInstService, TeacherService teacherService) {
         this.roleService = roleService;
         this.homeService = homeService;
         this.projectService = projectService;
         this.submissionInstService = submissionInstService;
         this.projInstService = projInstService;
+        this.teacherService = teacherService;
     }
 
     @ResponseBody
@@ -194,6 +197,8 @@ public class ProjController {
         Project proj = new Project();
         projectVO.copyToProjCreate(proj);
         proj.setCreatorId(role.getRoleId());
+        Teacher teacher = teacherService.getTeacherByRoleId(role.getRoleId());
+        proj.setSchId(teacher.getSchId());
         boolean success = projectService.createProject(proj);
         return Result.createBoolResult(success, "Create project successfully", "Create project failed");
     }
