@@ -232,4 +232,25 @@ public class ProjInstController {
         List<StudentDTO> stdDTOList = projInstService.getStudentDTOByProjInstId(projectInst.getProjInstId());
         return new Result<>(stdDTOList);
     }
+
+    @ResponseBody
+    @PostMapping("api/teacher/clear/std/team")
+    public Result<?> postClearStdTeam(@RequestBody QuitProjParamVO quitProjParamVO) {
+        logger.info("postClearStdTeam");
+        Role role = roleService.getByUsername(RoleUtils.getUsername());
+
+        int successCnt = 0;
+        int projId = quitProjParamVO.getProjId();
+        for (int roleId : quitProjParamVO.getRoleIdList()) {
+            ProjectInst projInst = projInstService.getPIByProjIdAndStdRoleId(projId, roleId);
+            if (projInst == null) {
+                continue;
+            }
+            boolean success = projInstService.quitTeam(roleId, projInst.getProjInstId());
+            successCnt += success ? 1 : 0;
+        }
+
+        return new Result<>("Delete " + successCnt + " student from team successfully", true);
+    }
+
 }

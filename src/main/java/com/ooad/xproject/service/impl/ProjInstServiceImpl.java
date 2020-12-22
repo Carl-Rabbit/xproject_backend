@@ -235,6 +235,7 @@ public class ProjInstServiceImpl implements ProjInstService {
     @Override
     public boolean quitTeam(int stdRoleId, int projInstId) {
         int affectedRoleCnt = projectInstMapper.deleteProjInstStdRT(stdRoleId, projInstId);
+        // TODO notice other student
         return affectedRoleCnt == 1;
     }
 
