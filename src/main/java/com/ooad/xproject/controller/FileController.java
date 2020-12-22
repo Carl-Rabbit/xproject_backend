@@ -91,13 +91,13 @@ public class FileController {
 
     @GetMapping("api/teacher/team/excel")
     public ResponseEntity<byte[]> getTeamExcel(HttpServletRequest request, @RequestParam("projId") Integer projId
-            , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
+            , @RequestHeader("user-agent") String userAgent
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
 
         SvResult<String> svResult = excelService.exportTeamByProjId(projId);
 
         String realPath = svResult.getData();
-        return fileService.download(request, realPath, userAgent, filename, inline);
+        return fileService.download(request, realPath, userAgent, "output.xlsx", inline);
     }
 
     @PostMapping("api/teacher/students/excel")
