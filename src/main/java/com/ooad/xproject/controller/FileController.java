@@ -238,9 +238,9 @@ public class FileController {
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
 
         File file = fileService.getResDir(srcId);
-        String outputPath = fileConfig.getOutputRoot() + "\\" + "output.zip";
-        SvResult<String> svResult = fileService.compressDir(file, outputPath);
-        return fileService.download(request, outputPath, userAgent, "output.zip", inline);
+        Resource resource = resourceMapper.selectByPrimaryKey(srcId);
+        String targetPath = file.getPath() + "\\" + resource.getFileName();
+        return fileService.download(request, targetPath, userAgent, resource.getFileName(), inline);
     }
 
     @ResponseBody
