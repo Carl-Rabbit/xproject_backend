@@ -135,7 +135,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public boolean updateSchool(School school) {
-        int affectedRowCnt = schoolMapper.updateByPrimaryKey(school);
+        int affectedRowCnt = schoolMapper.updateByPrimaryKeySelective(school);
         return affectedRowCnt == 1;
     }
 }
