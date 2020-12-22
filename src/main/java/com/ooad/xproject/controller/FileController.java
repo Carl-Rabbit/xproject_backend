@@ -14,8 +14,6 @@ import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.ResourceVO;
 import com.ooad.xproject.vo.Result;
-import com.ooad.xproject.vo.SbmInstVO;
-import org.apache.poi.poifs.crypt.dsig.services.RevocationData;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -200,7 +198,7 @@ public class FileController {
         }
         File studentDir = fileService.getOrCreateStudentDir(submissionInst);
 
-        fileService.deleteFilesOfFolder(studentDir);
+        fileService.deleteFilesExceptFolder(studentDir);
         return new Result<>(fileService.upload(files, studentDir.getPath()));
     }
 
@@ -256,7 +254,19 @@ public class FileController {
             ResourceVO resourceVO = ResourceVO.builder().resource(resource).creator(teacher).build();
             resourceVOS.add(resourceVO);
         }
-
         return new Result<>(resourceVOS);
+    }
+
+    @ResponseBody
+    @GetMapping("api/teacher/project/resource/del")
+    public Result<?> getDeleteResources(@RequestParam("srcId") int srcId) {
+        Resource resource = resourceMapper.selectByPrimaryKey(srcId);
+        if (resource == null) {
+            return new Result<>(RespStatus.FAIL);
+        }
+        File file = fileService.getResDir(srcId);
+        fileService.deleteFilesAndFolder(file);
+
+        return new Result<>(resourceMapper.deleteByPrimaryKey(srcId));
     }
 }

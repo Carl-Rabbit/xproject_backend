@@ -17,7 +17,9 @@ public interface FileService {
 
     int uploadResource(MultipartFile file, int projId, int creatorId);
 
-    void deleteFilesOfFolder(File folderPath);
+    void deleteFilesExceptFolder(File folder);
+
+    void deleteFilesAndFolder(File folder);
 
     File getOrCreateStudentDir(SubmissionInst submissionInst);
 

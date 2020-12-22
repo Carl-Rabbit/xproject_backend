@@ -149,7 +149,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void deleteFilesOfFolder(File folder) {
+    public void deleteFilesExceptFolder(File folder) {
         if (!folder.exists()) {
             return;
         }
@@ -157,12 +157,21 @@ public class FileServiceImpl implements FileService {
         if (files != null) {
             for (File file : files) {
                 if (file.isDirectory()) {
-                    deleteFilesOfFolder(file);
+                    deleteFilesExceptFolder(file);
                 } else {
                     file.delete();
                 }
             }
         }
+    }
+
+    @Override
+    public void deleteFilesAndFolder(File folder) {
+        if (!folder.exists()) {
+            return;
+        }
+        deleteFilesExceptFolder(folder);
+        folder.delete();
     }
 
     @Override
