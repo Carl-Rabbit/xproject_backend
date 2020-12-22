@@ -6,17 +6,11 @@ import com.ooad.xproject.bo.TopicBO;
 import com.ooad.xproject.bo.forming.FormingBO;
 import com.ooad.xproject.bo.forming.FormingResultBO;
 import com.ooad.xproject.constant.RespStatus;
-import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.dto.StudentProjDTO;
-import com.ooad.xproject.entity.Project;
-import com.ooad.xproject.entity.Role;
-import com.ooad.xproject.entity.Teacher;
+import com.ooad.xproject.entity.*;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
-import com.ooad.xproject.vo.AutoFormingVO;
-import com.ooad.xproject.vo.ProjAddStdVO;
-import com.ooad.xproject.vo.ProjectVO;
-import com.ooad.xproject.vo.Result;
+import com.ooad.xproject.vo.*;
 import org.apache.commons.math3.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,6 +18,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,14 +33,16 @@ public class ProjController {
     private final ProjInstService projInstService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
     private final TeacherService teacherService;
+    private final StudentService studentService;
 
-    public ProjController(RoleService roleService, HomeService homeService, ProjectService projectService, SubmissionInstService submissionInstService, ProjInstService projInstService, TeacherService teacherService) {
+    public ProjController(RoleService roleService, HomeService homeService, ProjectService projectService, SubmissionInstService submissionInstService, ProjInstService projInstService, TeacherService teacherService, StudentService studentService) {
         this.roleService = roleService;
         this.homeService = homeService;
         this.projectService = projectService;
         this.submissionInstService = submissionInstService;
         this.projInstService = projInstService;
         this.teacherService = teacherService;
+        this.studentService = studentService;
     }
 
     @ResponseBody
@@ -160,7 +157,18 @@ public class ProjController {
     @ResponseBody
     @GetMapping("api/teacher/project/submission-ins")
     public Result<?> getSbmInsList(@RequestParam(value="sbmId") int sbmId, @RequestParam(value="projId") int projId){
-        return new Result<>(submissionInstService.getSubmissionInstList(sbmId, projId));
+        List<SubmissionInst> submissionInsts = submissionInstService.getSubmissionInstList(sbmId, projId);
+        List<SbmInstVO> sbmInstVOS = new ArrayList<>();
+        for (SubmissionInst submissionInst : submissionInsts) {
+            Student submitter = studentService.getStudentByRoleId(submissionInst.getSubmitterId());
+
+            SbmInstVO sbmInstVO = SbmInstVO.builder()
+                    .submissionInst(submissionInst)
+                    .submitter(submitter)
+                    .build();
+            sbmInstVOS.add(sbmInstVO);
+        }
+        return new Result<>(sbmInstVOS);
     };
 
     @ResponseBody
