@@ -23,4 +23,6 @@ public interface RoleService {
     boolean changePwd(Role role, ChangePwdVO changePwdVO);
 
     List<Role> getAllRoles();
+
+    boolean changeStatus(int roleId);
 }

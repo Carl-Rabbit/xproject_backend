@@ -1,6 +1,8 @@
 package com.ooad.xproject.filter;
 
+import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.service.PermissionService;
+import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.utils.SpringContextUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -18,6 +20,7 @@ import java.util.Set;
 public class URLPathMatchingFilter extends PathMatchingFilter {
 
     private PermissionService adminPermissionService;
+    private RoleService roleService;
 
     @Override
     protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
@@ -32,6 +35,9 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
         if (null==adminPermissionService) {
             adminPermissionService = SpringContextUtils.getContext().getBean(PermissionService.class);
         }
+        if (null==roleService) {
+            roleService = SpringContextUtils.getContext().getBean(RoleService.class);
+        }
 
         String requestAPI = getPathWithinApplication(request);
         System.out.println("Visit interface" + requestAPI);
@@ -45,8 +51,17 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
         }
 
         System.out.println("Verify access rights: " + requestAPI);
-        // 判断当前用户是否有相应权限
+
         String username = subject.getPrincipal().toString();
+        // check valid
+        Role role = roleService.getByUsername(username);
+        if ("Disabled".equals(role.getStatus())) {
+            System.out.println("The current user is disabled by admin" + requestAPI);
+            httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return false;
+        }
+
+        // 判断当前用户是否有相应权限
         Set<String> permissionAPIs = adminPermissionService.listPmsURLsByUsername(username);
         boolean hasPermission = checkPermission(requestAPI, permissionAPIs);
 

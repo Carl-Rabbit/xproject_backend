@@ -142,4 +142,11 @@ public class RoleController {
         List<Role> roleList = roleService.getAllRoles();
         return new Result<>(roleList);
     }
+
+    @ResponseBody
+    @PostMapping("api/admin/role/change")
+    public Result<?> postChangeStatus(@RequestParam("roleId") int roleId){
+        boolean success = roleService.changeStatus(roleId);
+        return Result.createBoolResult(success, "Change password successfully", "Change password failed");
+    }
 }

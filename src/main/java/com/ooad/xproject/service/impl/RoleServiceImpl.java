@@ -124,4 +124,12 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> getAllRoles() {
         return roleMapper.selectAll(null);
     }
+
+    @Override
+    public boolean changeStatus(int roleId) {
+        Role role = roleMapper.selectByPrimaryKey(roleId);
+        role.setStatus(("Enabled".equals(role.getSalt())) ? "Disabled" : "Enabled");
+        int affectedRowCnt = roleMapper.updateByPrimaryKey(role);
+        return affectedRowCnt == 1;
+    }
 }
