@@ -80,13 +80,13 @@ public class FileController {
 
     @GetMapping("api/teacher/records/export")
     public ResponseEntity<byte[]> getRecordUnitExportToExcel(HttpServletRequest request, @RequestParam("projId") Integer projId
-            , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
+            , @RequestHeader("user-agent") String userAgent
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
 
         SvResult<String> svResult = excelService.exportRecordUnitByProjId(projId);
 
         String realPath = svResult.getData();
-        return fileService.download(request, realPath, userAgent, filename, inline);
+        return fileService.download(request, realPath, userAgent, "output.xlsx", inline);
     }
 
     @GetMapping("api/teacher/team/excel")
@@ -189,10 +189,16 @@ public class FileController {
                                           @RequestParam("projInstId") int projInstId) {
 
         Role role = roleService.getByUsername(RoleUtils.getUsername());
+        StringBuilder attachment = new StringBuilder();
+        for (MultipartFile file : files) {
+            attachment.append(file.getName()).append(";");
+        }
+
         SubmissionInst submissionInst = new SubmissionInst();
         submissionInst.setSbmId(sbmId);
         submissionInst.setProjInstId(projInstId);
         submissionInst.setSubmitterId(role.getRoleId());
+        submissionInst.setAttachments(attachment.toString());
         if (submissionInstService.upsertSubmissionInst(submissionInst) == 0) {
             return new Result<>(RespStatus.FAIL);
         }
