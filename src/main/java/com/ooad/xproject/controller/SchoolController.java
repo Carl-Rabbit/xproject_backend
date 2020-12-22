@@ -1,14 +1,15 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.constant.RespStatus;
+import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.School;
 import com.ooad.xproject.mapper.SchoolMapper;
 import com.ooad.xproject.service.*;
+import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,31 +50,31 @@ public class SchoolController {
 //            return new Result<>(RespStatus.FAIL, "Update failed", false);
 //        }
 //    }
-//
-//    @ResponseBody
-//    @PostMapping("api/teacher/project/ann/add")
-//    public Result<?> postAddAnnouncement(@RequestBody Announcement announcement) {
-//        String username = RoleUtils.getUsername();
-//        Role role = roleService.getByUsername(username);
-//
-//        announcement.setCreatorId(role.getRoleId());
-//
-//        boolean success = annService.addAnn(announcement);
-//        if (success) {
-//            return new Result<>(true);
-//        } else {
-//            return new Result<>(RespStatus.FAIL, "Add failed", false);
-//        }
-//    }
-//
-//    @ResponseBody
-//    @GetMapping("api/teacher/project/ann/delete")
-//    public Result<?> getDeleteAnnouncement(@RequestParam("annId") int annId) {
-//        boolean success = annService.deleteAnn(annId);
-//        if (success) {
-//            return new Result<>(true);
-//        } else {
-//            return new Result<>(RespStatus.FAIL, "Delete failed", false);
-//        }
-//    }
+
+    @ResponseBody
+    @PostMapping("api/admin/school/add")
+    public Result<?> postAddSchool(@RequestBody School school) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        school.setSchId(null);
+
+        boolean success = schoolMapper.insertSelective(school) != 0;
+        if (success) {
+            return new Result<>(true);
+        } else {
+            return new Result<>(RespStatus.FAIL, "Add failed", false);
+        }
+    }
+
+    @ResponseBody
+    @GetMapping("api/admin/school/delete")
+    public Result<?> getDeleteSchool(@RequestParam("schId") int schId) {
+        boolean success = schoolMapper.deleteByPrimaryKey(schId) != 0;
+        if (success) {
+            return new Result<>(true);
+        } else {
+            return new Result<>(RespStatus.FAIL, "Delete failed", false);
+        }
+    }
 }
