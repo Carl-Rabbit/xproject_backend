@@ -66,10 +66,6 @@ public class ProjController {
 
         Role role = roleService.getByUsername(username);
 
-        if (!RoleType.Teacher.match(role.getRoleType())) {
-            return new Result<>(RespStatus.UNAUTHORIZED);
-        }
-
         List<Project> projList = homeService.getProjectList(role.getRoleId());
 
         boolean hasThisProj = false;
@@ -97,10 +93,6 @@ public class ProjController {
         String username = subject.getPrincipal().toString();
 
         Role role = roleService.getByUsername(username);
-
-        if (!RoleType.Teacher.match(role.getRoleType())) {
-            return new Result<>(RespStatus.UNAUTHORIZED);
-        }
 
         List<Project> projList = homeService.getProjectList(role.getRoleId());
 
@@ -166,7 +158,7 @@ public class ProjController {
     }
 
     @ResponseBody
-    @PostMapping("api/teacher/project/submission-ins")
+    @GetMapping("api/teacher/project/submission-ins")
     public Result<?> getSbmInsList(@RequestParam(value="sbmId") int sbmId, @RequestParam(value="projId") int projId){
         return new Result<>(submissionInstService.getSubmissionInstList(sbmId, projId));
     };
