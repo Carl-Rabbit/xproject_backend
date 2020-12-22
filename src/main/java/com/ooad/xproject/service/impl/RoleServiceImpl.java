@@ -9,6 +9,7 @@ import com.ooad.xproject.mapper.RoleMapper;
 import com.ooad.xproject.mapper.StudentMapper;
 import com.ooad.xproject.mapper.TeacherMapper;
 import com.ooad.xproject.service.RoleService;
+import com.ooad.xproject.vo.ChangePwdVO;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.stereotype.Service;
@@ -107,5 +108,15 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Role getByRoleId(int roleId) {
         return roleMapper.selectByPrimaryKey(roleId);
+    }
+
+    @Override
+    public boolean changePwd(Role role, ChangePwdVO changePwdVO) {
+        int times = 2;      // hash times
+        String encodedPassword = new SimpleHash("md5", changePwdVO.getNewPassword(), role.getSalt(), times).toString();
+
+        role.setPassword(encodedPassword);
+        int affectedRowCnt = roleMapper.updateByPrimaryKey(role);
+        return affectedRowCnt != 0;
     }
 }

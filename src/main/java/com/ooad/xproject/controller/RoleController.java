@@ -5,6 +5,8 @@ import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.service.PermissionService;
 import com.ooad.xproject.service.RoleService;
+import com.ooad.xproject.utils.RoleUtils;
+import com.ooad.xproject.vo.ChangePwdVO;
 import com.ooad.xproject.vo.Result;
 import com.ooad.xproject.vo.RoleVO;
 import org.apache.ibatis.jdbc.Null;
@@ -120,5 +122,16 @@ public class RoleController {
         logger.info("Authentication for " + username);
         Role role = roleService.getByUsername(username);
         return new Result<>(role);
+    }
+
+    @ResponseBody
+    @PostMapping("api/all/change/password")
+    public Result<?> postChangePassword(@RequestBody ChangePwdVO changePwdVO){
+        if (!changePwdVO.getNewPassword().equals(changePwdVO.getConfirmNewPassword())) {
+            return new Result<>(RespStatus.FAIL, "Two passwords are not matched");
+        }
+        Role role = roleService.getByUsername(RoleUtils.getUsername());
+        boolean success = roleService.changePwd(role, changePwdVO);
+        return Result.createBoolResult(success, "Change password successfully", "Change password failed");
     }
 }
