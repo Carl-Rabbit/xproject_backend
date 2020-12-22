@@ -22,18 +22,15 @@ public class SubmissionInstServiceImpl implements SubmissionInstService {
 
     @Override
     public int upsertSubmissionInst(SubmissionInst submissionInst) {
-        int sbmId, projInstId, submitterId;
-        sbmId = submissionInst.getSbmId();
-        projInstId = submissionInst.getProjInstId();
-        submitterId = submissionInst.getSubmitterId();
 
-        SubmissionInst sbmInst = submissionInstMapper.selectBySbmIdAndProjInstId(sbmId, projInstId);
+        SubmissionInst sbmInst = submissionInstMapper.selectBySbmIdAndProjInstId(submissionInst.getSbmId(), submissionInst.getProjInstId());
         if (sbmInst == null) {
-            Submission sbm = submissionMapper.selectByPrimaryKey(sbmId);
+            Submission sbm = submissionMapper.selectByPrimaryKey(submissionInst.getSbmId());
             sbmInst = new SubmissionInst();
-            sbmInst.setSbmId(sbmId);
-            sbmInst.setProjInstId(projInstId);
-            sbmInst.setSubmitterId(submitterId);
+            sbmInst.setSbmId(submissionInst.getSbmId());
+            sbmInst.setProjInstId(submissionInst.getProjInstId());
+            sbmInst.setSubmitterId(submissionInst.getSubmitterId());
+            sbmInst.setAttachments(submissionInst.getAttachments());
             sbmInst.setSbmLeft(sbm.getMaxSbm() - 1);
             return submissionInstMapper.insert(sbmInst);
         } else {
@@ -42,6 +39,7 @@ public class SubmissionInstServiceImpl implements SubmissionInstService {
             } else {
                 sbmInst.setSubmitterId(submissionInst.getSubmitterId());
                 sbmInst.setSbmLeft(sbmInst.getSbmLeft() - 1);
+                sbmInst.setAttachments(submissionInst.getAttachments());
                 return submissionInstMapper.updateSubmissionInst(sbmInst);
             }
         }

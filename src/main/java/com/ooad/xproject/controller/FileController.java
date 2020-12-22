@@ -80,24 +80,24 @@ public class FileController {
 
     @GetMapping("api/teacher/records/export")
     public ResponseEntity<byte[]> getRecordUnitExportToExcel(HttpServletRequest request, @RequestParam("projId") Integer projId
-            , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
+            , @RequestHeader("user-agent") String userAgent
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
 
         SvResult<String> svResult = excelService.exportRecordUnitByProjId(projId);
 
         String realPath = svResult.getData();
-        return fileService.download(request, realPath, userAgent, filename, inline);
+        return fileService.download(request, realPath, userAgent, "output.xlsx", inline);
     }
 
     @GetMapping("api/teacher/team/excel")
     public ResponseEntity<byte[]> getTeamExcel(HttpServletRequest request, @RequestParam("projId") Integer projId
-            , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
+            , @RequestHeader("user-agent") String userAgent
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
 
         SvResult<String> svResult = excelService.exportTeamByProjId(projId);
 
         String realPath = svResult.getData();
-        return fileService.download(request, realPath, userAgent, filename, inline);
+        return fileService.download(request, realPath, userAgent, "output.xlsx", inline);
     }
 
     @PostMapping("api/teacher/students/excel")
@@ -189,10 +189,16 @@ public class FileController {
                                           @RequestParam("projInstId") int projInstId) {
 
         Role role = roleService.getByUsername(RoleUtils.getUsername());
+        StringBuilder attachment = new StringBuilder();
+        for (MultipartFile file : files) {
+            attachment.append(file.getName()).append(";");
+        }
+
         SubmissionInst submissionInst = new SubmissionInst();
         submissionInst.setSbmId(sbmId);
         submissionInst.setProjInstId(projInstId);
         submissionInst.setSubmitterId(role.getRoleId());
+        submissionInst.setAttachments(attachment.toString());
         if (submissionInstService.upsertSubmissionInst(submissionInst) == 0) {
             return new Result<>(RespStatus.FAIL);
         }
@@ -204,13 +210,13 @@ public class FileController {
 
     @GetMapping("api/teacher/submission/download")
     public ResponseEntity<byte[]> getAllSbmFiles(HttpServletRequest request, @RequestParam("sbmId") int sbmId
-            , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
+            , @RequestHeader("user-agent") String userAgent
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
 
         File file = fileService.getSbmDir(sbmId);
-        String realPath = fileConfig.getOutputRoot() + "\\" + "output.zip";
-        SvResult<String> svResult = fileService.compressDir(file, realPath);
-        return fileService.download(request, realPath, userAgent, filename, inline);
+        String outputPath = fileConfig.getOutputRoot() + "\\" + "output.zip";
+        SvResult<String> svResult = fileService.compressDir(file, outputPath);
+        return fileService.download(request, outputPath, userAgent, "output.zip", inline);
     }
 
     @PostMapping("api/teacher/resource/upload")
@@ -234,11 +240,13 @@ public class FileController {
 
     @GetMapping("api/all/resource/download")
     public ResponseEntity<byte[]> getRecource(HttpServletRequest request, @RequestParam("srcId") int srcId
-            , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
+            , @RequestHeader("user-agent") String userAgent
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
 
         File file = fileService.getResDir(srcId);
-        return fileService.download(request, file.getPath(), userAgent, filename, inline);
+        Resource resource = resourceMapper.selectByPrimaryKey(srcId);
+        String targetPath = file.getPath() + "\\" + resource.getFileName();
+        return fileService.download(request, targetPath, userAgent, resource.getFileName(), inline);
     }
 
     @ResponseBody

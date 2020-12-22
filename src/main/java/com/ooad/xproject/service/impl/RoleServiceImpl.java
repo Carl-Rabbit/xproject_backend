@@ -128,7 +128,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public boolean changeStatus(int roleId) {
         Role role = roleMapper.selectByPrimaryKey(roleId);
-        role.setStatus(("Enabled".equals(role.getSalt())) ? "Disabled" : "Enabled");
+        role.setStatus(("Enabled".equals(role.getStatus())) ? "Disabled" : "Enabled");
         int affectedRowCnt = roleMapper.updateByPrimaryKey(role);
         return affectedRowCnt == 1;
     }
