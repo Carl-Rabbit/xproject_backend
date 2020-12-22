@@ -119,4 +119,9 @@ public class RoleServiceImpl implements RoleService {
         int affectedRowCnt = roleMapper.updateByPrimaryKey(role);
         return affectedRowCnt != 0;
     }
+
+    @Override
+    public List<Role> getAllRoles() {
+        return roleMapper.selectAll(null);
+    }
 }

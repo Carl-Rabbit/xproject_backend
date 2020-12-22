@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 public class RoleController {
@@ -133,5 +134,12 @@ public class RoleController {
         Role role = roleService.getByUsername(RoleUtils.getUsername());
         boolean success = roleService.changePwd(role, changePwdVO);
         return Result.createBoolResult(success, "Change password successfully", "Change password failed");
+    }
+
+    @ResponseBody
+    @GetMapping("api/admin/role/list")
+    public Result<?> getRoleList(){
+        List<Role> roleList = roleService.getAllRoles();
+        return new Result<>(roleList);
     }
 }
