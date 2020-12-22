@@ -204,13 +204,13 @@ public class FileController {
 
     @GetMapping("api/teacher/submission/download")
     public ResponseEntity<byte[]> getAllSbmFiles(HttpServletRequest request, @RequestParam("sbmId") int sbmId
-            , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
+            , @RequestHeader("user-agent") String userAgent
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
 
         File file = fileService.getSbmDir(sbmId);
-        String realPath = fileConfig.getOutputRoot() + "\\" + "output.zip";
-        SvResult<String> svResult = fileService.compressDir(file, realPath);
-        return fileService.download(request, realPath, userAgent, filename, inline);
+        String outputPath = fileConfig.getOutputRoot() + "\\" + "output.zip";
+        SvResult<String> svResult = fileService.compressDir(file, outputPath);
+        return fileService.download(request, outputPath, userAgent, "output.zip", inline);
     }
 
     @PostMapping("api/teacher/resource/upload")
@@ -234,11 +234,13 @@ public class FileController {
 
     @GetMapping("api/all/resource/download")
     public ResponseEntity<byte[]> getRecource(HttpServletRequest request, @RequestParam("srcId") int srcId
-            , @RequestHeader("user-agent") String userAgent, @RequestParam("filename") String filename
+            , @RequestHeader("user-agent") String userAgent
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
 
         File file = fileService.getResDir(srcId);
-        return fileService.download(request, file.getPath(), userAgent, filename, inline);
+        String outputPath = fileConfig.getOutputRoot() + "\\" + "output.zip";
+        SvResult<String> svResult = fileService.compressDir(file, outputPath);
+        return fileService.download(request, outputPath, userAgent, "output.zip", inline);
     }
 
     @ResponseBody
