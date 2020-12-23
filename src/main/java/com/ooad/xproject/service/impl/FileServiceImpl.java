@@ -113,10 +113,6 @@ public class FileServiceImpl implements FileService {
         int ret = resourceMapper.insert(resource);
         if (ret == 0)
             return 0;
-        Resource res = resourceMapper.selectByPrimaryKey(ret);
-
-        Project project = projectMapper.selectByPrimaryKey(projId);
-        School school = schoolMapper.selectByPrimaryKey(project.getSchId());
 
         String filePath = getOrCreateResourceDir(projId, resource.getSrcId()).getPath();
 
