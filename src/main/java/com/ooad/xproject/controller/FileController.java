@@ -10,6 +10,7 @@ import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.ProjectMapper;
 import com.ooad.xproject.mapper.RecordInstMapper;
 import com.ooad.xproject.mapper.ResourceMapper;
+import com.ooad.xproject.mapper.SubmissionMapper;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.ResourceVO;
@@ -42,13 +43,16 @@ public class FileController {
 
     private final RecordInstMapper recordInstMapper;
     private final ProjectMapper projectMapper;
+    private final ProjInstService projInstService;
     private final SubmissionInstService submissionInstService;
 
     private final PermissionService permissionService;
 
+    private final SubmissionMapper submissionMapper;
+
     private final ResourceMapper resourceMapper;
 
-    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper, ProjectMapper projectMapper, SubmissionInstService submissionInstService, PermissionService permissionService, ResourceMapper resourceMapper) {
+    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper, ProjectMapper projectMapper, ProjInstService projInstService, SubmissionInstService submissionInstService, PermissionService permissionService, SubmissionMapper submissionMapper, ResourceMapper resourceMapper) {
         this.fileConfig = fileConfig;
         this.fileService = fileService;
         this.excelService = excelService;
@@ -58,8 +62,10 @@ public class FileController {
         this.recordService = recordService;
         this.recordInstMapper = recordInstMapper;
         this.projectMapper = projectMapper;
+        this.projInstService = projInstService;
         this.submissionInstService = submissionInstService;
         this.permissionService = permissionService;
+        this.submissionMapper = submissionMapper;
         this.resourceMapper = resourceMapper;
     }
 
@@ -185,18 +191,21 @@ public class FileController {
     // todo: upsert database
     @PostMapping("api/student/submission/upload")
     public Result<?> postUploadSubmission(@RequestParam("files") MultipartFile[] files,
-                                          @RequestParam("sbmId") int sbmId,
-                                          @RequestParam("projInstId") int projInstId) {
+                                          @RequestParam("sbmId") int sbmId) {
 
         Role role = roleService.getByUsername(RoleUtils.getUsername());
         StringBuilder attachment = new StringBuilder();
         for (MultipartFile file : files) {
-            attachment.append(file.getName()).append(";");
+            attachment.append(file.getOriginalFilename()).append(";");
         }
+
+        Submission submission = submissionMapper.selectByPrimaryKey(sbmId);
+
+        ProjectInst projectInst = projInstService.getPIByProjIdAndStdRoleId(submission.getProjId(), role.getRoleId());
 
         SubmissionInst submissionInst = new SubmissionInst();
         submissionInst.setSbmId(sbmId);
-        submissionInst.setProjInstId(projInstId);
+        submissionInst.setProjInstId(projectInst.getProjInstId());
         submissionInst.setSubmitterId(role.getRoleId());
         submissionInst.setAttachments(attachment.toString());
         if (submissionInstService.upsertSubmissionInst(submissionInst) == 0) {
