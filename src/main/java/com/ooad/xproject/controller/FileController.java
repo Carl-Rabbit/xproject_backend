@@ -15,7 +15,6 @@ import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.ResourceVO;
 import com.ooad.xproject.vo.Result;
-import com.ooad.xproject.vo.UploadFileProjIdVO;
 import com.ooad.xproject.vo.UploadSbmVO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -137,10 +136,7 @@ public class FileController {
 
 
     @PostMapping("api/teacher/records/excel")
-    public Result<Integer> postRecordUnitImportFromExcel(@RequestBody UploadFileProjIdVO uploadFileProjIdVO) {
-        MultipartFile[] files = uploadFileProjIdVO.getFiles();
-        int projId = uploadFileProjIdVO.getProjId();
-
+    public Result<Integer> postRecordUnitImportFromExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
 //        System.out.println(filePath);
         List<RecordUnitBO> recordUnitBOList = excelService.readRecordUnitBO(filePath);
@@ -169,9 +165,7 @@ public class FileController {
     }
 
     @PostMapping("api/teacher/project/student/excel")
-    public Result<Integer> postProjStdExcel(@RequestBody UploadFileProjIdVO uploadFileProjIdVO) {
-        MultipartFile[] files = uploadFileProjIdVO.getFiles();
-        int projId = uploadFileProjIdVO.getProjId();
+    public Result<Integer> postProjStdExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
 //        System.out.println(filePath);
         List<StudentClassBO> studentClassBOList = excelService.readStudentClassBO(filePath);
@@ -195,6 +189,7 @@ public class FileController {
         return new Result<>(status, msg, successCnt);
     }
 
+    // todo: upsert database
     @PostMapping("api/student/submission/upload")
     public Result<?> postUploadSubmission(@RequestBody UploadSbmVO uploadSbmVO) {
         MultipartFile[] files = uploadSbmVO.getFiles();
@@ -236,9 +231,8 @@ public class FileController {
     }
 
     @PostMapping("api/teacher/resource/upload")
-    public Result<?> postResources(@RequestBody UploadFileProjIdVO uploadFileProjIdVO) {
-        MultipartFile[] files = uploadFileProjIdVO.getFiles();
-        int projId = uploadFileProjIdVO.getProjId();
+    public Result<?> postResources(@RequestParam("files") MultipartFile[] files,
+                                   @RequestParam("projId") int projId) {
 
         Role role = roleService.getByUsername(RoleUtils.getUsername());
         int creatorId = role.getRoleId();

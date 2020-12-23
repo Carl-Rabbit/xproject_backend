@@ -20,4 +20,6 @@ public interface SchoolMapper {
     int updateByPrimaryKey(School record);
 
     List<School> selectAll();
+
+    School selectBySchName(String schName);
 }

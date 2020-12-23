@@ -52,19 +52,19 @@ class ExcelServiceImplTest {
     private FileConfig fileConfig;
 
     @Test
-    void outputRecordUnitList() {
-        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output\\output.xlsx";
+    void generateRecordUnitList() {
+        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\input\\testImport\\OOADGrade.xlsx";
         List<RecordUnitBO> recordUnitList = projectService.getRecordUnitList(1);
 
         excelService.generate(recordUnitList, filePath);
     }
 
     @Test
-    void generateStudentImportBO() {
+    void generateStudentImportBOList() {
 
-        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output\\output.xlsx";
-        int clsFrom = 72, clsTo = 72; // 10 ~ 99
-        int stdFrom = 10, stdTo = 10; // 10 ~ 99
+        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\input\\testImport\\StudentAcImport.xlsx";
+        int clsFrom = 75, clsTo = 75; // 10 ~ 99
+        int stdFrom = 10, stdTo = 14; // 10 ~ 99
 
         List<StudentImportBO> studentImportBOS = new ArrayList<>();
         for (int lab = clsFrom; lab <= clsTo; ++lab) {

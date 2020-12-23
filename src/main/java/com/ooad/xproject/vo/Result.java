@@ -8,7 +8,7 @@ public class Result<T> {
     private String message;
     private T data;
 
-    public Result(RespStatus status, String message, T data) {
+    public  Result(RespStatus status, String message, T data) {
         this.code = status.code;
         this.phrase = status.phrase;
         this.message = message;
