@@ -41,7 +41,7 @@ class FileControllerTest {
         submissionInst.setSbmId(3);
         submissionInst.setProjInstId(43);
         submissionInst.setSubmitterId(3);
-        MultipartFile[] files = new MultipartFile[1];
+        MultipartFile[] files = new MockMultipartFile[1];
 
         if (submissionInstService.upsertSubmissionInst(submissionInst) == 0) {
             System.out.println("fail");

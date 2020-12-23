@@ -64,7 +64,7 @@ public class FileController {
     }
 
     @PostMapping("api/upload")
-    public String fileUpload(@RequestParam("file") MultipartFile[] files) {
+    public String fileUpload(@RequestParam("files") MultipartFile[] files) {
         return fileService.upload(files, fileConfig.getUploadRoot());
     }
 
@@ -101,7 +101,7 @@ public class FileController {
     }
 
     @PostMapping("api/teacher/students/excel")
-    public Result<Integer> postStudentAcCreationFromExcel(@RequestParam("file") MultipartFile[] files) {
+    public Result<Integer> postStudentAcCreationFromExcel(@RequestParam("files") MultipartFile[] files) {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
         System.out.println(filePath);
         List<StudentImportBO> studentImportBOList = excelService.readStudentImportBO(filePath);
@@ -129,7 +129,7 @@ public class FileController {
 
 
     @PostMapping("api/teacher/records/excel")
-    public Result<Integer> postRecordUnitImportFromExcel(@RequestParam("file") MultipartFile[] files, @RequestParam("projId") Integer projId) {
+    public Result<Integer> postRecordUnitImportFromExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
 //        System.out.println(filePath);
         List<RecordUnitBO> recordUnitBOList = excelService.readRecordUnitBO(filePath);
@@ -158,7 +158,7 @@ public class FileController {
     }
 
     @PostMapping("api/teacher/project/student/excel")
-    public Result<Integer> postProjStdExcel(@RequestParam("file") MultipartFile[] files, @RequestParam("projId") Integer projId) {
+    public Result<Integer> postProjStdExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
 //        System.out.println(filePath);
         List<StudentClassBO> studentClassBOList = excelService.readStudentClassBO(filePath);
@@ -184,7 +184,7 @@ public class FileController {
 
     // todo: upsert database
     @PostMapping("api/student/submission/upload")
-    public Result<?> postUploadSubmission(@RequestParam("file") MultipartFile[] files,
+    public Result<?> postUploadSubmission(@RequestParam("files") MultipartFile[] files,
                                           @RequestParam("sbmId") int sbmId,
                                           @RequestParam("projInstId") int projInstId) {
 
@@ -220,7 +220,7 @@ public class FileController {
     }
 
     @PostMapping("api/teacher/resource/upload")
-    public Result<?> postResources(@RequestParam("file") MultipartFile[] files,
+    public Result<?> postResources(@RequestParam("files") MultipartFile[] files,
                                    @RequestParam("projId") int projId) {
 
         Role role = roleService.getByUsername(RoleUtils.getUsername());
