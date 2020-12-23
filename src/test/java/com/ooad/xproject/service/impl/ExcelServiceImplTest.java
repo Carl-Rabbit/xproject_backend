@@ -86,6 +86,23 @@ class ExcelServiceImplTest {
     }
 
     @Test
+    void generateStudentClassList() {
+        FileConfig fileConfig = new FileConfig();
+        String filePath = "C:\\Users\\BCS\\Desktop\\Testcase\\testImport\\studentClassImport.xlsx";
+        List<StudentClassBO> studentClassBOList = new ArrayList<>();
+        String cls = "Lab 7";
+        int roleFrom = 10, roleTo = 11;
+        for (int i = roleFrom; i <= roleTo; ++i) {
+            StudentClassBO studentClassBO = new StudentClassBO();
+            studentClassBO.setClsMark(cls);
+            studentClassBO.setStdNo("118170" + i);
+            studentClassBOList.add(studentClassBO);
+        }
+
+        excelService.generate(studentClassBOList, filePath);
+    }
+
+    @Test
     void getField() {
         Admin admin = new Admin();
         admin.setAdminId(1);
@@ -154,22 +171,7 @@ class ExcelServiceImplTest {
         System.out.println(new Result<>(status, msg, successCnt).toString());
     }
 
-    @Test
-    void outputStudentClassList() {
-        FileConfig fileConfig = new FileConfig();
-        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output.xlsx";
-        List<StudentClassBO> studentClassBOList = new ArrayList<>();
-        String cls = "Lab 7";
-        int roleFrom = 10, roleTo = 11;
-        for (int i = roleFrom; i <= roleTo; ++i) {
-            StudentClassBO studentClassBO = new StudentClassBO();
-            studentClassBO.setClsMark(cls);
-            studentClassBO.setStdNo("118170" + i);
-            studentClassBOList.add(studentClassBO);
-        }
 
-        excelService.generate(studentClassBOList, filePath);
-    }
 
     @Test
     void postProjStdExcel() {

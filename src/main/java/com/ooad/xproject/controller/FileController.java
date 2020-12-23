@@ -25,6 +25,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ooad.xproject.constant.ProjInstStatus.Confirm;
+
 
 // todo: role + database -> directory name -> upload/download
 @RestController
@@ -53,7 +55,9 @@ public class FileController {
 
     private final ResourceMapper resourceMapper;
 
-    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper, ProjectMapper projectMapper, ProjInstService projInstService, SubmissionInstService submissionInstService, PermissionService permissionService, SubmissionMapper submissionMapper, ResourceMapper resourceMapper) {
+    private final ProjectService projService;
+
+    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper, ProjectMapper projectMapper, ProjInstService projInstService, SubmissionInstService submissionInstService, PermissionService permissionService, SubmissionMapper submissionMapper, ResourceMapper resourceMapper, ProjectService projectService) {
         this.fileConfig = fileConfig;
         this.fileService = fileService;
         this.excelService = excelService;
@@ -68,6 +72,7 @@ public class FileController {
         this.permissionService = permissionService;
         this.submissionMapper = submissionMapper;
         this.resourceMapper = resourceMapper;
+        this.projService = projectService;
     }
 
     @PostMapping("api/upload")
@@ -108,8 +113,8 @@ public class FileController {
     }
 
     @PostMapping("api/teacher/students/excel")
-    public Result<Integer> postStudentAcCreationFromExcel(@RequestParam("files") MultipartFile[] files) {
-        String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "stdInput.xlsx");
+    public Result<Integer> postStudentAcCreationFromExcel(@RequestParam("file") MultipartFile file) {
+        String filePath = fileService.upload(file, fileConfig.getInputRoot(), "stdInput.xlsx");
 //        System.out.println(filePath);
         List<StudentImportBO> studentImportBOList = excelService.readStudentImportBO(filePath);
 
@@ -189,7 +194,6 @@ public class FileController {
         return new Result<>(status, msg, successCnt);
     }
 
-    // todo: upsert database
     @PostMapping("api/student/submission/upload")
     public Result<?> postUploadSubmission(@RequestParam("files") MultipartFile[] files,
                                           @RequestParam("sbmId") int sbmId) {
@@ -202,7 +206,18 @@ public class FileController {
 
         Submission submission = submissionMapper.selectByPrimaryKey(sbmId);
 
+        // check project accessible
+        if (!projService.isAccessible(submission.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         ProjectInst projectInst = projInstService.getPIByProjIdAndStdRoleId(submission.getProjId(), role.getRoleId());
+
+        if (projectInst == null) {
+            return new Result<>(RespStatus.FAIL, "No team yet");
+        } else if (!projectInst.getStatus().equals(Confirm.name())) {
+            return new Result<>(RespStatus.FAIL, "Team is not confirm");
+        }
 
         SubmissionInst submissionInst = new SubmissionInst();
         submissionInst.setSbmId(sbmId);
@@ -210,7 +225,7 @@ public class FileController {
         submissionInst.setSubmitterId(role.getRoleId());
         submissionInst.setAttachments(attachment.toString());
         if (submissionInstService.upsertSubmissionInst(submissionInst) == 0) {
-            return new Result<>(RespStatus.FAIL);
+            return new Result<>(RespStatus.FAIL, "No chance left");
         }
         File studentDir = fileService.getOrCreateStudentDir(submissionInst);
 
@@ -222,6 +237,14 @@ public class FileController {
     public ResponseEntity<byte[]> getAllSbmFiles(HttpServletRequest request, @RequestParam("sbmId") int sbmId
             , @RequestHeader("user-agent") String userAgent
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
+
+        Submission submission = submissionMapper.selectByPrimaryKey(sbmId);
+
+        // check project accessible
+        if (!projService.isAccessible(submission.getProjId())) {
+            // TODO LYZ
+            return null;
+        }
 
         File file = fileService.getSbmDir(sbmId);
         String outputPath = fileConfig.getOutputRoot() + "\\" + "output.zip";
@@ -253,8 +276,20 @@ public class FileController {
             , @RequestHeader("user-agent") String userAgent
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
 
-        File file = fileService.getResDir(srcId);
         Resource resource = resourceMapper.selectByPrimaryKey(srcId);
+
+        if (resource == null) {
+            // TODO LYZ
+            return null;
+        }
+
+        // check project accessible
+        if (!projService.isAccessible(resource.getProjId())) {
+            // TODO LYZ
+            return null;
+        }
+
+        File file = fileService.getResDir(srcId);
         String targetPath = file.getPath() + "\\" + resource.getFileName();
         return fileService.download(request, targetPath, userAgent, resource.getFileName(), inline);
     }
@@ -262,6 +297,11 @@ public class FileController {
     @ResponseBody
     @GetMapping("api/all/resource/list")
     public Result<?> getResourceList(@RequestParam("projId") int projId) {
+
+        // check project accessible
+        if (!projService.isAccessible(projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
 
         List<Resource> resources = resourceMapper.selectByProjId(projId);
 
@@ -279,8 +319,14 @@ public class FileController {
     @GetMapping("api/teacher/project/resource/del")
     public Result<?> getDeleteResources(@RequestParam("srcId") int srcId) {
         Resource resource = resourceMapper.selectByPrimaryKey(srcId);
+
         if (resource == null) {
-            return new Result<>(RespStatus.FAIL);
+            return new Result<>(RespStatus.FAIL, "No such resource");
+        }
+
+        // check project accessible
+        if (!projService.isAccessible(resource.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
         }
         File file = fileService.getResDir(srcId);
         fileService.deleteFilesAndFolder(file);
