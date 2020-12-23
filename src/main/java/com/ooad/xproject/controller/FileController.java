@@ -239,7 +239,7 @@ public class FileController {
     }
 
     @GetMapping("api/all/resource/download")
-    public ResponseEntity<byte[]> getRecource(HttpServletRequest request, @RequestParam("srcId") int srcId
+    public ResponseEntity<byte[]> getResource(HttpServletRequest request, @RequestParam("srcId") int srcId
             , @RequestHeader("user-agent") String userAgent
             , @RequestParam(required = false, defaultValue = "false") boolean inline) {
 
