@@ -10,6 +10,8 @@ import com.ooad.xproject.mapper.StudentMapper;
 import com.ooad.xproject.service.RecordService;
 import com.ooad.xproject.vo.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 
@@ -101,6 +103,7 @@ public class RecordServiceImpl implements RecordService {
         return new SvResult<>(rcdInstUpdateRetVO.generateMessage(), rcdInstUpdateRetVO);
     }
 
+    @Transactional
     @Override
     public SvResult<Integer> updateRecordInstsBatch(Integer roleId, CombineRcdInstParamVO combineRcdInstParamVO) {
         int[] rcdIdList = combineRcdInstParamVO.getRcdIdList();
@@ -110,19 +113,25 @@ public class RecordServiceImpl implements RecordService {
             return new SvResult<>("Record list is empty", 0);
         }
 
-        Record record = recordMapper.selectByPrimaryKey(rcdIdList[0]);
+        try {
+            Record record = recordMapper.selectByPrimaryKey(rcdIdList[0]);
 
-        Record newRecord = new Record();
-        newRecord.setProjId(record.getProjId());
-        newRecord.setCreatorId(roleId);
-        newRecord.setRcdName(combineRcdInstParamVO.getRecordName());
-        newRecord.setType("Point");
-        recordMapper.insertSelective(newRecord);
+            Record newRecord = new Record();
+            newRecord.setProjId(record.getProjId());
+            newRecord.setCreatorId(roleId);
+            newRecord.setRcdName(combineRcdInstParamVO.getRecordName());
+            newRecord.setType("Point");
+            recordMapper.insertSelective(newRecord);
 
+            int successCnt = recordInstMapper.generateRecordInst(record.getProjId(),
+                    newRecord.getRcdId(), roleId, rcdIdList, coeList);
 
-        int successCnt = recordInstMapper.generateRecordInst(record.getProjId(),
-                newRecord.getRcdId(), roleId, rcdIdList, coeList);
-
-        return new SvResult<>("Execute finished", successCnt);
+            return new SvResult<>("Execute finished", successCnt);
+        } catch (Exception e) {
+            // roll back
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            e.printStackTrace();
+            return new SvResult<>(e.toString(), 0);
+        }
     }
 }
