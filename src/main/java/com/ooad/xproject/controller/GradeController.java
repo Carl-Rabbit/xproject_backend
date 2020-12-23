@@ -137,4 +137,15 @@ public class GradeController {
         SvResult<RecordInstUpdateRetVO> svResult = recordService.updateRecordInsts(role.getRoleId(), recordInstUpdateParamVO);
         return new Result<>(svResult.getMsg(), svResult.getData());
     }
+
+    @ResponseBody
+    @PostMapping("api/teacher/combine/record/inst")
+    public Result<?> postCombineRecordInst(@RequestBody CombineRcdInstParamVO combineRcdInstParamVO) {
+        Subject subject = SecurityUtils.getSubject();
+        String username = subject.getPrincipal().toString();
+        Role role = roleService.getByUsername(username);
+
+        SvResult<Integer> svResult = recordService.updateRecordInstsBatch(role.getRoleId(), combineRcdInstParamVO);
+        return new Result<>(svResult.getMsg(), svResult.getData());
+    }
 }

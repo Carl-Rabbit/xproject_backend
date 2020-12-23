@@ -97,3 +97,10 @@ from students as std
     join roles as r on std.role_id = r.role_id
     join teachers as tch on tch.role_id = rcd.creator_id
 where std.role_id = 1 and rcd.rcd_id = 1;
+
+
+-- combine
+
+select ri.*
+from record_insts as ri
+where ri.rcd_id in (1, 2)
