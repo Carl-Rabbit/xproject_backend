@@ -70,9 +70,12 @@ public class AnnController {
 
         boolean success = annService.addAnn(announcement);
         if (success) {
+            // send email to all students
             List<StudentProjDTO> stdList = projService.getStdProjList(announcement.getProjId());
             List<String> mailList = stdList.stream().map(StudentProjDTO::getEmail).collect(Collectors.toList());
-//            mailService.sendMailToStudent(mailList, )
+            mailService.sendMailToStudent(mailList, "[XProject] New announcement has been released",
+                    "New announcement has been released\r\n" +
+                            "This automatic notification message was sent by Xproject");
 
             return new Result<>(true);
         } else {

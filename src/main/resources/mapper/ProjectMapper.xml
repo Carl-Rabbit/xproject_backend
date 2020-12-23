@@ -185,6 +185,11 @@
         where proj_id = #{projId}
           and role_id = #{roleId};
     </select>
+    <select id="selectExistByRoleIdAndProjId" resultType="java.lang.Boolean">
+        select count(*) == 1 as exist
+        from project_role_rt
+        where role_id = #{roleId} and proj_id = #{proj_id}
+    </select>
     <insert id="joinProject">
         insert into project_role_rt (proj_id, role_id, group_mark)
         values (#{projId}, #{roleId}, #{groupMark});
