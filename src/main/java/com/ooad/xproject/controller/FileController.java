@@ -109,8 +109,8 @@ public class FileController {
 
     @PostMapping("api/teacher/students/excel")
     public Result<Integer> postStudentAcCreationFromExcel(@RequestParam("files") MultipartFile[] files) {
-        String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
-        System.out.println(filePath);
+        String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "stdInput.xlsx");
+//        System.out.println(filePath);
         List<StudentImportBO> studentImportBOList = excelService.readStudentImportBO(filePath);
 
         String username = RoleUtils.getUsername();
@@ -137,7 +137,7 @@ public class FileController {
 
     @PostMapping("api/teacher/records/excel")
     public Result<Integer> postRecordUnitImportFromExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
-        String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
+        String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "recInput.xlsx");
 //        System.out.println(filePath);
         List<RecordUnitBO> recordUnitBOList = excelService.readRecordUnitBO(filePath);
 
@@ -166,7 +166,7 @@ public class FileController {
 
     @PostMapping("api/teacher/project/student/excel")
     public Result<Integer> postProjStdExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
-        String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
+        String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "projInput.xlsx");
 //        System.out.println(filePath);
         List<StudentClassBO> studentClassBOList = excelService.readStudentClassBO(filePath);
 
