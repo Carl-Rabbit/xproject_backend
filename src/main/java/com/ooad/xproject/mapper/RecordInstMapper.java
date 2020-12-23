@@ -36,4 +36,8 @@ public interface RecordInstMapper {
     List<GradeDTO> selectByProjInstIdAndRcdId(int projInstId, int rcdId);
 
     List<GradeDTO> selectByStdRoleIdAndRcdId(int stdRoleId, int rcdId);
+
+    List<RecordInst> selectRIByRcdIdList(int[] rcdIdList);
+
+    int generateRecordInst(Integer projId, Integer rcdId, Integer modifiedRoleId, int[] rcdIdList, double[] coeList);
 }

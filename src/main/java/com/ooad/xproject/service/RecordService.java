@@ -4,10 +4,7 @@ import com.ooad.xproject.bo.RecordUnitBO;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.entity.Record;
 import com.ooad.xproject.entity.RecordInst;
-import com.ooad.xproject.vo.RecordCreationVO;
-import com.ooad.xproject.vo.RecordDeletionVO;
-import com.ooad.xproject.vo.RecordInstUpdateParamVO;
-import com.ooad.xproject.vo.RecordInstUpdateRetVO;
+import com.ooad.xproject.vo.*;
 
 import java.util.List;
 
@@ -22,4 +19,6 @@ public interface RecordService {
     SvResult<Integer> deleteRecords(RecordDeletionVO recordDeletionVO);
 
     SvResult<RecordInstUpdateRetVO> updateRecordInsts(int roleId, RecordInstUpdateParamVO recordInstUpdateParamVO);
+
+    SvResult<Integer> updateRecordInstsBatch(Integer roleId, CombineRcdInstParamVO combineRcdInstParamVO);
 }

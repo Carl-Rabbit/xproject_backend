@@ -20,4 +20,6 @@ public interface HomeService {
     boolean joinProject(int roleId, int projId, String groupMark);
 
     boolean quitProject(Integer roleId, int projId);
+
+    School getSchoolBySchId(Integer schId);
 }

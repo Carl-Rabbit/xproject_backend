@@ -187,4 +187,26 @@
            join teachers as tch on tch.role_id = rcd.creator_id
     where std.role_id = #{stdRoleId} and rcd.rcd_id = #{rcdId};
   </select>
+    <select id="selectRIByRcdIdList" resultType="com.ooad.xproject.entity.RecordInst">
+      select *
+      from record_insts as ri
+      where ri.rcd_id in
+      <foreach collection="rcdIdList" item="rcdId"
+               index="index" open="(" close=")" separator=",">
+        #{rcdId}
+      </foreach>
+    </select>
+  <select id="generateRecordInst" resultType="java.lang.Integer">
+    select success_cnt
+    from generate_score(#{projId}, #{rcdId}, #{modifiedRoleId},
+    <foreach collection="rcdIdList" item="rcdId"
+             index="index" open="array[" close="]" separator=",">
+      #{rcdId}
+    </foreach>,
+    <foreach collection="coeList" item="coe"
+             index="index" open="array[" close="]" separator=",">
+      #{coe}
+    </foreach>
+        ) as success_cnt;
+  </select>
 </mapper>

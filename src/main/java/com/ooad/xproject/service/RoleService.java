@@ -11,7 +11,7 @@ public interface RoleService {
 
     Role getByUsername(String username);
 
-    Role createUser(String type, String username, String password);
+    Role createUser(String type, String username, String password, int schId);
 
     boolean validUsername(String username);
 
