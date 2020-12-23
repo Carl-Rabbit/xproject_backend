@@ -191,9 +191,8 @@ public class FileController {
 
     // todo: upsert database
     @PostMapping("api/student/submission/upload")
-    public Result<?> postUploadSubmission(@RequestBody UploadSbmVO uploadSbmVO) {
-        MultipartFile[] files = uploadSbmVO.getFiles();
-        Integer sbmId = uploadSbmVO.getSbmId();
+    public Result<?> postUploadSubmission(@RequestParam("files") MultipartFile[] files,
+                                          @RequestParam("sbmId") int sbmId) {
 
         Role role = roleService.getByUsername(RoleUtils.getUsername());
         StringBuilder attachment = new StringBuilder();

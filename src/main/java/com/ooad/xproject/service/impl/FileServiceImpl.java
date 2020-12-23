@@ -109,7 +109,7 @@ public class FileServiceImpl implements FileService {
         resource.setProjId(projId);
         resource.setCreatorRoleId(creatorId);
         resource.setSize(String.valueOf(multipartFile.getSize()));
-        resource.setFileName(multipartFile.getName());
+        resource.setFileName(multipartFile.getOriginalFilename());
         int ret = resourceMapper.insert(resource);
         if (ret == 0)
             return 0;
