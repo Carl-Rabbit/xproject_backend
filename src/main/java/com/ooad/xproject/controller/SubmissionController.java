@@ -60,6 +60,9 @@ public class SubmissionController {
         Role role = roleService.getByUsername(username);
 
         SubmissionInst sbmInst = sbmService.getSbmInstByStdRoleIdAndSbmId(role.getRoleId(), sbmId);
+        if (sbmInst == null) {
+            return new Result<>("No submission inst found", null);
+        }
         Student submitter = studentService.getStudentByRoleId(role.getRoleId());
 
         SbmInstVO sbmInstVO = SbmInstVO.builder()

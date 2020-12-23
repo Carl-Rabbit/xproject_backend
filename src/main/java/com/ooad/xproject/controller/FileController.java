@@ -15,6 +15,7 @@ import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.ResourceVO;
 import com.ooad.xproject.vo.Result;
+import com.ooad.xproject.vo.UploadSbmVO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -190,8 +191,9 @@ public class FileController {
 
     // todo: upsert database
     @PostMapping("api/student/submission/upload")
-    public Result<?> postUploadSubmission(@RequestParam("files") MultipartFile[] files,
-                                          @RequestParam("sbmId") int sbmId) {
+    public Result<?> postUploadSubmission(@RequestBody UploadSbmVO uploadSbmVO) {
+        MultipartFile[] files = uploadSbmVO.getFiles();
+        Integer sbmId = uploadSbmVO.getSbmId();
 
         Role role = roleService.getByUsername(RoleUtils.getUsername());
         StringBuilder attachment = new StringBuilder();
