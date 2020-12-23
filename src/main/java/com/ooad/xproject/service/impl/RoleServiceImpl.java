@@ -20,7 +20,7 @@ public class RoleServiceImpl implements RoleService {
 
     // Contain number and letter, at least 8 chars.
     // For username, not start with number
-    public static final String USERNAME_REGEX = "^(?![0-9])(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,24}$";
+    public static final String USERNAME_REGEX = "^(?![0-9])(?![0-9]+$)[0-9A-Za-z]{8,24}$";
     public static final String PASSWORD_REGEX = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,32}$";
 
     private final RoleMapper roleMapper;
