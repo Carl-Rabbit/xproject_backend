@@ -2,12 +2,10 @@ package com.ooad.xproject.service.impl;
 
 import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.entity.Role;
+import com.ooad.xproject.entity.School;
 import com.ooad.xproject.entity.Student;
 import com.ooad.xproject.entity.Teacher;
-import com.ooad.xproject.mapper.AdminMapper;
-import com.ooad.xproject.mapper.RoleMapper;
-import com.ooad.xproject.mapper.StudentMapper;
-import com.ooad.xproject.mapper.TeacherMapper;
+import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.vo.ChangePwdVO;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
@@ -29,13 +27,15 @@ public class RoleServiceImpl implements RoleService {
     private final AdminMapper adminMapper;
     private final TeacherMapper teacherMapper;
     private final StudentMapper studentMapper;
+    private final SchoolMapper schoolMapper;
 
     public RoleServiceImpl(RoleMapper roleMapper, AdminMapper adminMapper,
-                           TeacherMapper teacherMapper, StudentMapper studentMapper) {
+                           TeacherMapper teacherMapper, StudentMapper studentMapper, SchoolMapper schoolMapper) {
         this.roleMapper = roleMapper;
         this.adminMapper = adminMapper;
         this.teacherMapper = teacherMapper;
         this.studentMapper = studentMapper;
+        this.schoolMapper = schoolMapper;
     }
 
     @Override
@@ -130,6 +130,12 @@ public class RoleServiceImpl implements RoleService {
         Role role = roleMapper.selectByPrimaryKey(roleId);
         role.setStatus(("Enabled".equals(role.getStatus())) ? "Disabled" : "Enabled");
         int affectedRowCnt = roleMapper.updateByPrimaryKey(role);
+        return affectedRowCnt == 1;
+    }
+
+    @Override
+    public boolean updateSchool(School school) {
+        int affectedRowCnt = schoolMapper.updateByPrimaryKeySelective(school);
         return affectedRowCnt == 1;
     }
 }

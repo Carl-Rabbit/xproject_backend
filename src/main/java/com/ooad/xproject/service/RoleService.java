@@ -1,6 +1,7 @@
 package com.ooad.xproject.service;
 
 import com.ooad.xproject.entity.Role;
+import com.ooad.xproject.entity.School;
 import com.ooad.xproject.vo.ChangePwdVO;
 
 import java.util.List;
@@ -25,4 +26,6 @@ public interface RoleService {
     List<Role> getAllRoles();
 
     boolean changeStatus(int roleId);
+
+    boolean updateSchool(School school);
 }

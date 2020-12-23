@@ -77,4 +77,11 @@ public class SchoolController {
             return new Result<>(RespStatus.FAIL, "Delete failed", false);
         }
     }
+
+    @ResponseBody
+    @PostMapping("api/admin/school/edit")
+    public Result<?> postEditSchool(@RequestBody School school){
+        boolean success = roleService.updateSchool(school);
+        return Result.createBoolResult(success, "Update school successfully", "Update school failed");
+    }
 }
