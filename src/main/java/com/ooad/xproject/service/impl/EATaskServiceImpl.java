@@ -12,6 +12,7 @@ import com.ooad.xproject.vo.EventInstCreationVO;
 import com.ooad.xproject.vo.EventInstManageParamVO;
 import org.apache.commons.math3.util.Pair;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -48,6 +49,7 @@ public class EATaskServiceImpl implements EATaskService {
         return eventInstMapper.selectByEATaskId(eaTaskId);
     }
 
+    @Transactional
     @Override
     public SvResult<Boolean> applyEventInst(int eventInstId, Integer projInstId) {
         EventInst eventInst = eventInstMapper.selectByPrimaryKey(eventInstId);

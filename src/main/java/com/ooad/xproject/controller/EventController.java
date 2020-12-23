@@ -5,6 +5,7 @@ import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.EATaskDTO;
 import com.ooad.xproject.dto.EventInstDTO;
 import com.ooad.xproject.dto.StudentDTO;
+import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.ooad.xproject.vo.Result.createBoolResult;
 
@@ -28,22 +30,31 @@ public class EventController {
     private final HomeService homeService;
     private final ProjInstService projInstService;
     private final EATaskService eaTaskService;
+    private final ProjectService projService;
+    private final MailService mailService;
 
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
 
-    public EventController(RoleService roleService, StudentService studentService, TeacherService teacherService, HomeService homeService, ProjInstService projInstService, EATaskService eaTaskService) {
+    public EventController(RoleService roleService, StudentService studentService, TeacherService teacherService, HomeService homeService, ProjInstService projInstService, EATaskService eaTaskService, ProjectService projService, MailService mailService) {
         this.roleService = roleService;
         this.studentService = studentService;
         this.teacherService = teacherService;
         this.homeService = homeService;
         this.projInstService = projInstService;
         this.eaTaskService = eaTaskService;
+        this.projService = projService;
+        this.mailService = mailService;
     }
 
 
     @ResponseBody
     @GetMapping("api/all/event")
     public Result<?> getEATaskList(@RequestParam("projId") int projId) {
+        // check project accessible
+        if (!projService.isAccessible(projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         List<EventArrangeTask> eaTaskList = eaTaskService.getEATaskList(projId);
         List<EATaskDTO> eaTaskDTOList = new ArrayList<>();
         for (EventArrangeTask eaTask: eaTaskList) {
@@ -62,6 +73,11 @@ public class EventController {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
+        // check project accessible
+        if (!projService.isAccessible(role.getRoleId(), eaTaskCreationVO.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         EventArrangeTask eaTask = new EventArrangeTask();
         try {
             eaTaskCreationVO.copyToEATask(eaTask, role.getRoleId());
@@ -72,7 +88,16 @@ public class EventController {
 
         boolean success = eaTaskService.createEATask(eaTask);
 
-        return createBoolResult(success, "Update successfully", "Update failed");
+        if (success) {
+            // send email to all students
+            List<StudentProjDTO> stdList = projService.getStdProjList(eaTask.getProjId());
+            List<String> mailList = stdList.stream().map(StudentProjDTO::getEmail).collect(Collectors.toList());
+            mailService.sendMailToStudent(mailList, "[XProject] New event arrangement task has been released",
+                    "New event arrangement task has been released\r\n" +
+                            "This automatic notification message was sent by Xproject");
+        }
+
+        return createBoolResult(success, "Create successfully", "Create failed");
     }
 
     @ResponseBody
@@ -111,14 +136,14 @@ public class EventController {
 
     @ResponseBody
     @PostMapping("api/teacher/event/inst/delete")
-    public Result<?> postEventInstDeletion(@RequestBody EventInstListParamVO eilParamVO) {
+    public Result<?> postEventInstDeletion(@RequestBody EventInstListParamVO eventInstListParamVO) {
 //        String username = RoleUtils.getUsername();
 //        Role role = roleService.getByUsername(username);
 
-        int[] eventInstIdList = eilParamVO.getEventInstIdList();
+        int[] eventInstIdList = eventInstListParamVO.getEventInstIdList();
         int successCnt = eaTaskService.deleteEventInsts(eventInstIdList);
         String message = "Delete " + successCnt + " event item successfully. Total "
-                + eilParamVO.getEventInstIdList().length;
+                + eventInstListParamVO.getEventInstIdList().length;
         return new Result<>(message, successCnt);
     }
 
@@ -129,12 +154,26 @@ public class EventController {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
+        // check project accessible
+        if (!projService.isAccessible(role.getRoleId(), projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         ProjectInst projInst = projInstService.getPIByProjIdAndStdRoleId(projId, role.getRoleId());
         if (projInst == null) {
             return new Result<>(RespStatus.FAIL, "No Team yet");
         }
 
         SvResult<Boolean> svResult = eaTaskService.applyEventInst(eventInstId, projInst.getProjInstId());
+
+        if (svResult.getData()) {
+            // send email to all students
+            List<StudentDTO> stdList = projInstService.getStudentDTOByProjInstId(projInst.getProjInstId());
+            List<String> mailList = stdList.stream().map(StudentDTO::getEmail).collect(Collectors.toList());
+            mailService.sendMailToStudent(mailList, "[XProject] Your team has taken a event item",
+                    "Your team has taken a event item\r\n" +
+                            "This automatic notification message was sent by Xproject");
+        }
 
         return createBoolResult(svResult.getData(), "Apply successfully", svResult.getMsg());
     }
@@ -146,12 +185,26 @@ public class EventController {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
+        // check project accessible
+        if (!projService.isAccessible(role.getRoleId(), projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         ProjectInst projInst = projInstService.getPIByProjIdAndStdRoleId(projId, role.getRoleId());
         if (projInst == null) {
             return new Result<>(RespStatus.FAIL, "No Team yet");
         }
 
         SvResult<Boolean> svResult = eaTaskService.clearEventInstStd(eventInstId, projInst.getProjInstId());
+
+        if (svResult.getData()) {
+            // send email to all students
+            List<StudentDTO> stdList = projInstService.getStudentDTOByProjInstId(projInst.getProjInstId());
+            List<String> mailList = stdList.stream().map(StudentDTO::getEmail).collect(Collectors.toList());
+            mailService.sendMailToStudent(mailList, "[XProject] Your team has given up a event item",
+                    "Your team has given up a event item\r\n" +
+                            "This automatic notification message was sent by Xproject");
+        }
 
         return createBoolResult(svResult.getData(), "Clear successfully", svResult.getMsg());
     }
@@ -162,9 +215,18 @@ public class EventController {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
-        // check teacher access here
+        int[] eventInstIdList = eventInstListParamVO.getEventInstIdList();
 
-        // not implemented yet
+        if (eventInstIdList.length == 0) {
+            return new Result<>(RespStatus.FAIL, "Empty event inst id list");
+        }
+
+        // not to check
+
+//        // check project accessible
+//        if (!projService.isAccessible(role.getRoleId(), )) {
+//            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+//        }
 
         int successCnt = eaTaskService.clearEventInstTch(eventInstListParamVO.getEventInstIdList());
 
@@ -176,6 +238,7 @@ public class EventController {
     @ResponseBody
     @PostMapping("api/teacher/event/inst/manage")
     public Result<?> postEventInstAuto(@RequestBody EventInstManageParamVO eventInstManageParamVO) {
+        // not to check
 //        logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
         int successCnt = eaTaskService.manageEventInsts(eventInstManageParamVO);
         String message = String.format("Manage %d event items. Total event item %d. Remain %d teams.",
@@ -190,6 +253,11 @@ public class EventController {
     @GetMapping("api/teacher/event/team/no-arrange")
     public Result<?> getTeamsNoArrange(@RequestParam("projId") int projId,
                                        @RequestParam("eaTaskId") int eaTaskId) {
+        // check project accessible
+        if (!projService.isAccessible(projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         List<ProjectInst> projInstList = projInstService.getProInstList(projId);
         List<SimpleTeamVO> simpleTeamVOList = new ArrayList<>();
         for (ProjectInst projectInst: projInstList) {

@@ -43,11 +43,13 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Deprecated
     public List<Student> getTeammatesByTeamId(Integer tid) {
         return studentMapper.selectByTeamId(tid);
     }
 
     @Override
+    @Deprecated
     public List<Student> getTeammatesByStdId(Integer sid) {
         int tid = studentMapper.selectTeamIdByStdId(sid);
         return studentMapper.selectByTeamId(tid);
