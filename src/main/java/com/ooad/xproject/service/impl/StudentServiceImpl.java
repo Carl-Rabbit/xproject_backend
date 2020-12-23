@@ -61,26 +61,26 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public boolean updateAcInfo(Role role, AcInfoStdUpdateVO acInfoStdUpdateVO) {
         Student student = studentMapper.selectByRoleId(role.getRoleId());
-        Student newStd = new Student();     // not use the old one to save recourse
-
-        newStd.setStdId(student.getStdId());
 
         if (acInfoStdUpdateVO.getFlags() != null) {
             String newFlagsJson = JSON.toJSONString(acInfoStdUpdateVO.getFlags());
-            newStd.setFlags(newFlagsJson);
+            student.setFlags(newFlagsJson);
         }
 
         if (acInfoStdUpdateVO.getSkills() != null) {
             String newSkillsJson = JSON.toJSONString(acInfoStdUpdateVO.getSkills());
-            newStd.setSkills(newSkillsJson);
+            student.setSkills(newSkillsJson);
         }
 
-        newStd.setBio(acInfoStdUpdateVO.getBio());
-        newStd.setEmail(acInfoStdUpdateVO.getEmail());
+        student.setBio(acInfoStdUpdateVO.getBio());
+        student.setEmail(acInfoStdUpdateVO.getEmail());
 
-        int affectedRowCnt = studentMapper.updateByPrimaryKeySelective(newStd);
+        int affectedRowCnt = studentMapper.updateByPrimaryKeySelective(student);
 
-        return affectedRowCnt == 1;
+        role.setIconUrl(acInfoStdUpdateVO.getIconUrl());
+        affectedRowCnt += roleMapper.updateByPrimaryKey(role);
+
+        return affectedRowCnt == 2;
     }
 
     @Override

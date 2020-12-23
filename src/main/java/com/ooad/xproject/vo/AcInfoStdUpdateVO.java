@@ -8,5 +8,6 @@ public class AcInfoStdUpdateVO {
     private String[] flags;
     private String bio;
     private String email;
+    private String iconUrl;
 }
 

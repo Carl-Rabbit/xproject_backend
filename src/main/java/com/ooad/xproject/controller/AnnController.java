@@ -2,6 +2,7 @@ package com.ooad.xproject.controller;
 
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.AnnDTO;
+import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.Announcement;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.service.*;
@@ -12,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class AnnController {
@@ -21,14 +23,18 @@ public class AnnController {
     private final TeacherService teacherService;
     private final HomeService homeService;
     private final AnnService annService;
+    private final MailService mailService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
+    private final ProjectService projService;
 
-    public AnnController(RoleService testService, StudentService studentService, TeacherService teacherService, HomeService homeService, AnnService annService) {
+    public AnnController(RoleService testService, StudentService studentService, TeacherService teacherService, HomeService homeService, AnnService annService, MailService mailService, ProjectService projService) {
         this.roleService = testService;
         this.studentService = studentService;
         this.teacherService = teacherService;
         this.homeService = homeService;
         this.annService = annService;
+        this.mailService = mailService;
+        this.projService = projService;
     }
 
     @ResponseBody
@@ -55,10 +61,19 @@ public class AnnController {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
+        // check project accessible
+        if (!projService.isAccessible(role.getRoleId(), announcement.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         announcement.setCreatorId(role.getRoleId());
 
         boolean success = annService.addAnn(announcement);
         if (success) {
+            List<StudentProjDTO> stdList = projService.getStdProjList(announcement.getProjId());
+            List<String> mailList = stdList.stream().map(StudentProjDTO::getEmail).collect(Collectors.toList());
+//            mailService.sendMailToStudent(mailList, )
+
             return new Result<>(true);
         } else {
             return new Result<>(RespStatus.FAIL, "Add failed", false);

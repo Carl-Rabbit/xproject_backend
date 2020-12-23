@@ -42,4 +42,6 @@ public interface ProjectService {
     SvResult<FormingResultBO> autoForming(FormingBO formingBO);
 
     boolean createProject(Project project);
+
+    boolean isAccessible(int roleId, int projId);
 }

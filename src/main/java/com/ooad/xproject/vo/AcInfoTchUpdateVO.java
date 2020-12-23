@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class AcInfoTchUpdateVO {
-    private String bio;
+    private String email;
+    private String iconUrl;
 }
 

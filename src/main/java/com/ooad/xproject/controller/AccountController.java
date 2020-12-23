@@ -11,10 +11,7 @@ import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.service.StudentService;
 import com.ooad.xproject.service.TeacherService;
 import com.ooad.xproject.utils.RoleUtils;
-import com.ooad.xproject.vo.AcInfoStdUpdateVO;
-import com.ooad.xproject.vo.AccountInfoStdVO;
-import com.ooad.xproject.vo.AccountInfoTchVO;
-import com.ooad.xproject.vo.Result;
+import com.ooad.xproject.vo.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
@@ -94,7 +91,7 @@ public class AccountController {
 
     @ResponseBody
     @PostMapping("api/student/self-intro")
-    public Result<?> updateAccountInfo(@RequestBody AcInfoStdUpdateVO acInfoStdUpdateVO) {
+    public Result<?> postUpdateAccountInfo(@RequestBody AcInfoStdUpdateVO acInfoStdUpdateVO) {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
@@ -107,6 +104,20 @@ public class AccountController {
             }
         } else {
             return new Result<>(RespStatus.NOT_IMPLEMENTED, "Not supported yet");
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("api/teacher/self-intro")
+    public Result<?> postTchPersonalInfo(@RequestBody AcInfoTchUpdateVO acInfoTchUpdateVO) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        boolean success = teacherService.updateAcInfo(role, acInfoTchUpdateVO);
+        if (success) {
+            return new Result<>(RespStatus.SUCCESS);
+        } else {
+            return new Result<>(RespStatus.FAIL);
         }
     }
 }

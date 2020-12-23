@@ -120,4 +120,9 @@ public class ProjectServiceImpl implements ProjectService {
         int affectedRowCnt = projectMapper.insertSelective(project);
         return affectedRowCnt == 1;
     }
+
+    @Override
+    public boolean isAccessible(int roleId, int projId) {
+        return projectMapper.selectExistByRoleIdAndProjId(roleId, projId);
+    }
 }

@@ -2,17 +2,19 @@ package com.ooad.xproject.service.impl;
 
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.Teacher;
+import com.ooad.xproject.mapper.RoleMapper;
 import com.ooad.xproject.mapper.TeacherMapper;
 import com.ooad.xproject.service.TeacherService;
 import com.ooad.xproject.vo.AcInfoTchUpdateVO;
-import org.apache.commons.lang.NotImplementedException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
+    private final RoleMapper roleMapper;
     private final TeacherMapper teacherMapper;
 
-    public TeacherServiceImpl(TeacherMapper teacherMapper) {
+    public TeacherServiceImpl(RoleMapper roleMapper, TeacherMapper teacherMapper) {
+        this.roleMapper = roleMapper;
         this.teacherMapper = teacherMapper;
     }
 
@@ -29,19 +31,14 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public boolean updateAcInfo(Role role, AcInfoTchUpdateVO acInfoTchUpdateVO) {
         Teacher teacher = teacherMapper.selectByRoleId(role.getRoleId());
-        Teacher newTch = new Teacher();     // not use the old one to save recourse
 
-        newTch.setTchId(teacher.getTchId());
+        teacher.setEmail(acInfoTchUpdateVO.getEmail());
 
-        throw new NotImplementedException("Updating account info for teacher is not implemented");
+        int affectedRowCnt = teacherMapper.updateByPrimaryKeySelective(teacher);
 
-//        if (acInfoTchUpdateVO.getBio() != null) {
-//            String newBio = acInfoTchUpdateVO.getBio();
-//            newTch.setBio(newBio);
-//        }
-//
-//        int affectedRowCnt = studentMapper.updateByPrimaryKeySelective(newTch);
-//
-//        return affectedRowCnt == 1;
+        role.setIconUrl(acInfoTchUpdateVO.getIconUrl());
+        affectedRowCnt += roleMapper.updateByPrimaryKey(role);
+
+        return affectedRowCnt == 2;
     }
 }

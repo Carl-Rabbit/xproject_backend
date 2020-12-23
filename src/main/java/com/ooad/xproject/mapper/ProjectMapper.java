@@ -39,4 +39,6 @@ public interface ProjectMapper {
     int insertProjectRoleRT(Integer projId, Integer roleId, String groupMark);
 
     int quitProject(Integer roleId, int projId);
+
+    boolean selectExistByRoleIdAndProjId(int roleId, int projId);
 }
