@@ -79,11 +79,13 @@ public class RoleServiceImpl implements RoleService {
             // create teacher
             Teacher tch = new Teacher();
             tch.setRoleId(roleId);
+            tch.setSchId(schId);
             teacherMapper.insertSelective(tch);
         } else if (RoleType.Student.match(type)){
             // create student
             Student std = new Student();
             std.setRoleId(roleId);
+            std.setSchId(schId);
             studentMapper.insertSelective(std);
         } else {
             // do nothing
