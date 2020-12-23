@@ -61,7 +61,7 @@ public class RoleServiceImpl implements RoleService {
 //    }
 
     @Override
-    public Role createUser(String type, String username, String password, int schId) {
+    public Role createUser(String type, String username, String password, Integer schId) {
         String salt = new SecureRandomNumberGenerator().nextBytes().toString();
         int times = 2;      // hash times
         String encodedPassword = new SimpleHash("md5", password, salt, times).toString();
@@ -80,11 +80,13 @@ public class RoleServiceImpl implements RoleService {
             Teacher tch = new Teacher();
             tch.setRoleId(roleId);
             teacherMapper.insertSelective(tch);
-        } else {
+        } else if (RoleType.Student.match(type)){
             // create student
             Student std = new Student();
             std.setRoleId(roleId);
             studentMapper.insertSelective(std);
+        } else {
+            // do nothing
         }
 
         return newRole;

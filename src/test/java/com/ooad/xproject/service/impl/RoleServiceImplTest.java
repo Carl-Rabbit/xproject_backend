@@ -28,7 +28,7 @@ public class RoleServiceImplTest {
 
     @Test
     public void createAdmin() {
-        Role newRole = roleService.createUser(RoleType.Admin.name(), "administrator0", "administrator0", );
+        Role newRole = roleService.createUser(RoleType.Admin.name(), "administrator0", "administrator0", null);
         permissionService.appendPmsRoleToNewRole(newRole);
     }
 }
