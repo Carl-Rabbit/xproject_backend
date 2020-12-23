@@ -16,7 +16,7 @@ begin
     truncate new_rcd;
 
     insert into new_rcd
-    select role_id, sum(new_score)
+    select role_id, round(sum(new_score), 2)
     from (with scores as ( -- get the student with coe info
         with rcd_coe as ( -- get the coe param table
             select rcd_id as rcd_id, coe / 100.0 as coe
@@ -41,7 +41,7 @@ begin
           from scores) as t
     group by role_id;
 
-    select sum(new_content) into new_base_content
+    select round(sum(new_content), 2) into new_base_content
     from (with rcd_temp as (
             with rcd_coe as ( -- get the coe param table
                 select rcd_id as rcd_id, coe / 100.0 as coe

@@ -103,4 +103,8 @@ where std.role_id = 1 and rcd.rcd_id = 1;
 
 select ri.*
 from record_insts as ri
-where ri.rcd_id in (1, 2)
+where ri.rcd_id in (1, 2);
+
+select count(*) = 1 as exist
+from project_role_rt
+where role_id = 5 and proj_id = 1
