@@ -82,4 +82,9 @@ public class HomeServiceImpl implements HomeService {
         int affectedRowCnt = projectMapper.quitProject(roleId, projId);
         return affectedRowCnt != 0;
     }
+
+    @Override
+    public School getSchoolBySchId(Integer schId) {
+        return schoolMapper.selectByPrimaryKey(schId);
+    }
 }

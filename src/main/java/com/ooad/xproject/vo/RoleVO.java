@@ -10,5 +10,6 @@ public class RoleVO {
     private String type;      // role type
     private String username;
     private String password;
+    private Integer schId;
 }
 

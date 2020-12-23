@@ -61,7 +61,7 @@ public class RoleServiceImpl implements RoleService {
 //    }
 
     @Override
-    public Role createUser(String type, String username, String password) {
+    public Role createUser(String type, String username, String password, int schId) {
         String salt = new SecureRandomNumberGenerator().nextBytes().toString();
         int times = 2;      // hash times
         String encodedPassword = new SimpleHash("md5", password, salt, times).toString();

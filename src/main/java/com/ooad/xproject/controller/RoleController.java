@@ -3,6 +3,8 @@ package com.ooad.xproject.controller;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.entity.Role;
+import com.ooad.xproject.entity.School;
+import com.ooad.xproject.service.HomeService;
 import com.ooad.xproject.service.PermissionService;
 import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.utils.RoleUtils;
@@ -28,10 +30,12 @@ public class RoleController {
     private final RoleService roleService;
     private final PermissionService permissionService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
+    private final HomeService homeService;
 
-    public RoleController(RoleService testService, PermissionService permissionService) {
+    public RoleController(RoleService testService, PermissionService permissionService, HomeService homeService) {
         this.roleService = testService;
         this.permissionService = permissionService;
+        this.homeService = homeService;
     }
 
     @ResponseBody
@@ -74,6 +78,7 @@ public class RoleController {
         String username = requestRoleVO.getUsername();
         username = HtmlUtils.htmlEscape(username);
         String password = requestRoleVO.getPassword();
+        Integer schId = requestRoleVO.getSchId();
 
         Role role = roleService.getByUsername(username);
         if (role != null) {
@@ -99,7 +104,12 @@ public class RoleController {
         String msg;
 
         if (RoleType.Student.match(type) || RoleType.Teacher.match(type)) {
-            Role newRole = roleService.createUser(type, username, password);
+            School school = homeService.getSchoolBySchId(schId);
+            if (school == null) {
+                return new Result<>(RespStatus.FAIL, "No such school");
+            }
+
+            Role newRole = roleService.createUser(type, username, password, schId);
             permissionService.appendPmsRoleToNewRole(newRole);
             msg = "User created";
             status = RespStatus.SUCCESS;
