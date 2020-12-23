@@ -47,8 +47,23 @@ public class AnnController {
     @ResponseBody
     @PostMapping("api/teacher/project/ann/modify")
     public Result<?> postModifyAnnouncement(@RequestBody Announcement announcement) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        // check project accessible
+        if (!projService.isAccessible(announcement.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         boolean success = annService.updateAnn(announcement);
         if (success) {
+            // send email to all students
+            List<StudentProjDTO> stdList = projService.getStdProjList(announcement.getProjId());
+            List<String> mailList = stdList.stream().map(StudentProjDTO::getEmail).collect(Collectors.toList());
+            mailService.sendMailToStudent(mailList, "[XProject] An announcement has been modified",
+                    "An announcement has been modified\r\n" +
+                            "This automatic notification message was sent by Xproject");
+
             return new Result<>(true);
         } else {
             return new Result<>(RespStatus.FAIL, "Update failed", false);
@@ -62,7 +77,7 @@ public class AnnController {
         Role role = roleService.getByUsername(username);
 
         // check project accessible
-        if (!projService.isAccessible(role.getRoleId(), announcement.getProjId())) {
+        if (!projService.isAccessible(announcement.getProjId())) {
             return new Result<>(RespStatus.FAIL, "Project is not accessible");
         }
 

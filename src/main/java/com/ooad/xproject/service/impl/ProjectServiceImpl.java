@@ -9,6 +9,7 @@ import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.ProjectService;
+import com.ooad.xproject.utils.RoleUtils;
 import org.apache.commons.math3.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +26,9 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectInstMapper projectInstMapper;
     private final TeamFormTaskMapper teamFormTaskMapper;
     private final StudentMapper studentMapper;
+    private final RoleMapper roleMapper;
 
-    public ProjectServiceImpl(AnnouncementMapper announcementMapper, EventArrangeTaskMapper eventArrangeTaskMapper, SubmissionMapper submissionMapper, RecordMapper recordMapper, ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, TeamFormTaskMapper teamFormTaskMapper, StudentMapper studentMapper) {
+    public ProjectServiceImpl(AnnouncementMapper announcementMapper, EventArrangeTaskMapper eventArrangeTaskMapper, SubmissionMapper submissionMapper, RecordMapper recordMapper, ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, TeamFormTaskMapper teamFormTaskMapper, StudentMapper studentMapper, RoleMapper roleMapper) {
         this.announcementMapper = announcementMapper;
         this.eventArrangeTaskMapper = eventArrangeTaskMapper;
         this.submissionMapper = submissionMapper;
@@ -35,6 +37,7 @@ public class ProjectServiceImpl implements ProjectService {
         this.projectInstMapper = projectInstMapper;
         this.teamFormTaskMapper = teamFormTaskMapper;
         this.studentMapper = studentMapper;
+        this.roleMapper = roleMapper;
     }
 
     @Override
@@ -119,6 +122,13 @@ public class ProjectServiceImpl implements ProjectService {
     public boolean createProject(Project project) {
         int affectedRowCnt = projectMapper.insertSelective(project);
         return affectedRowCnt == 1;
+    }
+
+    @Override
+    public boolean isAccessible(int projId) {
+        String username = RoleUtils.getUsername();
+        Role role = roleMapper.selectByUsername(username);
+        return isAccessible(role.getRoleId(), projId);
     }
 
     @Override

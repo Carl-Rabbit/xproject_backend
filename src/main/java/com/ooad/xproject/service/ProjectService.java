@@ -43,5 +43,7 @@ public interface ProjectService {
 
     boolean createProject(Project project);
 
+    boolean isAccessible(int projId);
+
     boolean isAccessible(int roleId, int projId);
 }
