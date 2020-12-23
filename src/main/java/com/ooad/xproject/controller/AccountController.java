@@ -43,11 +43,13 @@ public class AccountController {
             School school = homeService.getSchool(student.getSchId());
             AccountInfoStdVO accountInfoStdVO = AccountInfoStdVO.createFrom(role, student, school);
             return new Result<>(accountInfoStdVO);
-        } else {
+        } else if (RoleType.Teacher.match(role.getRoleType())){
             Teacher teacher = teacherService.getTeacherByRoleId(role.getRoleId());
             School school = homeService.getSchool(teacher.getSchId());
             AccountInfoTchVO accountInfoTchVO = AccountInfoTchVO.createFrom(role, teacher, school);
             return new Result<>(accountInfoTchVO);
+        } else {
+            return new Result<>(RespStatus.FAIL, "Admin can't call this api");
         }
     }
 
@@ -95,15 +97,11 @@ public class AccountController {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
-        if (RoleType.Student.match(role.getRoleType())) {
-            boolean success = studentService.updateAcInfo(role, acInfoStdUpdateVO);
-            if (success) {
-                return new Result<>(RespStatus.SUCCESS);
-            } else {
-                return new Result<>(RespStatus.FAIL);
-            }
+        boolean success = studentService.updateAcInfo(role, acInfoStdUpdateVO);
+        if (success) {
+            return new Result<>(RespStatus.SUCCESS);
         } else {
-            return new Result<>(RespStatus.NOT_IMPLEMENTED, "Not supported yet");
+            return new Result<>(RespStatus.FAIL);
         }
     }
 
