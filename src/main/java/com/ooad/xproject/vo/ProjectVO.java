@@ -12,6 +12,9 @@ public class ProjectVO {
     private String term;        // E.g. 202001, 202003
     private String description;
 
+    private Boolean stdJoin;
+    private Boolean tchJoin;
+
     private String topics;
     private String projSettings;
 
@@ -29,6 +32,9 @@ public class ProjectVO {
         proj.setCourseName(courseName);
         proj.setTerm(term);
         proj.setDescription(description);
+
+        proj.setStdJoin(stdJoin);
+        proj.setTchJoin(tchJoin);
 
         proj.setTopics(topics);
         proj.setProjSettings(projSettings);
