@@ -43,7 +43,7 @@ public class AccountController {
             School school = homeService.getSchool(student.getSchId());
             AccountInfoStdVO accountInfoStdVO = AccountInfoStdVO.createFrom(role, student, school);
             return new Result<>(accountInfoStdVO);
-        } else if (RoleType.Teacher.match(role.getRoleType())){
+        } else if (RoleType.Teacher.match(role.getRoleType())) {
             Teacher teacher = teacherService.getTeacherByRoleId(role.getRoleId());
             School school = homeService.getSchool(teacher.getSchId());
             AccountInfoTchVO accountInfoTchVO = AccountInfoTchVO.createFrom(role, teacher, school);
@@ -121,8 +121,10 @@ public class AccountController {
 
     @ResponseBody
     @PostMapping("api/student/review/teammates")
-    public Result<?> postReviewToTeammates(@RequestParam("tarRoleId") int[] tarRoleIds, @RequestParam("comment") String[] comments) {
+    public Result<?> postReviewToTeammates(@RequestParam("stdComments") StdCommentsVO stdCommentsVOS) {
         int successCnt = 0;
+        int[] tarRoleIds = stdCommentsVOS.getTarRoleIds();
+        String[] comments = stdCommentsVOS.getComments();
         for (int i = 0; i < tarRoleIds.length; ++i) {
             if(studentService.appendStdPayload(tarRoleIds[i], comments[i])){
                 ++successCnt;
