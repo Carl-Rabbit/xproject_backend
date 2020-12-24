@@ -174,12 +174,13 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public boolean appendStdPayload(int stdId, String payload) {
-        Student student = studentMapper.selectByPrimaryKey(stdId);
+    public boolean appendStdPayload(int roleId, String payload) {
+        Student student = studentMapper.selectByRoleId(roleId);
 
         if (student == null) {
             return false;
         }
+
         String pl = student.getPayload();
         if(pl == null)
             pl = "";
