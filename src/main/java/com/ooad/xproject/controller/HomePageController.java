@@ -50,7 +50,7 @@ public class HomePageController {
         String username = subject.getPrincipal().toString();
 
         Role role = roleService.getByUsername(username);
-        List<Project> projList = homeService.getProjectListBySch(role);
+        List<Project> projList = homeService.getProjectList(role.getRoleId());
         return new Result<>(projList);
     }
 
