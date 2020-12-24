@@ -7,6 +7,7 @@ import com.ooad.xproject.mapper.*;
 import com.ooad.xproject.service.FileService;
 import com.ooad.xproject.utils.ZipUtils;
 import org.apache.commons.io.FileUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,9 @@ public class FileServiceImpl implements FileService {
     @Override
     public ResponseEntity<byte[]> download(HttpServletRequest request, String realPath, String userAgent, String filename, boolean inline) {
         File file = new File(realPath);
+        if (!file.exists()) {
+            return (ResponseEntity<byte[]>) ResponseEntity.status(HttpStatus.NOT_FOUND);
+        }
         // build response
         ResponseEntity.BodyBuilder bodyBuilder = ResponseEntity.ok();
         bodyBuilder.contentLength(file.length());
