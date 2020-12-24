@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 import static com.ooad.xproject.constant.ProjInstStatus.Confirm;
 
 
-// todo: role + database -> directory name -> upload/download
 @RestController
 public class FileController {
 
@@ -271,7 +270,7 @@ public class FileController {
         // check project accessible
         if (!projService.isAccessible(submission.getProjId())) {
             // TODO LYZ
-            return null;
+            return (ResponseEntity<byte[]>) ResponseEntity.badRequest();
         }
 
         File file = fileService.getSbmDir(sbmId);

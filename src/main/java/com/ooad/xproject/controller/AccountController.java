@@ -121,9 +121,14 @@ public class AccountController {
 
     @ResponseBody
     @PostMapping("api/student/review/teammates")
-    public Result<?> postReviewToTeammates(@RequestParam("tarRoleId") int tarRoleId, @RequestParam("comment") String comment) {
-        boolean success = studentService.appendStdPayload(tarRoleId, comment);
-        if (success) {
+    public Result<?> postReviewToTeammates(@RequestParam("tarRoleId") int[] tarRoleIds, @RequestParam("comment") String[] comments) {
+        int successCnt = 0;
+        for (int i = 0; i < tarRoleIds.length; ++i) {
+            if(studentService.appendStdPayload(tarRoleIds[i], comments[i])){
+                ++successCnt;
+            }
+        }
+        if (successCnt > 0) {
             return new Result<>(RespStatus.SUCCESS);
         } else {
             return new Result<>(RespStatus.FAIL);
