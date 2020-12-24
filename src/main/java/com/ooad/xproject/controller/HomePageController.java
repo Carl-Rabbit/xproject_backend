@@ -176,7 +176,7 @@ public class HomePageController {
         Student student = studentService.getStudentByRoleId(role.getRoleId());
         String[] comments;
         if (student.getPayload() == null) {
-            comments = new String[0];
+            comments = null;
         } else {
             comments = student.getPayload().split(";");
         }
