@@ -110,6 +110,7 @@ public class ProjInstServiceImpl implements ProjInstService {
             // check proj inst validate
             SvResult<Boolean> svResult = checkProjInst(projInstId);
             if (!svResult.getData()) {
+                System.out.println("Team " + projInstId + " has not ");
                 return svResult;
             }
         }
@@ -363,7 +364,7 @@ public class ProjInstServiceImpl implements ProjInstService {
                     // reject
 
                     // send message
-                    Message rejectMsg = MessageFactory.createApplyReplyMsg(msg.getCreatorRoleId(), roleId, false);
+                    Message rejectMsg = MessageFactory.createApplyReplyMsg(projInst.getProjId(), msg.getCreatorRoleId(), roleId, false);
                     msgMapper.insertSelective(rejectMsg);
 
                     // send email
@@ -380,7 +381,7 @@ public class ProjInstServiceImpl implements ProjInstService {
             if (projInstApplicant != null) {
                 // already has a team
                 // send message
-                Message rejectMsg = MessageFactory.createApplyReplyMsg(msg.getCreatorRoleId(), roleId, false);
+                Message rejectMsg = MessageFactory.createApplyReplyMsg(projInst.getProjId(), msg.getCreatorRoleId(), roleId, false);
                 msgMapper.insertSelective(rejectMsg);
 
                 return new SvResult<>("Application accepted. Applicant has been in anther team.", true);
@@ -388,7 +389,7 @@ public class ProjInstServiceImpl implements ProjInstService {
 
             if (projInst.getStatus().equals(Confirm.name())) {
                 // send message
-                Message rejectMsg = MessageFactory.createApplyReplyMsg(msg.getCreatorRoleId(), roleId, false);
+                Message rejectMsg = MessageFactory.createApplyReplyMsg(projInst.getProjId(), msg.getCreatorRoleId(), roleId, false);
                 msgMapper.insertSelective(rejectMsg);
 
                 return new SvResult<>("Application reject. Team is confirmed", true);
@@ -398,7 +399,7 @@ public class ProjInstServiceImpl implements ProjInstService {
 
             if (affectedRowCnt != 0) {
                 // send message
-                Message acceptMsg = MessageFactory.createApplyReplyMsg(msg.getCreatorRoleId(), roleId, true);
+                Message acceptMsg = MessageFactory.createApplyReplyMsg(projInst.getProjId(), msg.getCreatorRoleId(), roleId, true);
                 msgMapper.insertSelective(acceptMsg);
 
                 // send email
