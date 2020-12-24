@@ -4,7 +4,7 @@ import com.ooad.xproject.entity.ProjectInst;
 import lombok.Setter;
 
 public class FormingBO {
-    public static final String RAND = "Rand";
+    public static final String RANDOM = "Random";
     public static final String TEAM_FIRST = "Team First";
     public static final String SIZE_BALANCE = "Size Balance";
 
@@ -13,12 +13,12 @@ public class FormingBO {
     private @Setter int[] stdRoleIdList;
 
     public static String[] getStrategyList() {
-        return new String[]{RAND, TEAM_FIRST, SIZE_BALANCE};
+        return new String[]{RANDOM, TEAM_FIRST, SIZE_BALANCE};
     }
 
     public boolean setStrategy(String strategyName) {
         switch (strategyName) {
-            case RAND: this.strategy = new RandForming(); break;
+            case RANDOM: this.strategy = new RandForming(); break;
             case TEAM_FIRST: this.strategy = new TeamFirstForming(); break;
             case SIZE_BALANCE: this.strategy = new SizeBalanceForming(); break;
             default: return false;
