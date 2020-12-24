@@ -292,10 +292,12 @@ public class FileController {
         Role role = roleService.getByUsername(RoleUtils.getUsername());
         int creatorId = role.getRoleId();
         int successCnt = 0;
+//        System.out.println(projId);
         for (MultipartFile file : files) {
             if (fileService.uploadResource(file, projId, creatorId) > 0) {
                 ++successCnt;
             }
+//            System.out.println(file.getOriginalFilename());
         }
 
         boolean check = (successCnt == 0);

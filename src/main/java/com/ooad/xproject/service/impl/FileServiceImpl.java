@@ -116,7 +116,7 @@ public class FileServiceImpl implements FileService {
 
         String filePath = getOrCreateResourceDir(projId, resource.getSrcId()).getPath();
 
-        upload(multipartFile, filePath, multipartFile.getName());
+        upload(multipartFile, filePath, multipartFile.getOriginalFilename());
         return ret;
     }
 
