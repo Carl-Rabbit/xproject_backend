@@ -1,6 +1,5 @@
 package com.ooad.xproject.controller;
 
-import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.entity.TestObject;
 import com.ooad.xproject.service.MailService;
@@ -60,8 +59,8 @@ public class TestController {
     public Result<?> testSendMail(@RequestParam("to") String to,
                                   @RequestParam("subject") String subject,
                                   @RequestParam("content") String content) {
-        SvResult<Boolean> svResult = mailService.sendSimpleMail(to, subject, content);
-        return new Result<>(svResult.getData() ? RespStatus.SUCCESS : RespStatus.FAIL, svResult.getMsg());
+        mailService.sendSimpleMail(to, subject, content);
+        return new Result<>(null);
     }
 
     @ResponseBody

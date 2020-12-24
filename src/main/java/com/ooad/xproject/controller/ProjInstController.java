@@ -95,6 +95,11 @@ public class ProjInstController {
         if (projectInst == null) {
             return new Result<>(RespStatus.FAIL, "No team");
         }
+
+        if (projectInst.getStatus().equals(Confirm.name())) {
+            return new Result<>(RespStatus.FAIL, "Team has already confirmed");
+        }
+
         projInstUpdateVO.copyToProjInst(projectInst);
         boolean success = projInstService.updateProjInst(projectInst);
         return Result.createBoolResult(success, "Update successfully", "Update failed");

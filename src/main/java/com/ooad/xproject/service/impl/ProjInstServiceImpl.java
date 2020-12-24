@@ -297,6 +297,7 @@ public class ProjInstServiceImpl implements ProjInstService {
             Student applicant = studentMapper.selectByRoleId(roleId);
 
             // send email to all members
+            System.out.println("Send email to all members");
             List<StudentDTO> stdList = this.getStudentDTOByProjInstId(projInstId);
             List<String> mailList = stdList.stream().map(StudentDTO::getEmail).collect(Collectors.toList());
             mailService.sendMailToStudent(mailList, "[XProject] A student applies to your team",
