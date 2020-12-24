@@ -3,11 +3,26 @@ package com.ooad.xproject;
 import com.alibaba.fastjson.JSON;
 import com.ooad.xproject.bo.ProjSettingsBO;
 import com.ooad.xproject.bo.TopicBO;
+import com.ooad.xproject.service.StudentService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class OtherTests {
+    @Autowired
+    private StudentService studentService;
+
+    @Test
+    public void testComment(){
+        studentService.appendStdPayload(20, "testComment");
+    }
+
     @Test
     public void testTopic() {
         TopicBO topic = TopicBO.builder().topicName("Topic123").maxTeamSize(-1).build();

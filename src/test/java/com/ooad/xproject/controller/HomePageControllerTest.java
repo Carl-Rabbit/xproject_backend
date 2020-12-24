@@ -1,5 +1,6 @@
 package com.ooad.xproject.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.Student;
 import com.ooad.xproject.service.StudentService;
@@ -22,16 +23,16 @@ class HomePageControllerTest {
     @Test
     void getComments() {
 
-        Student student = studentService.getStudentByRoleId(5);
-        String[] comments;
-        System.out.println(student.getPayload());
-        if (student.getPayload() == null) {
-            comments = null;
+        Student student = studentService.getStudentByRoleId(12);
+        String str = student.getPayload();
+        String jsonStr;
+
+        if (str == null || str.equals("")) {
+            jsonStr = JSON.toJSONString(null);
         } else {
-            comments = student.getPayload().split(";");
+            String[] comments = str.split(";");
+            jsonStr = JSON.toJSONString(comments);
         }
-        for (String str : comments) {
-            System.out.println(str);
-        }
+        System.out.println(jsonStr);
     }
 }

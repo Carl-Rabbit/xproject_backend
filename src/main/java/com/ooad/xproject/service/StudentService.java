@@ -40,7 +40,7 @@ public interface StudentService {
 
     Student getStudentByStdNo(String stdNo);
 
-    boolean appendStdPayload(int stdId, String payload);
+    boolean appendStdPayload(int roleId, String payload);
 
     boolean updateStdInfo(StdUpdateVO stdUpdateVO);
 }

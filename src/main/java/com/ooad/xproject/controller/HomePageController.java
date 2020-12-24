@@ -1,5 +1,6 @@
 package com.ooad.xproject.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.Project;
@@ -169,17 +170,27 @@ public class HomePageController {
     }
 
     @ResponseBody
-    @GetMapping("api/student/comments")
+    @GetMapping("api/all/comments")
     public Result<?> getComments() {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
-        Student student = studentService.getStudentByRoleId(role.getRoleId());
-        String[] comments;
-        if (student.getPayload() == null) {
-            comments = null;
+        return getCommentsByRoleId(role.getRoleId());
+    }
+
+    @ResponseBody
+    @GetMapping("api/all/comments/roleId")
+    public Result<?> getCommentsByRoleId(@RequestParam("roleId") int roleId) {
+        Student student = studentService.getStudentByRoleId(roleId);
+        String str = student.getPayload();
+        String jsonStr;
+
+        if (str == null || str.equals("")) {
+            jsonStr = JSON.toJSONString(null);
         } else {
-            comments = student.getPayload().split(";");
+            String[] comments = str.split(";");
+            jsonStr = JSON.toJSONString(comments);
         }
-        return new Result<>(comments);
+
+        return new Result<>(jsonStr);
     }
 }
