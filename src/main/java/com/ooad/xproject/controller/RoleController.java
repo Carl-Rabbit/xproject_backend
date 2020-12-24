@@ -104,7 +104,7 @@ public class RoleController {
         String msg;
 
         if (RoleType.Student.match(type) || RoleType.Teacher.match(type)) {
-            School school = homeService.getSchoolBySchId(schId);
+            School school = homeService.getSchool(schId);
             if (school == null) {
                 return new Result<>(RespStatus.FAIL, "No such school");
             }
