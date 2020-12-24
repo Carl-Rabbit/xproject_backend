@@ -17,6 +17,8 @@ public class MessageFactory {
         titleMap.put(MsgType.JoinFail, "has been refused to join your team");
         titleMap.put(MsgType.Quit, "was invited to join your team");
         titleMap.put(MsgType.Invite, "was invited to join your team");
+        titleMap.put(MsgType.InviteSuccess, "was agreed to join your team");
+        titleMap.put(MsgType.InviteFail, "was rejected to join your team");
     }
 
     public static Message createInviteMessage(int creatorRoleId, ProjectInst projInst, int inviteStdRoleId) {
