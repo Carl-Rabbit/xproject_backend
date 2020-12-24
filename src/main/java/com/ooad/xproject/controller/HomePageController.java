@@ -175,9 +175,8 @@ public class HomePageController {
         Role role = roleService.getByUsername(username);
         Student student = studentService.getStudentByRoleId(role.getRoleId());
         String[] comments = new String[1];
-        if (student.getPayload() == null) {
-            comments[0] = "No Comments";
-        } else {
+        comments[0] = "No Comments";
+        if (student.getPayload() != null) {
             comments = student.getPayload().split(";");
         }
         return new Result<>(comments);

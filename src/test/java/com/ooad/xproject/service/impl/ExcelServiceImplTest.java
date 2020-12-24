@@ -63,8 +63,8 @@ class ExcelServiceImplTest {
     void generateStudentImportBOList() {
 
         String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\input\\testImport\\StudentAcImport.xlsx";
-        int clsFrom = 75, clsTo = 75; // 10 ~ 99
-        int stdFrom = 10, stdTo = 20; // 10 ~ 99
+        int clsFrom = 80, clsTo = 85; // 10 ~ 99
+        int stdFrom = 10, stdTo = 70; // 10 ~ 99
 
         List<StudentImportBO> studentImportBOS = new ArrayList<>();
         for (int lab = clsFrom; lab <= clsTo; ++lab) {
