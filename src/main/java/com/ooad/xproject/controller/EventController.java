@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ooad.xproject.constant.ProjInstStatus.Confirm;
 import static com.ooad.xproject.vo.Result.createBoolResult;
 
 @RestController
@@ -162,6 +163,11 @@ public class EventController {
         ProjectInst projInst = projInstService.getPIByProjIdAndStdRoleId(projId, role.getRoleId());
         if (projInst == null) {
             return new Result<>(RespStatus.FAIL, "No Team yet");
+        }
+
+        // check team status
+        if (!projInst.getStatus().equals(Confirm.name())) {
+            return new Result<>(RespStatus.FAIL, "Your team has not been confirm yet");
         }
 
         SvResult<Boolean> svResult = eaTaskService.applyEventInst(eventInstId, projInst.getProjInstId());

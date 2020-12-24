@@ -8,6 +8,7 @@ import com.ooad.xproject.entity.ProjectInst;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.service.MessageService;
 import com.ooad.xproject.service.ProjInstService;
+import com.ooad.xproject.service.ProjectService;
 import com.ooad.xproject.service.RoleService;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.*;
@@ -22,12 +23,14 @@ import java.util.List;
 public class ProjInstController {
 
     private final RoleService roleService;
+    private final ProjectService projService;
     private final ProjInstService projInstService;
     private final MessageService messageService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
 
-    public ProjInstController(RoleService roleService, ProjInstService projInstService, MessageService messageService) {
+    public ProjInstController(RoleService roleService, ProjectService projService, ProjInstService projInstService, MessageService messageService) {
         this.roleService = roleService;
+        this.projService = projService;
         this.projInstService = projInstService;
         this.messageService = messageService;
     }
@@ -35,6 +38,11 @@ public class ProjInstController {
     @ResponseBody
     @GetMapping("api/all/team/list")
     public Result<?> getTeamInfoList(@RequestParam(value="projId") int projId) {
+        // check project accessible
+        if (!projService.isAccessible(projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         List<ProjectInst> projInstList = projInstService.getProInstList(projId);
         List<SimpleTeamVO> simpleTeamVOList = new ArrayList<>();
         for (ProjectInst projectInst: projInstList) {
@@ -50,6 +58,16 @@ public class ProjInstController {
     @GetMapping("api/all/team/info/detail")
     public Result<?> getTeamDetail(@RequestParam(value="teamId") int projInstId) {
         ProjectInst projectInst = projInstService.getProjectInst(projInstId);
+
+        if (projectInst == null) {
+            return new Result<>(RespStatus.FAIL, "No such projInst");
+        }
+
+        // check project accessible
+        if (!projService.isAccessible(projectInst.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         List<StudentDTO> studentList = projInstService.getStudentDTOByProjInstId(projInstId);
         TeamVO teamVO = TeamVO.createFrom(projectInst, studentList);
         logger.info(String.format("getTeamDetail -> %s", teamVO));
