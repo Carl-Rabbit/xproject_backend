@@ -1,5 +1,6 @@
 package com.ooad.xproject.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.SbmDTO;
@@ -154,16 +155,18 @@ public class SubmissionController {
             return new Result<>(RespStatus.FAIL, "Project is not accessible");
         }
 
-        Submission sbm = new Submission();
+        Submission sbm = submission;
         try {
-            submissionVO.copyToSubmission(sbm, null);
+            submissionVO.copyToSubmission(sbm, role.getRoleId());
         } catch (ParseException e) {
             e.printStackTrace();
             return new Result<>(RespStatus.FAIL, "Format is not correct");
         }
         logger.info("postModifySubmission -> " + sbm);
+        System.out.println(JSON.toJSONString(sbm));
+        System.out.println(JSON.toJSONString(submissionVO));
         boolean success = sbmService.modifySubmission(sbm);
-        return createBoolResult(success, "Modify submission successfully", "Fail to create");
+        return createBoolResult(success, "Modify submission successfully", "Fail to modify");
     }
 
 }

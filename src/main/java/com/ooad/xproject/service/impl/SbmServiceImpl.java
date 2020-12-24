@@ -45,7 +45,7 @@ public class SbmServiceImpl implements SbmService {
 
     @Override
     public boolean modifySubmission(Submission sbm) {
-        int affectedRowCnt = submissionMapper.updateByPrimaryKeySelective(sbm);
+        int affectedRowCnt = submissionMapper.updateByPrimaryKey(sbm);
         return affectedRowCnt == 1;
     }
 
