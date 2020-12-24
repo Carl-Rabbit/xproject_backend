@@ -16,8 +16,6 @@ import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.ResourceVO;
 import com.ooad.xproject.vo.Result;
-import com.ooad.xproject.vo.UploadFileProjIdVO;
-import com.ooad.xproject.vo.UploadSbmVO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -120,9 +118,9 @@ public class FileController {
     }
 
     @PostMapping("api/teacher/students/excel")
-    public Result<Integer> postStudentAcCreationFromExcel(@RequestParam("files") MultipartFile[] files) {
-        String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
-        System.out.println(filePath);
+    public Result<Integer> postStudentAcCreationFromExcel(@RequestParam("file") MultipartFile file) {
+        String filePath = fileService.upload(file, fileConfig.getInputRoot(), "stdInput.xlsx");
+//        System.out.println(filePath);
         List<StudentImportBO> studentImportBOList = excelService.readStudentImportBO(filePath);
 
         String username = RoleUtils.getUsername();
@@ -148,16 +146,13 @@ public class FileController {
 
 
     @PostMapping("api/teacher/records/excel")
-    public Result<Integer> postRecordUnitImportFromExcel(@RequestBody UploadFileProjIdVO uploadFileProjIdVO) {
-        MultipartFile[] files = uploadFileProjIdVO.getFiles();
-        int projId = uploadFileProjIdVO.getProjId();
-
+    public Result<Integer> postRecordUnitImportFromExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
         // check project accessible
         if (!projService.isAccessible(projId)) {
             return new Result<>(RespStatus.FAIL, "Project is not accessible");
         }
 
-        String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
+        String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "recInput.xlsx");
 //        System.out.println(filePath);
         List<RecordUnitBO> recordUnitBOList = excelService.readRecordUnitBO(filePath);
 
@@ -185,16 +180,13 @@ public class FileController {
     }
 
     @PostMapping("api/teacher/project/student/excel")
-    public Result<Integer> postProjStdExcel(@RequestBody UploadFileProjIdVO uploadFileProjIdVO) {
-        MultipartFile[] files = uploadFileProjIdVO.getFiles();
-        int projId = uploadFileProjIdVO.getProjId();
-
+    public Result<Integer> postProjStdExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
         // check project accessible
         if (!projService.isAccessible(projId)) {
             return new Result<>(RespStatus.FAIL, "Project is not accessible");
         }
 
-        String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "input.xlsx");
+        String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "projInput.xlsx");
 //        System.out.println(filePath);
         List<StudentClassBO> studentClassBOList = excelService.readStudentClassBO(filePath);
 
@@ -218,9 +210,8 @@ public class FileController {
     }
 
     @PostMapping("api/student/submission/upload")
-    public Result<?> postUploadSubmission(@RequestBody UploadSbmVO uploadSbmVO) {
-        MultipartFile[] files = uploadSbmVO.getFiles();
-        Integer sbmId = uploadSbmVO.getSbmId();
+    public Result<?> postUploadSubmission(@RequestParam("files") MultipartFile[] files,
+                                          @RequestParam("sbmId") int sbmId) {
 
         Role role = roleService.getByUsername(RoleUtils.getUsername());
         StringBuilder attachment = new StringBuilder();
@@ -290,9 +281,8 @@ public class FileController {
     }
 
     @PostMapping("api/teacher/resource/upload")
-    public Result<?> postResources(@RequestBody UploadFileProjIdVO uploadFileProjIdVO) {
-        MultipartFile[] files = uploadFileProjIdVO.getFiles();
-        int projId = uploadFileProjIdVO.getProjId();
+    public Result<?> postResources(@RequestParam("files") MultipartFile[] files,
+                                   @RequestParam("projId") int projId) {
 
         // check project accessible
         if (!projService.isAccessible(projId)) {

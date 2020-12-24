@@ -52,19 +52,19 @@ class ExcelServiceImplTest {
     private FileConfig fileConfig;
 
     @Test
-    void outputRecordUnitList() {
-        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output\\output.xlsx";
+    void generateRecordUnitList() {
+        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\input\\testImport\\OOADGrade.xlsx";
         List<RecordUnitBO> recordUnitList = projectService.getRecordUnitList(1);
 
         excelService.generate(recordUnitList, filePath);
     }
 
     @Test
-    void generateStudentImportBO() {
+    void generateStudentImportBOList() {
 
-        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output\\output.xlsx";
-        int clsFrom = 72, clsTo = 72; // 10 ~ 99
-        int stdFrom = 10, stdTo = 10; // 10 ~ 99
+        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\input\\testImport\\StudentAcImport.xlsx";
+        int clsFrom = 75, clsTo = 75; // 10 ~ 99
+        int stdFrom = 10, stdTo = 14; // 10 ~ 99
 
         List<StudentImportBO> studentImportBOS = new ArrayList<>();
         for (int lab = clsFrom; lab <= clsTo; ++lab) {
@@ -83,6 +83,23 @@ class ExcelServiceImplTest {
         }
 
         System.out.println(excelService.generate(studentImportBOS, filePath));
+    }
+
+    @Test
+    void generateStudentClassList() {
+        FileConfig fileConfig = new FileConfig();
+        String filePath = "C:\\Users\\BCS\\Desktop\\Testcase\\testImport\\studentClassImport.xlsx";
+        List<StudentClassBO> studentClassBOList = new ArrayList<>();
+        String cls = "Lab 7";
+        int roleFrom = 10, roleTo = 11;
+        for (int i = roleFrom; i <= roleTo; ++i) {
+            StudentClassBO studentClassBO = new StudentClassBO();
+            studentClassBO.setClsMark(cls);
+            studentClassBO.setStdNo("118170" + i);
+            studentClassBOList.add(studentClassBO);
+        }
+
+        excelService.generate(studentClassBOList, filePath);
     }
 
     @Test
@@ -154,22 +171,7 @@ class ExcelServiceImplTest {
         System.out.println(new Result<>(status, msg, successCnt).toString());
     }
 
-    @Test
-    void outputStudentClassList() {
-        FileConfig fileConfig = new FileConfig();
-        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output.xlsx";
-        List<StudentClassBO> studentClassBOList = new ArrayList<>();
-        String cls = "Lab 7";
-        int roleFrom = 10, roleTo = 11;
-        for (int i = roleFrom; i <= roleTo; ++i) {
-            StudentClassBO studentClassBO = new StudentClassBO();
-            studentClassBO.setClsMark(cls);
-            studentClassBO.setStdNo("118170" + i);
-            studentClassBOList.add(studentClassBO);
-        }
 
-        excelService.generate(studentClassBOList, filePath);
-    }
 
     @Test
     void postProjStdExcel() {

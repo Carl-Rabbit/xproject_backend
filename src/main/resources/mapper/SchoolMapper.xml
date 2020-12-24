@@ -1,70 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ooad.xproject.mapper.SchoolMapper">
-  <resultMap id="BaseResultMap" type="com.ooad.xproject.entity.School">
-    <id column="sch_id" jdbcType="INTEGER" property="schId" />
-    <result column="sch_name" jdbcType="VARCHAR" property="schName" />
-    <result column="location" jdbcType="VARCHAR" property="location" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    sch_id, sch_name, location
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from schools
-    where sch_id = #{schId,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from schools
-    where sch_id = #{schId,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.ooad.xproject.entity.School"
-          useGeneratedKeys="true" keyProperty="schId" keyColumn="sch_id">
-    insert into schools (sch_name, location)
-    values (#{schName,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.ooad.xproject.entity.School"
-          useGeneratedKeys="true" keyProperty="schId" keyColumn="sch_id">
-    insert into schools
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="schName != null">
-        sch_name,
-      </if>
-      <if test="location != null">
-        location,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="schName != null">
-        #{schName,jdbcType=VARCHAR},
-      </if>
-      <if test="location != null">
-        #{location,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.ooad.xproject.entity.School">
-    update schools
-    <set>
-      <if test="schName != null">
-        sch_name = #{schName,jdbcType=VARCHAR},
-      </if>
-      <if test="location != null">
-        location = #{location,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where sch_id = #{schId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.ooad.xproject.entity.School">
-    update schools
-    set sch_name = #{schName,jdbcType=VARCHAR},
-      location = #{location,jdbcType=VARCHAR}
-    where sch_id = #{schId,jdbcType=INTEGER}
-  </update>
+    <resultMap id="BaseResultMap" type="com.ooad.xproject.entity.School">
+        <id column="sch_id" jdbcType="INTEGER" property="schId"/>
+        <result column="sch_name" jdbcType="VARCHAR" property="schName"/>
+        <result column="location" jdbcType="VARCHAR" property="location"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        sch_id, sch_name, location
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from schools
+        where sch_id = #{schId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from schools
+        where sch_id = #{schId,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.ooad.xproject.entity.School"
+            useGeneratedKeys="true" keyProperty="schId" keyColumn="sch_id">
+        insert into schools (sch_name, location)
+        values (#{schName,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.ooad.xproject.entity.School"
+            useGeneratedKeys="true" keyProperty="schId" keyColumn="sch_id">
+        insert into schools
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="schName != null">
+                sch_name,
+            </if>
+            <if test="location != null">
+                location,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="schName != null">
+                #{schName,jdbcType=VARCHAR},
+            </if>
+            <if test="location != null">
+                #{location,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ooad.xproject.entity.School">
+        update schools
+        <set>
+            <if test="schName != null">
+                sch_name = #{schName,jdbcType=VARCHAR},
+            </if>
+            <if test="location != null">
+                location = #{location,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where sch_id = #{schId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ooad.xproject.entity.School">
+        update schools
+        set sch_name = #{schName,jdbcType=VARCHAR},
+            location = #{location,jdbcType=VARCHAR}
+        where sch_id = #{schId,jdbcType=INTEGER}
+    </update>
 
-  <select id="selectAll" resultType="com.ooad.xproject.entity.School">
-    select *
-    from schools;
-  </select>
+    <select id="selectAll" resultType="com.ooad.xproject.entity.School">
+        select *
+        from schools;
+    </select>
+    <select id="selectBySchName" resultType="com.ooad.xproject.entity.School">
+        select *
+        from schools
+        where sch_name = #{schName, jdbcType=VARCHAR};
+    </select>
 </mapper>
