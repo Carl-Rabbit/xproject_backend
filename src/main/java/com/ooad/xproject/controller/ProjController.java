@@ -14,8 +14,6 @@ import com.ooad.xproject.vo.*;
 import org.apache.commons.math3.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,17 +26,17 @@ public class ProjController {
 
     private final RoleService roleService;
     private final HomeService homeService;
-    private final ProjectService projectService;
+    private final ProjectService projService;
     private final SubmissionInstService submissionInstService;
     private final ProjInstService projInstService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
     private final TeacherService teacherService;
     private final StudentService studentService;
 
-    public ProjController(RoleService roleService, HomeService homeService, ProjectService projectService, SubmissionInstService submissionInstService, ProjInstService projInstService, TeacherService teacherService, StudentService studentService) {
+    public ProjController(RoleService roleService, HomeService homeService, ProjectService projService, SubmissionInstService submissionInstService, ProjInstService projInstService, TeacherService teacherService, StudentService studentService) {
         this.roleService = roleService;
         this.homeService = homeService;
-        this.projectService = projectService;
+        this.projService = projService;
         this.submissionInstService = submissionInstService;
         this.projInstService = projInstService;
         this.teacherService = teacherService;
@@ -48,7 +46,13 @@ public class ProjController {
     @ResponseBody
     @GetMapping("api/all/project/topic")
     public Result<?> getProjTopics(@RequestParam(value="projId") int projId) {
-        Project project = projectService.getProject(projId);
+
+        // check project accessible
+        if (!projService.isAccessible(projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
+        Project project = projService.getProject(projId);
         List<TopicBO> topicList = JSON.parseArray(project.getTopics(), TopicBO.class);
         return new Result<>(topicList);
     }
@@ -58,25 +62,12 @@ public class ProjController {
     public Result<Project> getProject(@RequestParam("projId") int projId) {
         logger.info("getProject");
 
-        Subject subject = SecurityUtils.getSubject();
-        String username = subject.getPrincipal().toString();
-
-        Role role = roleService.getByUsername(username);
-
-        List<Project> projList = homeService.getProjectList(role.getRoleId());
-
-        boolean hasThisProj = false;
-        for (Project proj: projList) {
-            if (proj.getProjId() == projId) {
-                hasThisProj = true;
-                break;
-            }
-        }
-        if (!hasThisProj) {
-            return new Result<>(RespStatus.UNAUTHORIZED);
+        // check project accessible
+        if (!projService.isAccessible(projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
         }
 
-        Project proj = projectService.getProject(projId);
+        Project proj = projService.getProject(projId);
 
         return new Result<>(proj);
     }
@@ -85,27 +76,14 @@ public class ProjController {
     @PostMapping("api/teacher/update-overview")
     public Result<Boolean> updateProject(@RequestBody ProjectVO projectVO) {
         logger.info("updateProject");
-
-        Subject subject = SecurityUtils.getSubject();
-        String username = subject.getPrincipal().toString();
-
-        Role role = roleService.getByUsername(username);
-
-        List<Project> projList = homeService.getProjectList(role.getRoleId());
-
-        boolean hasThisProj = false;
-        for (Project proj: projList) {
-            if (proj.getProjId().equals(projectVO.getProjId())) {
-                hasThisProj = true;
-                break;
-            }
+        // check project accessible
+        if (!projService.isAccessible(projectVO.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
         }
-        if (!hasThisProj) {
-            return new Result<>(RespStatus.UNAUTHORIZED);
-        }
+
         Project project = new Project();
         projectVO.copyToProjUpdate(project);
-        boolean success = projectService.updateProject(project);
+        boolean success = projService.updateProject(project);
 
         if (success) {
             return new Result<>(true);
@@ -118,7 +96,12 @@ public class ProjController {
     @ResponseBody
     @GetMapping("api/teacher/project/students")
     public Result<?> getProjStdList(@RequestParam(value="projId") int projId) {
-        List<StudentProjDTO> stdProjDTOList = projectService.getStdProjList(projId);
+        // check project accessible
+        if (!projService.isAccessible(projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
+        List<StudentProjDTO> stdProjDTOList = projService.getStdProjList(projId);
         logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
         return new Result<>(stdProjDTOList);
     }
@@ -126,6 +109,8 @@ public class ProjController {
     @ResponseBody
     @PostMapping("api/teacher/team/auto-forming")
     public Result<?> postAutoForming(@RequestBody AutoFormingVO autoFormingVO) {
+        // no check access
+
         FormingBO formContext = new FormingBO();
         boolean success = formContext.setStrategy(autoFormingVO.getStrategy());
         if (!success) {
@@ -134,7 +119,7 @@ public class ProjController {
         formContext.setProjInstList(autoFormingVO.getProjInstList());
         formContext.setStdRoleIdList(autoFormingVO.getStdRoleIdList());
 
-        SvResult<FormingResultBO> formingRes = projectService.autoForming(formContext);
+        SvResult<FormingResultBO> formingRes = projService.autoForming(formContext);
         FormingResultBO res = formingRes.getData();
 
         // handle auto confirm
@@ -157,6 +142,11 @@ public class ProjController {
     @ResponseBody
     @GetMapping("api/teacher/project/submission-ins")
     public Result<?> getSbmInsList(@RequestParam(value="sbmId") int sbmId, @RequestParam(value="projId") int projId){
+        // check project accessible
+        if (!projService.isAccessible(projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         List<SubmissionInst> submissionInsts = submissionInstService.getSubmissionInstList(sbmId, projId);
         List<SbmInstVO> sbmInstVOS = new ArrayList<>();
         for (SubmissionInst submissionInst : submissionInsts) {
@@ -174,7 +164,12 @@ public class ProjController {
     @ResponseBody
     @GetMapping("api/student/team/ungrouped")
     public Result<?> getUngroupedStudents(@RequestParam(value="projId") int projId) {
-        List<StudentProjDTO> stdProjDTOList = projectService.getStdProjList(projId);
+        // check project accessible
+        if (!projService.isAccessible(projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
+        List<StudentProjDTO> stdProjDTOList = projService.getStdProjList(projId);
         stdProjDTOList.removeIf(studentProjDTO -> studentProjDTO.getProjInstId() != null);
         logger.info(String.format("getUngroupedStudents -> %s", stdProjDTOList));
         return new Result<>(stdProjDTOList);
@@ -183,6 +178,7 @@ public class ProjController {
     @ResponseBody
     @GetMapping("api/all/team/stu-proj")
     public Result<?> getStuProj(@RequestParam(value="roleId") int roleId) {
+        // no check school
         List<Project> projList = homeService.getProjectList(roleId);
         logger.info(String.format("getUngroupedStudents -> %s", projList));
         return new Result<>(projList);
@@ -199,15 +195,18 @@ public class ProjController {
         proj.setCreatorId(role.getRoleId());
         Teacher teacher = teacherService.getTeacherByRoleId(role.getRoleId());
         proj.setSchId(teacher.getSchId());
-        boolean success = projectService.createProject(proj);
+        boolean success = projService.createProject(proj);
         return Result.createBoolResult(success, "Create project successfully", "Create project failed");
     }
 
     @ResponseBody
     @PostMapping("api/teacher/project/add/std")
     public Result<?> postAddStdIntoProj(@RequestBody ProjAddStdVO projAddStdVO) {
-//        String username = RoleUtils.getUsername();
-//        Role role = roleService.getByUsername(username);
+
+        // check project accessible
+        if (!projService.isAccessible(projAddStdVO.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
 
         int successCnt = 0;
         for (int stdRoleId: projAddStdVO.getStdRoleIdList()) {

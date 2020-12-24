@@ -8,6 +8,7 @@ import com.ooad.xproject.bo.forming.FormingResultBO;
 import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
+import com.ooad.xproject.service.MailService;
 import com.ooad.xproject.service.ProjectService;
 import com.ooad.xproject.utils.RoleUtils;
 import org.apache.commons.math3.util.Pair;
@@ -27,8 +28,9 @@ public class ProjectServiceImpl implements ProjectService {
     private final TeamFormTaskMapper teamFormTaskMapper;
     private final StudentMapper studentMapper;
     private final RoleMapper roleMapper;
+    private final MailService mailService;
 
-    public ProjectServiceImpl(AnnouncementMapper announcementMapper, EventArrangeTaskMapper eventArrangeTaskMapper, SubmissionMapper submissionMapper, RecordMapper recordMapper, ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, TeamFormTaskMapper teamFormTaskMapper, StudentMapper studentMapper, RoleMapper roleMapper) {
+    public ProjectServiceImpl(AnnouncementMapper announcementMapper, EventArrangeTaskMapper eventArrangeTaskMapper, SubmissionMapper submissionMapper, RecordMapper recordMapper, ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, TeamFormTaskMapper teamFormTaskMapper, StudentMapper studentMapper, RoleMapper roleMapper, MailService mailService) {
         this.announcementMapper = announcementMapper;
         this.eventArrangeTaskMapper = eventArrangeTaskMapper;
         this.submissionMapper = submissionMapper;
@@ -38,6 +40,7 @@ public class ProjectServiceImpl implements ProjectService {
         this.teamFormTaskMapper = teamFormTaskMapper;
         this.studentMapper = studentMapper;
         this.roleMapper = roleMapper;
+        this.mailService = mailService;
     }
 
     @Override
@@ -105,6 +108,11 @@ public class ProjectServiceImpl implements ProjectService {
                 if (!success) {
                     res.reduceSuccess(1);
                     System.out.println("Fail in autoForming " + pair.toString());
+                } else {
+                    Student std = studentMapper.selectByRoleId(pair.getSecond());
+                    mailService.sendSimpleMail(std.getEmail(), "[XProject] Your have been add to one team",
+                            "Your have been add to one team by teacher\r\n" +
+                                    "This automatic notification message was sent by Xproject");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -11,6 +11,7 @@ import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
+import com.ooad.xproject.service.MailService;
 import com.ooad.xproject.service.ProjInstService;
 import com.ooad.xproject.vo.ApplyReplyParamVO;
 import com.ooad.xproject.vo.ApplyTeamParamVO;
@@ -21,6 +22,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjInstServiceImpl implements ProjInstService {
@@ -33,8 +35,10 @@ public class ProjInstServiceImpl implements ProjInstService {
 
     private final ProjInstStudentRTMapper pisRTMapper;
     private final RecordMapper recordMapper;
+    private final MailService mailService;
+    private final StudentMapper studentMapper;
 
-    public ProjInstServiceImpl(ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, RecordInstMapper recordInstMapper, SubmissionInstMapper submissionInstMapper, MessageMapper msgMapper, ProjInstStudentRTMapper pisRTMapper, RecordMapper recordMapper) {
+    public ProjInstServiceImpl(ProjectMapper projectMapper, ProjectInstMapper projectInstMapper, RecordInstMapper recordInstMapper, SubmissionInstMapper submissionInstMapper, MessageMapper msgMapper, ProjInstStudentRTMapper pisRTMapper, RecordMapper recordMapper, MailService mailService, StudentMapper studentMapper) {
         this.projectMapper = projectMapper;
         this.projectInstMapper = projectInstMapper;
         this.recordInstMapper = recordInstMapper;
@@ -42,6 +46,8 @@ public class ProjInstServiceImpl implements ProjInstService {
         this.msgMapper = msgMapper;
         this.pisRTMapper = pisRTMapper;
         this.recordMapper = recordMapper;
+        this.mailService = mailService;
+        this.studentMapper = studentMapper;
     }
 
     @Override
@@ -293,6 +299,10 @@ public class ProjInstServiceImpl implements ProjInstService {
             if (affectedRowCnt == 1) {
                 if (!applyReplyParamVO.isAccepted()) {
                     // reject
+                    Student applicant = studentMapper.selectByRoleId(msg.getCreatorRoleId());
+                    mailService.sendSimpleMail(applicant.getEmail(), "[XProject] You are reject to join the team",
+                            "You are reject to join the team\r\n" +
+                                    "This automatic notification message was sent by Xproject");
                     return new SvResult<>("Application rejected", true);
                 }
             } else {
@@ -308,6 +318,10 @@ public class ProjInstServiceImpl implements ProjInstService {
             boolean success = projectInstMapper.insertProjInstStdRT(msg.getProjInstId(), msg.getCreatorRoleId(), "Join");
 
             if (success) {
+                Student applicant = studentMapper.selectByRoleId(msg.getCreatorRoleId());
+                mailService.sendSimpleMail(applicant.getEmail(), "[XProject] You are accepted to join the team",
+                        "You are accepted to join the team\r\n" +
+                                "This automatic notification message was sent by Xproject");
                 return new SvResult<>("Application accepted", true);
             } else {
                 return new SvResult<>("Error occur when update team info", false);
@@ -334,6 +348,12 @@ public class ProjInstServiceImpl implements ProjInstService {
             if (svResult.getData()) {
                 // true
                 successList.add(projInstId);
+                // send email
+                List<StudentDTO> stdList = this.getStudentDTOByProjInstId(projInstId);
+                List<String> mailList = stdList.stream().map(StudentDTO::getEmail).collect(Collectors.toList());
+                mailService.sendMailToStudent(mailList, "[XProject] Your team has been confirmed",
+                        "Your team has been confirmed by teacher\r\n" +
+                                "This automatic notification message was sent by Xproject");
             } else {
                 // false
                 System.out.printf("postTeamConfirm -> Fail to confirm projInst %d%n", projInstId);
