@@ -64,14 +64,14 @@ class ExcelServiceImplTest {
 
         String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\input\\testImport\\StudentAcImport.xlsx";
         int clsFrom = 75, clsTo = 75; // 10 ~ 99
-        int stdFrom = 10, stdTo = 14; // 10 ~ 99
+        int stdFrom = 10, stdTo = 20; // 10 ~ 99
 
         List<StudentImportBO> studentImportBOS = new ArrayList<>();
         for (int lab = clsFrom; lab <= clsTo; ++lab) {
             for (int i = stdFrom; i <= stdTo; ++i) {
                 String stdId = "1181" + lab + i;
                 StudentImportBO studentImportBO = new StudentImportBO();
-                studentImportBO.setEmail(stdId + "@mail.sustech.edu.cn");
+                studentImportBO.setEmail(stdId + "@mail.fake.sustech.edu.cn");
                 studentImportBO.setStdClass("18" + lab);
                 studentImportBO.setStdNo(stdId);
                 studentImportBO.setStdName("std" + lab + "_" + i);

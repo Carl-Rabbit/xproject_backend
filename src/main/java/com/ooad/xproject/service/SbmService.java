@@ -1,5 +1,6 @@
 package com.ooad.xproject.service;
 
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.entity.Submission;
 import com.ooad.xproject.entity.SubmissionInst;
 
@@ -15,7 +16,7 @@ public interface SbmService {
 
     boolean modifySubmission(Submission sbm);
 
-    SubmissionInst getSbmInstByStdRoleIdAndSbmId(int roleId, int sbmId);
+    SvResult<SubmissionInst> getSbmInstByStdRoleIdAndSbmId(int roleId, int sbmId);
 
     Submission getSbmBySbmId(int sbmId);
 }
