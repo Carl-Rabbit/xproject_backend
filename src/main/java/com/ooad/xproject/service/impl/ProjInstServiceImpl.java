@@ -111,7 +111,7 @@ public class ProjInstServiceImpl implements ProjInstService {
             // check proj inst validate
             SvResult<Boolean> svResult = checkProjInst(projInstId, isTeacher);
             if (!svResult.getData()) {
-                System.out.println("Team " + projInstId + " check failed");
+                System.out.println("Team " + projInstId + " check failed.");
                 return svResult;
             }
         }
