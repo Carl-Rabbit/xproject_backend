@@ -16,6 +16,7 @@ import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.ResourceVO;
 import com.ooad.xproject.vo.Result;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +32,6 @@ import java.util.stream.Collectors;
 import static com.ooad.xproject.constant.ProjInstStatus.Confirm;
 
 
-// todo: role + database -> directory name -> upload/download
 @RestController
 public class FileController {
 
@@ -270,8 +270,7 @@ public class FileController {
 
         // check project accessible
         if (!projService.isAccessible(submission.getProjId())) {
-            // TODO LYZ
-            return null;
+            return (ResponseEntity<byte[]>) ResponseEntity.status(HttpStatus.FORBIDDEN);
         }
 
         File file = fileService.getSbmDir(sbmId);
@@ -314,14 +313,12 @@ public class FileController {
         Resource resource = resourceMapper.selectByPrimaryKey(srcId);
 
         if (resource == null) {
-            // TODO LYZ
-            return null;
+            return (ResponseEntity<byte[]>) ResponseEntity.status(HttpStatus.NOT_FOUND);
         }
 
         // check project accessible
         if (!projService.isAccessible(resource.getProjId())) {
-            // TODO LYZ
-            return null;
+            return (ResponseEntity<byte[]>) ResponseEntity.status(HttpStatus.FORBIDDEN);
         }
 
         File file = fileService.getResDir(srcId);
