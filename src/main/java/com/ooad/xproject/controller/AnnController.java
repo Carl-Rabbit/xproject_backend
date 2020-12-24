@@ -50,8 +50,10 @@ public class AnnController {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
+        Announcement ann = annService.getAnnByAnnId(announcement.getAnnId());
+
         // check project accessible
-        if (!projService.isAccessible(announcement.getProjId())) {
+        if (!projService.isAccessible(ann.getProjId())) {
             return new Result<>(RespStatus.FAIL, "Project is not accessible");
         }
 
@@ -101,6 +103,13 @@ public class AnnController {
     @ResponseBody
     @GetMapping("api/teacher/project/ann/delete")
     public Result<?> getDeleteAnnouncement(@RequestParam("annId") int annId) {
+        Announcement ann = annService.getAnnByAnnId(annId);
+
+        // check project accessible
+        if (!projService.isAccessible(ann.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         boolean success = annService.deleteAnn(annId);
         if (success) {
             return new Result<>(true);
