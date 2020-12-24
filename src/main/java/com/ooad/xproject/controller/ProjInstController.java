@@ -284,7 +284,7 @@ public class ProjInstController {
 
         if (RoleType.Student.match(role.getRoleType())) {
             int projInstId = teamConfirmParamVO.getProjInstIdList()[0];
-            SvResult<Boolean> svResult = projInstService.confirmProjInst(projInstId, false);
+            SvResult<Boolean> svResult = projInstService.confirmProjInst(projInstId, false, false);
             if (svResult.getData()) {
                 // send email to all members
                 List<StudentDTO> stdList = projInstService.getStudentDTOByProjInstId(projInstId);
@@ -311,7 +311,7 @@ public class ProjInstController {
 
         if (RoleType.Student.match(role.getRoleType())) {
             int projInstId = teamConfirmParamVO.getProjInstIdList()[0];
-            SvResult<Boolean> svResult = projInstService.confirmProjInst(projInstId, false);
+            SvResult<Boolean> svResult = projInstService.confirmProjInst(projInstId, false, false);
             if (svResult.getData()) {
                 // send email to all members
                 List<StudentDTO> stdList = projInstService.getStudentDTOByProjInstId(projInstId);

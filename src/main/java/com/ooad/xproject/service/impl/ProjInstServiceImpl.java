@@ -104,13 +104,13 @@ public class ProjInstServiceImpl implements ProjInstService {
 
     @Transactional
     @Override
-    public SvResult<Boolean> confirmProjInst(int projInstId, boolean isForce) {
+    public SvResult<Boolean> confirmProjInst(int projInstId, boolean isForce, boolean isTeacher) {
 
         if (!isForce) {
             // check proj inst validate
-            SvResult<Boolean> svResult = checkProjInst(projInstId);
+            SvResult<Boolean> svResult = checkProjInst(projInstId, isTeacher);
             if (!svResult.getData()) {
-                System.out.println("Team " + projInstId + " has not ");
+                System.out.println("Team " + projInstId + " check failed");
                 return svResult;
             }
         }
@@ -135,14 +135,14 @@ public class ProjInstServiceImpl implements ProjInstService {
         }
     }
 
-    private SvResult<Boolean> checkProjInst(int projInstId) {
+    private SvResult<Boolean> checkProjInst(int projInstId, boolean isTeacher) {
         ProjectInst projInst = projectInstMapper.selectByPrimaryKey(projInstId);
         Project project = projectMapper.selectByPrimaryKey(projInst.getProjId());
 
         ProjSettingsBO settings = JSON.parseObject(project.getProjSettings(), ProjSettingsBO.class);
 
         // check recruit system
-        if (!settings.isUseRecruitSystem()) {
+        if (!settings.isUseRecruitSystem() && !isTeacher) {
             return new SvResult<>("Recruit system is not open now", false);
         }
 
@@ -169,7 +169,7 @@ public class ProjInstServiceImpl implements ProjInstService {
             }
         }
 
-        return new SvResult<>("", true);
+        return new SvResult<>("ProjInst is valid", true);
     }
 
     private SvResult<Boolean> cancelProjInst(int projInstId) {
@@ -512,7 +512,7 @@ public class ProjInstServiceImpl implements ProjInstService {
     public String confirmBatchTch(int[] projInstIdList, boolean isForce) {
         List<Integer> successList = new ArrayList<>();
         for (int projInstId : projInstIdList) {
-            SvResult<Boolean> svResult = confirmProjInst(projInstId, isForce);
+            SvResult<Boolean> svResult = confirmProjInst(projInstId, isForce, true);
             if (svResult.getData()) {
                 // true
                 successList.add(projInstId);
