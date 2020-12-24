@@ -169,16 +169,16 @@ public class HomePageController {
     }
 
     @ResponseBody
-    @GetMapping("api/student/comments")
+    @GetMapping("api/all/comments")
     public Result<?> getComments() {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
         Student student = studentService.getStudentByRoleId(role.getRoleId());
-        String[] comments = new String[1];
-        comments[0] = "No Comments";
+        String[] comments = null;
         if (student.getPayload() != null) {
             comments = student.getPayload().split(";");
         }
+
         return new Result<>(comments);
     }
 }
