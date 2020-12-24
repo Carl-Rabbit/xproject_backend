@@ -458,7 +458,7 @@ public class ProjInstServiceImpl implements ProjInstService {
                     mailService.sendSimpleMail(applicant.getEmail(), "[XProject] A student has rejected to join the team",
                             "A student has rejected to join the team\r\n" +
                                     "This automatic notification message was sent by Xproject");
-                    return new SvResult<>("Application rejected", true);
+                    return new SvResult<>("Invitation rejected", true);
                 }
             } else {
                 return new SvResult<>("Error occur when update message", false);
@@ -470,10 +470,10 @@ public class ProjInstServiceImpl implements ProjInstService {
                         projInst.getProjInstId(), roleId, false);
                 msgMapper.insertSelective(rejectMsg);
 
-                return new SvResult<>("Application reject. Team is confirmed", true);
+                return new SvResult<>("Invitation reject. Team is confirmed", true);
             }
 
-            affectedRowCnt = projectInstMapper.insertProjInstStdRT(msg.getProjInstId(), msg.getCreatorRoleId(), "Join");
+            affectedRowCnt = projectInstMapper.insertProjInstStdRT(msg.getProjInstId(), msg.getRoleId(), "Join");
 
             if (affectedRowCnt != 0) {
                 // send message
@@ -489,7 +489,7 @@ public class ProjInstServiceImpl implements ProjInstService {
                         "A student has been invited to join to your team" +
                                 "This automatic notification message was sent by Xproject");
 
-                return new SvResult<>("Application accepted", true);
+                return new SvResult<>("Invitation accepted", true);
             } else {
                 return new SvResult<>("Error occur when update team info", false);
             }
