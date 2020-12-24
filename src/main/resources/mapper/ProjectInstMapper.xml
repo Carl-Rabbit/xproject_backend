@@ -174,12 +174,12 @@
   <select id="selectStdProjDTOByProjInstId" resultType="com.ooad.xproject.dto.StudentProjDTO">
     select
       <include refid="StudentProjDTO_Column_List"/>
-    from students as std
-      join roles r on std.role_id = r.role_id
-      join project_role_rt as prr on std.role_id = prr.role_id
-      left join proj_inst_student_rt as pisr on pisr.std_role_id = r.role_id
-      left join project_insts pi on pisr.proj_inst_id = pi.proj_inst_id
-    where pi.proj_inst_id = #{projInstId}
+    from project_insts as pi
+      join proj_inst_student_rt pisr on pi.proj_inst_id = pisr.proj_inst_id
+      join roles r on pisr.std_role_id = r.role_id
+      join students as std on r.role_id = std.role_id
+      join project_role_rt prr on r.role_id = prr.role_id and prr.proj_id = pi.proj_id
+    where pi.proj_inst_id = #{projInstId};
   </select>
     <select id="selectTeamByProjId" resultType="com.ooad.xproject.bo.TeamBO">
       select p.proj_name, pi.status, pi.topic_str topic, pi.team_name, s.std_no, s.std_name
