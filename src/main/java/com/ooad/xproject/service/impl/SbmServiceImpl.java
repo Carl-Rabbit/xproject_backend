@@ -1,5 +1,6 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.entity.ProjectInst;
 import com.ooad.xproject.entity.Submission;
 import com.ooad.xproject.entity.SubmissionInst;
@@ -49,10 +50,14 @@ public class SbmServiceImpl implements SbmService {
     }
 
     @Override
-    public SubmissionInst getSbmInstByStdRoleIdAndSbmId(int roleId, int sbmId) {
+    public SvResult<SubmissionInst> getSbmInstByStdRoleIdAndSbmId(int roleId, int sbmId) {
         Submission sbm = submissionMapper.selectByPrimaryKey(sbmId);
         ProjectInst projInst = projInstMapper.selectPIByProjIdAndStdRoleId(sbm.getProjId(), roleId);
-        return sbmInstMapper.selectBySbmIdAndProjInstId(sbmId, projInst.getProjInstId());
+        if (projInst == null) {
+            return new SvResult<>("No team yet", null);
+        }
+        SubmissionInst sbmInst = sbmInstMapper.selectBySbmIdAndProjInstId(sbmId, projInst.getProjInstId());
+        return new SvResult<>("", sbmInst);
     }
 
     @Override
