@@ -7,6 +7,10 @@ public class School {
 
     private String location;
 
+    private Boolean stdCreate;
+
+    private Boolean tchCreate;
+
     public Integer getSchId() {
         return schId;
     }
@@ -29,5 +33,21 @@ public class School {
 
     public void setLocation(String location) {
         this.location = location == null ? null : location.trim();
+    }
+
+    public Boolean getStdCreate() {
+        return stdCreate;
+    }
+
+    public void setStdCreate(Boolean stdCreate) {
+        this.stdCreate = stdCreate;
+    }
+
+    public Boolean getTchCreate() {
+        return tchCreate;
+    }
+
+    public void setTchCreate(Boolean tchCreate) {
+        this.tchCreate = tchCreate;
     }
 }
