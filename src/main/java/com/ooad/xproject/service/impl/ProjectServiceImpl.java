@@ -5,6 +5,7 @@ import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.bo.TeamBO;
 import com.ooad.xproject.bo.forming.FormingBO;
 import com.ooad.xproject.bo.forming.FormingResultBO;
+import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.dto.StudentProjDTO;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.*;
@@ -146,6 +147,16 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public boolean canJoin(Role role, int projId) {
-        return true;
+        Project project = projectMapper.selectByPrimaryKey(projId);
+        return canJoin(role, project);
+    }
+
+    @Override
+    public boolean canJoin(Role role, Project project) {
+        if (RoleType.getRoleType(role.getRoleType()).equals(RoleType.Teacher)) {
+            return project.getTchJoin();
+        } else {
+            return project.getStdJoin();
+        }
     }
 }

@@ -72,7 +72,7 @@ public class HomePageController {
         }
 
         // check project settings
-        if (!projService.canJoin(role, projId)) {
+        if (!projService.canJoin(role, project)) {
             return new Result<>(RespStatus.FAIL, "You forbidden to join the project");
         }
 

@@ -48,4 +48,6 @@ public interface ProjectService {
     boolean isAccessible(int roleId, int projId);
 
     boolean canJoin(Role role, int projId);
+
+    boolean canJoin(Role role, Project project);
 }
