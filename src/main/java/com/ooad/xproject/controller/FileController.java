@@ -18,7 +18,6 @@ import com.ooad.xproject.vo.ResourceVO;
 import com.ooad.xproject.vo.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,8 +60,9 @@ public class FileController {
 
     private final ProjectService projService;
     private final MailService mailService;
+    private final ImportService importService;
 
-    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper, ProjectMapper projectMapper, ProjInstService projInstService, SubmissionInstService submissionInstService, PermissionService permissionService, SubmissionMapper submissionMapper, ResourceMapper resourceMapper, ProjectService projService, MailService mailService) {
+    public FileController(FileConfig fileConfig, FileService fileService, ExcelService excelService, StudentService studentService, RoleService roleService, TeacherService teacherService, RecordService recordService, RecordInstMapper recordInstMapper, ProjectMapper projectMapper, ProjInstService projInstService, SubmissionInstService submissionInstService, PermissionService permissionService, SubmissionMapper submissionMapper, ResourceMapper resourceMapper, ProjectService projService, MailService mailService, ImportService importService) {
         this.fileConfig = fileConfig;
         this.fileService = fileService;
         this.excelService = excelService;
@@ -79,6 +79,7 @@ public class FileController {
         this.resourceMapper = resourceMapper;
         this.projService = projService;
         this.mailService = mailService;
+        this.importService = importService;
     }
 
     @PostMapping("api/upload")
@@ -128,22 +129,12 @@ public class FileController {
         Role role = roleService.getByUsername(username);
 
         Teacher teacher = teacherService.getTeacherByRoleId(role.getRoleId());
-        importStudentAc(teacher, studentImportBOList);
+        importService.importStudentAc(teacher, studentImportBOList);
 
         int successCnt = 1;
         return new Result<>(RespStatus.SUCCESS, "upload success", successCnt);
     }
 
-    @Async
-    public void importStudentAc(Teacher teacher, List<StudentImportBO> studentImportBOList){
-        for (StudentImportBO studentImportBO :
-                studentImportBOList) {
-            SvResult<Role> svResult = studentService.creatRoleAndStudent(teacher.getSchId(), studentImportBO);
-            if (svResult.getData() != null) {
-                permissionService.appendPmsRoleToNewRole(svResult.getData());
-            }
-        }
-    }
 
     @PostMapping("api/teacher/records/excel")
     public Result<Integer> postRecordUnitImportFromExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
@@ -155,30 +146,11 @@ public class FileController {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "recInput.xlsx");
 //        System.out.println(filePath);
         List<RecordUnitBO> recordUnitBOList = excelService.readRecordUnitBO(filePath);
-
-        importRecordUnit(projId, recordUnitBOList);
+        importService.importRecordUnit(projId, recordUnitBOList);
+//        System.out.println("uploaded");
         return new Result<>(RespStatus.SUCCESS, "import success", 1);
     }
 
-    @Async
-    public void importRecordUnit(int projId, List<RecordUnitBO> recordUnitBOList) {
-
-        for (RecordUnitBO recordUnitBO : recordUnitBOList) {
-            RecordInst recordInst = recordService.getRecordInstByUnit(recordUnitBO, projId);
-            if (recordInst != null) {
-                RecordInst recordInst1 = recordInstMapper.selectByRcdIdAndRoleId(recordInst.getRcdId(), recordInst.getRoleId());
-                if (recordInst1 == null) {
-                    recordInst.setComments(recordUnitBO.getComments());
-                    recordInst.setContent(recordUnitBO.getGrade());
-                    recordInstMapper.insertRecordInst(recordInst);
-                } else {
-                    recordInst1.setComments(recordUnitBO.getComments());
-                    recordInst1.setContent(recordUnitBO.getGrade());
-                    recordInstMapper.updateRecordInst(recordInst1);
-                }
-            }
-        }
-    }
 
     @PostMapping("api/teacher/project/student/excel")
     public Result<Integer> postProjStdExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
@@ -190,24 +162,10 @@ public class FileController {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "projInput.xlsx");
 //        System.out.println(filePath);
         List<StudentClassBO> studentClassBOList = excelService.readStudentClassBO(filePath);
-        importProjStd(projId, studentClassBOList);
+        importService.importProjStd(projId, studentClassBOList);
         return new Result<>(RespStatus.SUCCESS, "upload success", 1);
     }
 
-    @Async
-    public void importProjStd(int projId, List<StudentClassBO> studentClassBOList){
-        for (StudentClassBO studentClassBO : studentClassBOList) {
-            Student student = studentService.getStudentByStdNo(studentClassBO.getStdNo());
-            if (student != null) {
-                List<Integer> prrIdList = projectMapper.selectByProjAndRole(projId, student.getRoleId());
-                if (prrIdList.size() == 0) {
-                    projectMapper.insertProjectRoleRT(projId, student.getRoleId(), studentClassBO.getClsMark());
-                } else {
-                    projectMapper.updateProjectRoleRT(prrIdList.get(0), studentClassBO.getClsMark());
-                }
-            }
-        }
-    }
 
     @PostMapping("api/student/submission/upload")
     public Result<?> postUploadSubmission(@RequestParam("files") MultipartFile[] files,
