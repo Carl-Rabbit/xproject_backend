@@ -4,6 +4,7 @@ import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.Project;
 import com.ooad.xproject.entity.Role;
+import com.ooad.xproject.entity.Student;
 import com.ooad.xproject.entity.Teacher;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
@@ -82,7 +83,7 @@ public class HomePageController {
         if (success) {
             return new Result<>(true);
         } else {
-            return new Result<>(RespStatus.FAIL,"Join project failed", false);
+            return new Result<>(RespStatus.FAIL, "Join project failed", false);
         }
     }
 
@@ -165,5 +166,20 @@ public class HomePageController {
 
         boolean success = studentService.updateStdInfo(stdUpdateVO);
         return Result.createBoolResult(success, "Update successfully", "Update failed");
+    }
+
+    @ResponseBody
+    @GetMapping("api/student/comments")
+    public Result<?> getComments() {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+        Student student = studentService.getStudentByRoleId(role.getRoleId());
+        String[] comments;
+        if (student.getPayload() == null) {
+            comments = new String[0];
+        } else {
+            comments = student.getPayload().split(";");
+        }
+        return new Result<>(comments);
     }
 }

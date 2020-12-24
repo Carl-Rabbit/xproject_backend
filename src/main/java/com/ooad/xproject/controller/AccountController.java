@@ -131,9 +131,9 @@ public class AccountController {
             }
         }
         if (successCnt > 0) {
-            return new Result<>(RespStatus.SUCCESS);
+            return new Result<>(RespStatus.SUCCESS, "comment success");
         } else {
-            return new Result<>(RespStatus.FAIL);
+            return new Result<>(RespStatus.FAIL, "comment fail");
         }
     }
 }
