@@ -9,6 +9,7 @@ import com.ooad.xproject.entity.Student;
 import com.ooad.xproject.entity.Teacher;
 import com.ooad.xproject.vo.AcInfoStdUpdateVO;
 import com.ooad.xproject.vo.SelectorStdVO;
+import com.ooad.xproject.vo.StdUpdateVO;
 
 import java.util.List;
 
@@ -38,4 +39,6 @@ public interface StudentService {
     SvResult<Role> creatRoleAndStudent(int schId, StudentImportBO studentImportBO);
 
     Student getStudentByStdNo(String stdNo);
+
+    boolean updateStdInfo(StdUpdateVO stdUpdateVO);
 }
