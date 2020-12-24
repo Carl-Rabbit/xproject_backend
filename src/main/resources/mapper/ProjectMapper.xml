@@ -212,7 +212,7 @@
           and role_id = #{roleId};
     </select>
     <select id="selectExistByRoleIdAndProjId" resultType="java.lang.Boolean">
-        select count(*) == 1 as exist
+        select count(*) = 1 as exist
         from project_role_rt
         where role_id = #{roleId} and proj_id = #{projId}
     </select>
