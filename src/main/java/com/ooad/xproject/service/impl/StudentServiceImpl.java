@@ -20,6 +20,7 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import springfox.documentation.spring.web.json.Json;
 
 import java.util.List;
 
@@ -180,7 +181,6 @@ public class StudentServiceImpl implements StudentService {
         if (student == null) {
             return false;
         }
-
         String pl = student.getPayload();
         if(pl == null)
             pl = "";
