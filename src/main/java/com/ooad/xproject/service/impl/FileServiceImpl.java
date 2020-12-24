@@ -120,8 +120,6 @@ public class FileServiceImpl implements FileService {
         return ret;
     }
 
-
-
     private String getStorePath(School school, Project project, Submission submission, ProjectInst projectInst) {
         String dir = "\\school-" + school.getSchId() + "-" + school.getSchName() +
                 "\\project-" + project.getProjId() + "-" + project.getProjName() +
