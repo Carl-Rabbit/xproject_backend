@@ -4,6 +4,7 @@ import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.config.FileConfig;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.service.FileService;
+import com.ooad.xproject.service.StudentService;
 import com.ooad.xproject.service.SubmissionInstService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,9 @@ import java.io.InputStream;
 @SpringBootTest
 class FileControllerTest {
     @Autowired
+    private StudentService studentService;
+
+    @Autowired
     private FileController fileController;
 
     @Autowired
@@ -34,6 +38,11 @@ class FileControllerTest {
 
     @Autowired
     private SubmissionInstService submissionInstService;
+
+    @Test
+    void testComment(){
+        studentService.appendStdPayload(3, "testpayload2");
+    }
 
     @Test
     void uploadToDir() {

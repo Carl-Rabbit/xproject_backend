@@ -1,8 +1,11 @@
 package com.ooad.xproject;
 
 import com.alibaba.fastjson.JSON;
+import com.ooad.xproject.bo.CommentBO;
 import com.ooad.xproject.bo.ProjSettingsBO;
 import com.ooad.xproject.bo.TopicBO;
+import com.ooad.xproject.entity.Student;
+import com.ooad.xproject.mapper.StudentMapper;
 import com.ooad.xproject.service.StudentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,17 +14,59 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class OtherTests {
+
     @Autowired
-    private StudentService studentService;
+    private StudentMapper studentMapper;
 
     @Test
     public void testComment(){
-        studentService.appendStdPayload(20, "testComment");
+        int roleId = 3;
+        String payload = "comments";
+
+        Student student = studentMapper.selectByRoleId(roleId);
+
+        String pl = student.getPayload();
+        List<String> commentList = new ArrayList<>();
+        CommentBO commentBO = JSON.parseObject(pl, CommentBO.class);
+        if(commentBO == null){
+            commentBO = new CommentBO();
+        }
+        commentList = commentBO.getComments();
+        commentList.add(payload);
+        commentBO.setComments(commentList);
+
+        pl = JSON.toJSONString(commentBO);
+        student.setPayload(pl);
     }
+
+//    private StudentMapper studentMapper;
+//
+//    @Test
+//    public void testComment(){
+//        int roleId = 3;
+//        String payload = "comments";
+//
+//        Student student = studentMapper.selectByRoleId(roleId);
+//
+//        String pl = student.getPayload();
+//        List<String> commentList = new ArrayList<>();
+//        CommentBO commentBO = JSON.parseObject(pl, CommentBO.class);
+//        if(commentBO == null){
+//            commentBO = new CommentBO();
+//        }
+//        commentList = commentBO.getComments();
+//        commentList.add(payload);
+//        commentBO.setComments(commentList);
+//
+//        pl = JSON.toJSONString(commentBO);
+//        student.setPayload(pl);
+//    }
 
     @Test
     public void testTopic() {

@@ -33,9 +33,9 @@ mybatis:
     map-underscore-to-camel-case: true
 
 
-logging:
-  level:
-    com.ooad.xproject.mapper: debug
+#logging:
+#  level:
+#    com.ooad.xproject.mapper: debug
 
 ooad:
   file:

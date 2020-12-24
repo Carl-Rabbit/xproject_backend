@@ -3,6 +3,7 @@ package com.ooad.xproject.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.ooad.xproject.bo.CommentBO;
 import com.ooad.xproject.bo.StudentImportBO;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.dto.StudentDTO;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import springfox.documentation.spring.web.json.Json;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -182,9 +184,19 @@ public class StudentServiceImpl implements StudentService {
             return false;
         }
         String pl = student.getPayload();
-        if(pl == null)
-            pl = "";
-        pl += payload + ";";
+        List<String> commentList = new ArrayList<>();
+        CommentBO commentBO = JSON.parseObject(pl, CommentBO.class);
+        if(commentBO == null){
+            commentBO = new CommentBO();
+        }
+        if(commentBO.getComments() == null){
+            commentBO.setComments(commentList);
+        }
+        commentList = commentBO.getComments();
+        commentList.add(payload);
+        commentBO.setComments(commentList);
+
+        pl = JSON.toJSONString(commentBO);
         student.setPayload(pl);
         return studentMapper.updateByPrimaryKey(student) != 0;
     }

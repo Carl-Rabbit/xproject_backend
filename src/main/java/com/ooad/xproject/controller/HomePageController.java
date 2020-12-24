@@ -1,6 +1,7 @@
 package com.ooad.xproject.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.ooad.xproject.bo.CommentBO;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.Project;
@@ -18,6 +19,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -181,16 +183,7 @@ public class HomePageController {
     @GetMapping("api/all/comments/roleId")
     public Result<?> getCommentsByRoleId(@RequestParam("roleId") int roleId) {
         Student student = studentService.getStudentByRoleId(roleId);
-        String str = student.getPayload();
-        String jsonStr;
 
-        if (str == null || str.equals("")) {
-            jsonStr = JSON.toJSONString(null);
-        } else {
-            String[] comments = str.split(";");
-            jsonStr = JSON.toJSONString(comments);
-        }
-
-        return new Result<>(jsonStr);
+        return new Result<>(student.getPayload());
     }
 }
