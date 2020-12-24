@@ -174,7 +174,13 @@ public class HomePageController {
     public Result<?> getComments() {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
-        Student student = studentService.getStudentByRoleId(role.getRoleId());
+        return getCommentsByRoleId(role.getRoleId());
+    }
+
+    @ResponseBody
+    @GetMapping("api/all/comments/roleId")
+    public Result<?> getCommentsByRoleId(@RequestParam("roleId") int roleId) {
+        Student student = studentService.getStudentByRoleId(roleId);
         String str = student.getPayload();
         String jsonStr;
 
