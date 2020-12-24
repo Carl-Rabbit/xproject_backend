@@ -39,4 +39,9 @@ public class AnnServiceImpl implements AnnService {
         int affectedRowCnt = announcementMapper.deleteByPrimaryKey(annId);
         return affectedRowCnt == 1;
     }
+
+    @Override
+    public Announcement getAnnByAnnId(Integer annId) {
+        return announcementMapper.selectByPrimaryKey(annId);
+    }
 }

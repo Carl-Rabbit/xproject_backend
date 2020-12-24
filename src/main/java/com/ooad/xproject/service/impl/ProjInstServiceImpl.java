@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -104,13 +105,13 @@ public class ProjInstServiceImpl implements ProjInstService {
 
     @Transactional
     @Override
-    public SvResult<Boolean> confirmProjInst(int projInstId, boolean isForce) {
+    public SvResult<Boolean> confirmProjInst(int projInstId, boolean isForce, boolean isTeacher) {
 
         if (!isForce) {
             // check proj inst validate
-            SvResult<Boolean> svResult = checkProjInst(projInstId);
+            SvResult<Boolean> svResult = checkProjInst(projInstId, isTeacher);
             if (!svResult.getData()) {
-                System.out.println("Team " + projInstId + " has not ");
+                System.out.println("Team " + projInstId + " check failed");
                 return svResult;
             }
         }
@@ -135,14 +136,14 @@ public class ProjInstServiceImpl implements ProjInstService {
         }
     }
 
-    private SvResult<Boolean> checkProjInst(int projInstId) {
+    private SvResult<Boolean> checkProjInst(int projInstId, boolean isTeacher) {
         ProjectInst projInst = projectInstMapper.selectByPrimaryKey(projInstId);
         Project project = projectMapper.selectByPrimaryKey(projInst.getProjId());
 
         ProjSettingsBO settings = JSON.parseObject(project.getProjSettings(), ProjSettingsBO.class);
 
         // check recruit system
-        if (!settings.isUseRecruitSystem()) {
+        if (!settings.isUseRecruitSystem() && !isTeacher) {
             return new SvResult<>("Recruit system is not open now", false);
         }
 
@@ -159,6 +160,12 @@ public class ProjInstServiceImpl implements ProjInstService {
             return new SvResult<>(msg, false);
         }
 
+        // check due time
+        if (settings.getDueTime().after(new Date(System.currentTimeMillis()))
+                && !isTeacher) {
+            return new SvResult<>("Recruit time out", false);
+        }
+
         // check group mark
         if (!stdProjDTOList.isEmpty() && !settings.isAllowCrossMark()) {
             String groupMark = stdProjDTOList.get(0).getGroupMark();
@@ -169,7 +176,7 @@ public class ProjInstServiceImpl implements ProjInstService {
             }
         }
 
-        return new SvResult<>("", true);
+        return new SvResult<>("ProjInst is valid", true);
     }
 
     private SvResult<Boolean> cancelProjInst(int projInstId) {
@@ -512,7 +519,7 @@ public class ProjInstServiceImpl implements ProjInstService {
     public String confirmBatchTch(int[] projInstIdList, boolean isForce) {
         List<Integer> successList = new ArrayList<>();
         for (int projInstId : projInstIdList) {
-            SvResult<Boolean> svResult = confirmProjInst(projInstId, isForce);
+            SvResult<Boolean> svResult = confirmProjInst(projInstId, isForce, true);
             if (svResult.getData()) {
                 // true
                 successList.add(projInstId);
@@ -524,7 +531,7 @@ public class ProjInstServiceImpl implements ProjInstService {
                                 "This automatic notification message was sent by Xproject");
             } else {
                 // false
-                System.out.printf("postTeamConfirm -> Fail to confirm projInst %d%n", projInstId);
+                System.out.printf("postTeamConfirm -> Fail to confirm projInst %d%nReason: %s", projInstId, svResult.getMsg());
             }
         }
         int successCnt = successList.size();

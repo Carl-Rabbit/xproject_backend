@@ -13,4 +13,6 @@ public interface AnnService {
     boolean addAnn(Announcement announcement);
 
     boolean deleteAnn(int annId);
+
+    Announcement getAnnByAnnId(Integer annId);
 }
