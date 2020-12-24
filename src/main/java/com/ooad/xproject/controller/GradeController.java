@@ -1,6 +1,7 @@
 package com.ooad.xproject.controller;
 
 import com.ooad.xproject.bo.SvResult;
+import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.GradeDTO;
 import com.ooad.xproject.dto.RecordInstDTO;
 import com.ooad.xproject.entity.Record;
@@ -22,15 +23,15 @@ import java.util.List;
 public class GradeController {
 
     private final RoleService roleService;
-    private final ProjectService projectService;
+    private final ProjectService projService;
     private final ProjInstService projInstService;
     private final RecordService recordService;
     private final TeacherService teacherService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
 
-    public GradeController(RoleService roleService, ProjectService projectService, ProjInstService projInstService, RecordService recordService, TeacherService teacherService) {
+    public GradeController(RoleService roleService, ProjectService projService, ProjInstService projInstService, RecordService recordService, TeacherService teacherService) {
         this.roleService = roleService;
-        this.projectService = projectService;
+        this.projService = projService;
         this.projInstService = projInstService;
         this.recordService = recordService;
         this.teacherService = teacherService;
@@ -44,6 +45,11 @@ public class GradeController {
         String username = subject.getPrincipal().toString();
         Role role = roleService.getByUsername(username);
 
+        // check project accessible
+        if (!projService.isAccessible(role.getRoleId(), projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         List<RecordInstDTO> recordInstDTOList = projInstService.getRecordInstList(projId, role.getRoleId());
 
 //        logger.info("getTeamInfoList -> " + Arrays.toString(recordInstDTOList.toArray()));
@@ -54,6 +60,12 @@ public class GradeController {
     @PostMapping("api/teacher/grade/new/record")
     public Result<?> postNewRecord(@RequestBody RecordCreationVO recordCreationVO) {
         Role role = roleService.getByUsername(RoleUtils.getUsername());
+
+        // check project accessible
+        if (!projService.isAccessible(role.getRoleId(), recordCreationVO.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         boolean success = recordService.createNewRecord(role.getRoleId(), recordCreationVO);
         return Result.createBoolResult(success, "Create record successfully", "Create record failed");
     }
@@ -66,7 +78,12 @@ public class GradeController {
         String username = subject.getPrincipal().toString();
         Role role = roleService.getByUsername(username);
 
-        // TODO check access
+        Record record = recordService.getRecordByRcdId(rcdId);
+
+        // check project accessible
+        if (!projService.isAccessible(role.getRoleId(), record.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
 
         List<GradeDTO> recordInstDTOList = projInstService.getTeamRecordInstList(projInstId, rcdId);
 
@@ -82,7 +99,12 @@ public class GradeController {
         String username = subject.getPrincipal().toString();
         Role role = roleService.getByUsername(username);
 
-        // TODO check access
+        Record record = recordService.getRecordByRcdId(rcdId);
+
+        // check project accessible
+        if (!projService.isAccessible(role.getRoleId(), record.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
 
         List<GradeDTO> recordInstDTOList = projInstService.getTeamRecordInstListStd(stdRoleId, rcdId);
 
@@ -97,6 +119,11 @@ public class GradeController {
         Subject subject = SecurityUtils.getSubject();
         String username = subject.getPrincipal().toString();
         Role role = roleService.getByUsername(username);
+
+        // check project accessible
+        if (!projService.isAccessible(role.getRoleId(), projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
 
         List<Record> recordList = recordService.getRecordList(projId);
         List<RecordVO> recordVOList = new ArrayList<>(recordList.size());
@@ -119,7 +146,7 @@ public class GradeController {
         String username = subject.getPrincipal().toString();
         Role role = roleService.getByUsername(username);
 
-        // TODO check access
+        // no access check
 
         SvResult<Integer> svResult = recordService.deleteRecords(recordDeletionVO);
         return new Result<>(svResult.getMsg(), svResult.getData());
@@ -132,7 +159,12 @@ public class GradeController {
         String username = subject.getPrincipal().toString();
         Role role = roleService.getByUsername(username);
 
-        // TODO check access
+        Record record = recordService.getRecordByRcdId(recordInstUpdateParamVO.getRcdId());
+
+        // check project accessible
+        if (!projService.isAccessible(role.getRoleId(), record.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
 
         SvResult<RecordInstUpdateRetVO> svResult = recordService.updateRecordInsts(role.getRoleId(), recordInstUpdateParamVO);
         return new Result<>(svResult.getMsg(), svResult.getData());
@@ -144,6 +176,8 @@ public class GradeController {
         Subject subject = SecurityUtils.getSubject();
         String username = subject.getPrincipal().toString();
         Role role = roleService.getByUsername(username);
+
+        // no access check
 
         SvResult<Integer> svResult = recordService.updateRecordInstsBatch(role.getRoleId(), combineRcdInstParamVO);
         return new Result<>(svResult.getMsg(), svResult.getData());

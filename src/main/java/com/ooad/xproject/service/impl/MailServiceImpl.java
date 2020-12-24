@@ -24,6 +24,14 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public SvResult<Boolean> sendSimpleMail(String to, String subject, String content) {
+        if (to == null || "".equals(to)) {
+            System.out.println("Null mail");
+            return new SvResult<>("Null mail", false);
+        }
+        if (isFakeMail(to)) {
+            return new SvResult<>("Fake mail", false);
+        }
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);
         message.setTo(to);

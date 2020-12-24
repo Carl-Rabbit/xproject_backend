@@ -21,4 +21,6 @@ public interface RecordService {
     SvResult<RecordInstUpdateRetVO> updateRecordInsts(int roleId, RecordInstUpdateParamVO recordInstUpdateParamVO);
 
     SvResult<Integer> updateRecordInstsBatch(Integer roleId, CombineRcdInstParamVO combineRcdInstParamVO);
+
+    Record getRecordByRcdId(int rcdId);
 }
