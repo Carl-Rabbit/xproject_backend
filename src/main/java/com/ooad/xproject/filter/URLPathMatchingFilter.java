@@ -40,7 +40,7 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
         }
 
         String requestAPI = getPathWithinApplication(request);
-        System.out.println("Visit interface" + requestAPI);
+//        System.out.println("Visit interface" + requestAPI);
 
         Subject subject = SecurityUtils.getSubject();
 
@@ -50,7 +50,7 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
             return false;
         }
 
-        System.out.println("Verify access rights: " + requestAPI);
+//        System.out.println("Verify access rights: " + requestAPI);
 
         String username = subject.getPrincipal().toString();
         // check valid
@@ -66,7 +66,7 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
         boolean hasPermission = checkPermission(requestAPI, permissionAPIs);
 
         if (hasPermission) {
-            System.out.println("Access right: " + requestAPI + "verify successfully");
+//            System.out.println("Access right: " + requestAPI + "verify successfully");
             return true;
         } else {
             System.out.println("The current user has no right to access interface " + requestAPI);

@@ -40,8 +40,8 @@ mybatis:
 ooad:
   file:
     path:
-      upload-root: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\submission"
-      download-root: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\business"
-      output-root: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output"
-      input-root: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\input"
-      resource-root: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\resource"
+      upload-root: "C:\\LocalDocument\\LocalCode\\XProject_backend\\xproject_backend\\business\\submission"
+      download-root: "C:\\LocalDocument\\LocalCode\\XProject_backend\\xproject_backend\business\\download"
+      output-root: "C:\\LocalDocument\\LocalCode\\XProject_backend\\xproject_backend\\business\\output"
+      input-root: "C:\\LocalDocument\\LocalCode\\XProject_backend\\xproject_backend\\business\\input"
+      resource-root: "C:\\LocalDocument\\LocalCode\\XProject_backend\\xproject_backend\\business\\resource"
