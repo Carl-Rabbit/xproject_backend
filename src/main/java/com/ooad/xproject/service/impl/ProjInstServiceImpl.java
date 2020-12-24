@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.ooad.xproject.bo.MessageFactory;
 import com.ooad.xproject.bo.ProjSettingsBO;
 import com.ooad.xproject.bo.SvResult;
-import com.ooad.xproject.constant.ProjInstStatus;
 import com.ooad.xproject.dto.GradeDTO;
 import com.ooad.xproject.dto.RecordInstDTO;
 import com.ooad.xproject.dto.StudentDTO;
@@ -23,6 +22,8 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.ooad.xproject.constant.ProjInstStatus.Confirm;
 
 @Service
 public class ProjInstServiceImpl implements ProjInstService {
@@ -113,7 +114,7 @@ public class ProjInstServiceImpl implements ProjInstService {
 
         ProjectInst record = new ProjectInst();
         record.setProjInstId(projInstId);
-        record.setStatus(ProjInstStatus.Confirm.toString());
+        record.setStatus(Confirm.toString());
         int affectedRowCnt = projectInstMapper.updateByPrimaryKeySelective(record);
 
         if (affectedRowCnt == 1) {
@@ -289,7 +290,7 @@ public class ProjInstServiceImpl implements ProjInstService {
             // can't use projId in msg here
             ProjectInst projInst = projectInstMapper.selectByPrimaryKey(msg.getProjInstId());
             ProjectInst projInstApplicant = projectInstMapper.selectPIByProjIdAndStdRoleId(projInst.getProjId(), msg.getCreatorRoleId());
-            if (projInstApplicant != null) {
+            if (projInstApplicant != null || projInst.getStatus().equals(Confirm.name())) {
                 // already has a team
                 msg.setResult("Fail to join");
             }
@@ -314,6 +315,9 @@ public class ProjInstServiceImpl implements ProjInstService {
                 return new SvResult<>("Application accepted. Applicant has been in anther team.", true);
             }
 
+            if (projInst.getStatus().equals(Confirm.name())) {
+                return new SvResult<>("Application reject. Team is confirmed", true);
+            }
 
             boolean success = projectInstMapper.insertProjInstStdRT(msg.getProjInstId(), msg.getCreatorRoleId(), "Join");
 

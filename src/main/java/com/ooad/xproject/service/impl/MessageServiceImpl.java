@@ -43,4 +43,9 @@ public class MessageServiceImpl implements MessageService {
         int affectedRowCnt = messageMapper.deleteByPrimaryKey(msgId);
         return affectedRowCnt == 1;
     }
+
+    @Override
+    public Message getMessageByMsgId(int msgId) {
+        return messageMapper.selectByPrimaryKey(msgId);
+    }
 }

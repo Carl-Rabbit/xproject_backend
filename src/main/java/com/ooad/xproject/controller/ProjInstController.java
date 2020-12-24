@@ -4,12 +4,11 @@ import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.dto.StudentDTO;
+import com.ooad.xproject.entity.Message;
 import com.ooad.xproject.entity.ProjectInst;
 import com.ooad.xproject.entity.Role;
-import com.ooad.xproject.service.MessageService;
-import com.ooad.xproject.service.ProjInstService;
-import com.ooad.xproject.service.ProjectService;
-import com.ooad.xproject.service.RoleService;
+import com.ooad.xproject.entity.Student;
+import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.*;
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.ooad.xproject.constant.ProjInstStatus.Confirm;
 
 @RestController
 public class ProjInstController {
@@ -27,12 +29,16 @@ public class ProjInstController {
     private final ProjInstService projInstService;
     private final MessageService messageService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
+    private final StudentService studentService;
+    private final MailService mailService;
 
-    public ProjInstController(RoleService roleService, ProjectService projService, ProjInstService projInstService, MessageService messageService) {
+    public ProjInstController(RoleService roleService, ProjectService projService, ProjInstService projInstService, MessageService messageService, StudentService studentService, MailService mailService) {
         this.roleService = roleService;
         this.projService = projService;
         this.projInstService = projInstService;
         this.messageService = messageService;
+        this.studentService = studentService;
+        this.mailService = mailService;
     }
 
     @ResponseBody
@@ -76,15 +82,20 @@ public class ProjInstController {
 
     @ResponseBody
     @PostMapping("api/student/team/change/info")
-    public Result<?> postEditedTeamInfo(@RequestBody ProjInstUpdateVO piuVO) {
+    public Result<?> postEditedTeamInfo(@RequestBody ProjInstUpdateVO projInstUpdateVO) {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
-        ProjectInst projectInst = projInstService.getPIByProjIdAndStdRoleId(piuVO.getProjId(), role.getRoleId());
+        // check project accessible
+        if (!projService.isAccessible(role.getRoleId(), projInstUpdateVO.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
+        ProjectInst projectInst = projInstService.getPIByProjIdAndStdRoleId(projInstUpdateVO.getProjId(), role.getRoleId());
         if (projectInst == null) {
             return new Result<>(RespStatus.FAIL, "No team");
         }
-        piuVO.copyToProjInst(projectInst);
+        projInstUpdateVO.copyToProjInst(projectInst);
         boolean success = projInstService.updateProjInst(projectInst);
         return Result.createBoolResult(success, "Update successfully", "Update failed");
     }
@@ -95,8 +106,9 @@ public class ProjInstController {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
-        if (!RoleType.Student.match(role.getRoleType())) {
-            return new Result<>(RespStatus.FAIL, "Only student can have a own team");
+        // check project accessible
+        if (!projService.isAccessible(projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
         }
 
         ProjectInst projInst = projInstService.getPIByProjIdAndStdRoleId(projId, role.getRoleId());
@@ -118,6 +130,17 @@ public class ProjInstController {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
+        ProjectInst projInst = projInstService.getProjectInst(applyTeamParamVO.getProjInstId());
+
+        // check project accessible
+        if (!projService.isAccessible(role.getRoleId(), projInst.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
+        if (projInst.getStatus().equals(Confirm.name())) {
+            return new Result<>(RespStatus.FAIL, "This team has already been confirmed.");
+        }
+
         SvResult<Boolean> svResult = projInstService.applyTeam(role.getRoleId(), applyTeamParamVO);
         return new Result<>(svResult.getMsg(), svResult.getData());
     }
@@ -128,7 +151,16 @@ public class ProjInstController {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
-        // TODO check access here
+        Message message = messageService.getMessageByMsgId(applyReplyParamVO.getMsgId());
+
+        // check project accessible
+        if (!projService.isAccessible(message.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
+        // not to check projInst
+
+        // check projInst status in service
 
         SvResult<Boolean> svResult = projInstService.applyTeamReply(role.getRoleId(), applyReplyParamVO);
         return new Result<>(svResult.getMsg(), svResult.getData());
@@ -139,6 +171,11 @@ public class ProjInstController {
     public Result<Integer> postTeamCreation(@RequestBody ProjInstCreationVO projInstCreationVO) {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
+
+        // check project accessible
+        if (!projService.isAccessible(projInstCreationVO.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
 
         if (RoleType.Teacher.match(role.getRoleType())) {
 
@@ -165,10 +202,19 @@ public class ProjInstController {
             return new Result<>(status, msg, successCnt);
 
         } else if (RoleType.Student.match(role.getRoleType())) {
-
+            ProjectInst projectInst = projInstService
+                    .getPIByProjIdAndStdRoleId(projInstCreationVO.getProjId(), role.getRoleId());
+            if (projectInst != null) {
+                return new Result<>(RespStatus.FAIL, "In team", 0);
+            }
             SvResult<Boolean> svResult = projInstService.createProjInstAndLink(role.getRoleId(), projInstCreationVO);
             if (svResult.getData()) {
                 logger.info("postTeamCreation: create success for student. " + svResult.getMsg());
+                Student std = studentService.getStudentByRoleId(role.getRoleId());
+                // send team create email
+                mailService.sendSimpleMail(std.getEmail(), "[XProject] You have create a new team",
+                        "You have create a new team\r\n" +
+                                "This automatic notification message was sent by Xproject");
                 return new Result<>(RespStatus.SUCCESS, svResult.getMsg(), 1);
             } else {
                 logger.info("postTeamCreation: create fail for student. " + svResult.getMsg());
@@ -183,6 +229,7 @@ public class ProjInstController {
     @ResponseBody
     @PostMapping("api/teacher/team/deletion")
     public Result<Integer> postTeamDeletion(@RequestBody ProjInstIdListVO projInstIdListVO) {
+        // not to check access
         List<Integer> successList = new ArrayList<>();
         for (int projInstId : projInstIdListVO.getProjInstIdList()) {
             SvResult<Boolean> svResult = projInstService.deleteProjInst(projInstId);
@@ -206,9 +253,19 @@ public class ProjInstController {
     public Result<?> postTeamConfirm(@RequestBody TeamConfirmParamVO teamConfirmParamVO) {
         Role role = roleService.getByUsername(RoleUtils.getUsername());
 
+        // not to check access
+
         if (RoleType.Student.match(role.getRoleType())) {
             int projInstId = teamConfirmParamVO.getProjInstIdList()[0];
             SvResult<Boolean> svResult = projInstService.confirmProjInst(projInstId, false);
+            if (svResult.getData()) {
+                // send email to all members
+                List<StudentDTO> stdList = projInstService.getStudentDTOByProjInstId(projInstId);
+                List<String> mailList = stdList.stream().map(StudentDTO::getEmail).collect(Collectors.toList());
+                mailService.sendMailToStudent(mailList, "[XProject] Your team has been confirmed",
+                        "Your team has been confirmed\r\n" +
+                                "This automatic notification message was sent by Xproject");
+            }
             return new Result<>(svResult.getMsg(), svResult.getData() ? 1 : 0);
         } else {
             String message = projInstService.confirmBatchTch(teamConfirmParamVO.getProjInstIdList(),
@@ -231,6 +288,10 @@ public class ProjInstController {
 
         boolean success = projInstService.quitTeam(role.getRoleId(), projectInst.getProjInstId());
         if (success) {
+            Student std = studentService.getStudentByRoleId(role.getRoleId());
+            mailService.sendSimpleMail(std.getEmail(), "[XProject] You are quit from the team",
+                    "You are quit from the team\r\n" +
+                            "This automatic notification message was sent by Xproject");
             return new Result<>("Quit successfully");
         } else {
             return new Result<>(RespStatus.FAIL, "Quit failed");
@@ -247,15 +308,26 @@ public class ProjInstController {
             return new Result<>(RespStatus.FAIL, "No team");
         }
 
+        // check project accessible
+        if (!projService.isAccessible(projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         List<StudentDTO> stdDTOList = projInstService.getStudentDTOByProjInstId(projectInst.getProjInstId());
         return new Result<>(stdDTOList);
     }
 
+    // reuse QuitProjParamVO
     @ResponseBody
     @PostMapping("api/teacher/clear/std/team")
     public Result<?> postClearStdTeam(@RequestBody QuitProjParamVO quitProjParamVO) {
         logger.info("postClearStdTeam");
         Role role = roleService.getByUsername(RoleUtils.getUsername());
+
+        // check project accessible
+        if (!projService.isAccessible(role.getRoleId(), quitProjParamVO.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
 
         int successCnt = 0;
         int projId = quitProjParamVO.getProjId();
@@ -265,7 +337,13 @@ public class ProjInstController {
                 continue;
             }
             boolean success = projInstService.quitTeam(roleId, projInst.getProjInstId());
-            successCnt += success ? 1 : 0;
+            if (success) {
+                successCnt += 1;
+                Student std = studentService.getStudentByRoleId(roleId);
+                mailService.sendSimpleMail(std.getEmail(), "[XProject] You are cleared from the team by teacher",
+                        "You are cleared from the team by teacher\r\n" +
+                                "This automatic notification message was sent by Xproject");
+            }
         }
 
         return new Result<>("Delete " + successCnt + " student from team successfully", true);

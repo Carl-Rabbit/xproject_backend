@@ -15,4 +15,6 @@ public interface MessageService {
     boolean createMessage(Message message);
 
     boolean deleteMessage(int msgId);
+
+    Message getMessageByMsgId(int msgId);
 }
