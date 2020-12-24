@@ -45,6 +45,22 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
+    public int getSchIdByRole(Role role) {
+        switch (RoleType.getRoleType(role.getRoleType())) {
+            case Admin:
+                throw new UnsupportedOperationException("Admin can't get school");
+            case Teacher:
+                Teacher tch = teacherMapper.selectByRoleId(role.getRoleId());
+                return tch.getSchId();
+            case Student:
+                Student std = studentMapper.selectByRoleId(role.getRoleId());
+                return std.getSchId();
+            default:
+                throw new UnsupportedOperationException("No such role type");
+        }
+    }
+
+    @Override
     public List<Project> getProjectListBySch(Role role) {
         List<Project> projects;
         RoleType roleType = RoleType.getRoleType(role.getRoleType());
@@ -81,10 +97,5 @@ public class HomeServiceImpl implements HomeService {
     public boolean quitProject(Integer roleId, int projId) {
         int affectedRowCnt = projectMapper.quitProject(roleId, projId);
         return affectedRowCnt != 0;
-    }
-
-    @Override
-    public School getSchoolBySchId(Integer schId) {
-        return schoolMapper.selectByPrimaryKey(schId);
     }
 }

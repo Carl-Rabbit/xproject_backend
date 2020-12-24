@@ -1,18 +1,14 @@
 package com.ooad.xproject.controller;
 
 import com.ooad.xproject.constant.RespStatus;
-import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.Project;
 import com.ooad.xproject.entity.Role;
 import com.ooad.xproject.entity.Teacher;
-import com.ooad.xproject.service.HomeService;
-import com.ooad.xproject.service.RoleService;
-import com.ooad.xproject.service.StudentService;
-import com.ooad.xproject.service.TeacherService;
+import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
-import com.ooad.xproject.vo.Result;
 import com.ooad.xproject.vo.QuitProjParamVO;
+import com.ooad.xproject.vo.Result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -28,13 +24,15 @@ public class HomePageController {
     private final TeacherService teacherService;
     private final StudentService studentService;
     private final HomeService homeService;
+    private final ProjectService projService;
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
 
-    public HomePageController(RoleService roleService, TeacherService teacherService, StudentService studentService, HomeService homeService) {
+    public HomePageController(RoleService roleService, TeacherService teacherService, StudentService studentService, HomeService homeService, ProjectService projService) {
         this.roleService = roleService;
         this.teacherService = teacherService;
         this.studentService = studentService;
         this.homeService = homeService;
+        this.projService = projService;
     }
 
     @ResponseBody
@@ -52,7 +50,7 @@ public class HomePageController {
         String username = subject.getPrincipal().toString();
 
         Role role = roleService.getByUsername(username);
-        List<Project> projList = homeService.getProjectList(role.getRoleId());
+        List<Project> projList = homeService.getProjectListBySch(role);
         return new Result<>(projList);
     }
 
@@ -65,6 +63,18 @@ public class HomePageController {
         String username = subject.getPrincipal().toString();
 
         Role role = roleService.getByUsername(username);
+
+        // check school
+        Project project = projService.getProject(projId);
+        int schId = homeService.getSchIdByRole(role);
+        if (project.getSchId() != schId) {
+            return new Result<>(RespStatus.FAIL, "School not match");
+        }
+
+        // check project settings
+        if (!projService.canJoin(role, projId)) {
+            return new Result<>(RespStatus.FAIL, "You forbidden to join the project");
+        }
 
         boolean success = homeService.joinProject(role.getRoleId(), projId, groupMark);
 
@@ -96,6 +106,11 @@ public class HomePageController {
         logger.info("postDeleteStdIntoProj");
         Role role = roleService.getByUsername(RoleUtils.getUsername());
 
+        // check project accessible
+        if (!projService.isAccessible(quitProjParamVO.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
         int successCnt = 0;
         for (int roleId : quitProjParamVO.getRoleIdList()) {
             boolean success = homeService.quitProject(roleId, quitProjParamVO.getProjId());
@@ -109,7 +124,7 @@ public class HomePageController {
     @ResponseBody
     @GetMapping("api/all/project/by-sch")
     public Result<?> getProjectListBySch() {
-        logger.info("getProjectList");
+        logger.info("getProjectListBySch");
         Subject subject = SecurityUtils.getSubject();
         String username = subject.getPrincipal().toString();
 
@@ -125,10 +140,6 @@ public class HomePageController {
         Subject subject = SecurityUtils.getSubject();
         String username = subject.getPrincipal().toString();
         Role role = roleService.getByUsername(username);
-
-        if (RoleType.Student.match(role.getRoleType())) {
-            return new Result<>(RespStatus.FAIL, "Student can't visit this api");
-        }
 
         Teacher teacher = teacherService.getTeacherByRoleId(role.getRoleId());
 

@@ -13,13 +13,13 @@ public interface HomeService {
 
     List<Announcement> getAnnounceList();
 
-    School getSchool(int roleId);
+    School getSchool(int schId);
+
+    int getSchIdByRole(Role role);
 
     List<Project> getProjectListBySch(Role role);
 
     boolean joinProject(int roleId, int projId, String groupMark);
 
     boolean quitProject(Integer roleId, int projId);
-
-    School getSchoolBySchId(Integer schId);
 }
