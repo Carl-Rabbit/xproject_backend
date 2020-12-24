@@ -259,14 +259,36 @@ public class ProjInstServiceImpl implements ProjInstService {
         if (teamMemList.isEmpty()) {
             // add this role directly
             System.out.printf("%d, %d", projInstId, roleId);
-            projectInstMapper.insertProjInstStdRT(projInstId, roleId, null);
-            // TODO send email
-            return new SvResult<>("Apply successfully. You are the first member!", true);
+            int affectedRowCnt = projectInstMapper.insertProjInstStdRT(projInstId, roleId, null);
+
+            if (affectedRowCnt != 0) {
+                // send email
+                Student applicant = studentMapper.selectByRoleId(roleId);
+                mailService.sendSimpleMail(applicant.getEmail(), "[XProject] You has joined the team",
+                        "You has joined the team\r\n" +
+                                "This automatic notification message was sent by Xproject");
+
+                return new SvResult<>("Apply successfully. You are the first member!", true);
+            } else {
+                return new SvResult<>("Apply failed.", false);
+            }
+
         } else {
             ProjectInst projInst = projectInstMapper.selectByPrimaryKey(projInstId);
             Message msg = MessageFactory.createApplyTeamMsg(projInst, roleId, atpVO.getMessage());
             msgMapper.insertSelective(msg);
-            // TODO send email to all members
+
+            Student applicant = studentMapper.selectByRoleId(roleId);
+
+            // send email to all members
+            List<StudentDTO> stdList = this.getStudentDTOByProjInstId(projInstId);
+            List<String> mailList = stdList.stream().map(StudentDTO::getEmail).collect(Collectors.toList());
+            mailService.sendMailToStudent(mailList, "[XProject] A student applies to your team",
+                    "A student applies to your team\r\n" +
+                            "Name: " + applicant.getStdName() + "\r\n" +
+                            "Email: " + applicant.getEmail() + "\r\n" +
+                            "This automatic notification message was sent by Xproject");
+
             return new SvResult<>("Apply successfully. Please wait for result!", true);
         }
     }
@@ -300,8 +322,14 @@ public class ProjInstServiceImpl implements ProjInstService {
             if (affectedRowCnt == 1) {
                 if (!applyReplyParamVO.isAccepted()) {
                     // reject
+
+                    // send message
+                    Message rejectMsg = MessageFactory.createApplyReplyMsg(msg.getCreatorRoleId(), roleId, false);
+                    msgMapper.insertSelective(rejectMsg);
+
+                    // send email
                     Student applicant = studentMapper.selectByRoleId(msg.getCreatorRoleId());
-                    mailService.sendSimpleMail(applicant.getEmail(), "[XProject] You are reject to join the team",
+                    mailService.sendSimpleMail(applicant.getEmail(), "[XProject] You are rejected to join the team",
                             "You are reject to join the team\r\n" +
                                     "This automatic notification message was sent by Xproject");
                     return new SvResult<>("Application rejected", true);
@@ -312,16 +340,29 @@ public class ProjInstServiceImpl implements ProjInstService {
 
             if (projInstApplicant != null) {
                 // already has a team
+                // send message
+                Message rejectMsg = MessageFactory.createApplyReplyMsg(msg.getCreatorRoleId(), roleId, false);
+                msgMapper.insertSelective(rejectMsg);
+
                 return new SvResult<>("Application accepted. Applicant has been in anther team.", true);
             }
 
             if (projInst.getStatus().equals(Confirm.name())) {
+                // send message
+                Message rejectMsg = MessageFactory.createApplyReplyMsg(msg.getCreatorRoleId(), roleId, false);
+                msgMapper.insertSelective(rejectMsg);
+
                 return new SvResult<>("Application reject. Team is confirmed", true);
             }
 
-            boolean success = projectInstMapper.insertProjInstStdRT(msg.getProjInstId(), msg.getCreatorRoleId(), "Join");
+            affectedRowCnt = projectInstMapper.insertProjInstStdRT(msg.getProjInstId(), msg.getCreatorRoleId(), "Join");
 
-            if (success) {
+            if (affectedRowCnt != 0) {
+                // send message
+                Message acceptMsg = MessageFactory.createApplyReplyMsg(msg.getCreatorRoleId(), roleId, true);
+                msgMapper.insertSelective(acceptMsg);
+
+                // send email
                 Student applicant = studentMapper.selectByRoleId(msg.getCreatorRoleId());
                 mailService.sendSimpleMail(applicant.getEmail(), "[XProject] You are accepted to join the team",
                         "You are accepted to join the team\r\n" +

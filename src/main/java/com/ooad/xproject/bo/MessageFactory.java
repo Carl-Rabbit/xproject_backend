@@ -49,4 +49,21 @@ public class MessageFactory {
 
         return msg;
     }
+
+    public static Message createApplyReplyMsg(Integer applicantRoleId, Integer handlerRoleId, boolean accepted) {
+        Message msg = new Message();
+
+        MsgType type = accepted ? MsgType.JoinSuccess : MsgType.JoinFail;
+        msg.setType(type.name());
+        msg.setTitle(titleMap.get(type));
+
+        msg.setCreatorRoleId(handlerRoleId);
+        msg.setHandlerRoleId(handlerRoleId);
+        msg.setRoleId(applicantRoleId);
+
+        msg.setConfirmed(false);
+        msg.setDecided(false);
+
+        return msg;
+    }
 }

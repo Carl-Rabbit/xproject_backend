@@ -105,8 +105,8 @@ public class ProjectServiceImpl implements ProjectService {
         FormingResultBO res = formingBO.executeForming();
         for (Pair<Integer, Integer> pair : res.getMatchList()) {
             try {
-                boolean success = projectInstMapper.insertProjInstStdRT(pair.getFirst(), pair.getSecond(), null);
-                if (!success) {
+                int affectedRowCnt = projectInstMapper.insertProjInstStdRT(pair.getFirst(), pair.getSecond(), null);
+                if (affectedRowCnt == 0) {
                     res.reduceSuccess(1);
                     System.out.println("Fail in autoForming " + pair.toString());
                 } else {
