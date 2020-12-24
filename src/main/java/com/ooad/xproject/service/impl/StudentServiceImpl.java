@@ -7,15 +7,14 @@ import com.ooad.xproject.bo.StudentImportBO;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.Role;
-import com.ooad.xproject.entity.School;
 import com.ooad.xproject.entity.Student;
 import com.ooad.xproject.entity.Teacher;
 import com.ooad.xproject.mapper.RoleMapper;
-import com.ooad.xproject.mapper.SchoolMapper;
 import com.ooad.xproject.mapper.StudentMapper;
 import com.ooad.xproject.service.StudentService;
 import com.ooad.xproject.vo.AcInfoStdUpdateVO;
 import com.ooad.xproject.vo.SelectorStdVO;
+import com.ooad.xproject.vo.StdUpdateVO;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.stereotype.Service;
@@ -161,6 +160,17 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student getStudentByStdNo(String stdNo) {
         return studentMapper.selectByStdNo(stdNo);
+    }
+
+    @Override
+    public boolean updateStdInfo(StdUpdateVO stdUpdateVO) {
+        Student std = studentMapper.selectByRoleId(stdUpdateVO.getRoleId());
+        if (std == null) {
+            return false;
+        }
+        stdUpdateVO.copyToStudent(std);
+        int affectedRowCnt = studentMapper.updateByPrimaryKeySelective(std);
+        return affectedRowCnt == 1;
     }
 
     @Override

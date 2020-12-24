@@ -9,6 +9,7 @@ import com.ooad.xproject.service.*;
 import com.ooad.xproject.utils.RoleUtils;
 import com.ooad.xproject.vo.QuitProjParamVO;
 import com.ooad.xproject.vo.Result;
+import com.ooad.xproject.vo.StdUpdateVO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -146,5 +147,23 @@ public class HomePageController {
         List<StudentDTO> stdDTOList = studentService.getAllStudentList(teacher);
 
         return new Result<>(stdDTOList);
+    }
+
+    @ResponseBody
+    @PostMapping("api/teacher/student/info/update")
+    public Result<?> postUpdateStudentInfo(@RequestBody StdUpdateVO stdUpdateVO) {
+        logger.info("postUpdateStudentInfo");
+
+        Role tchRole = roleService.getByUsername(RoleUtils.getUsername());
+        int schId = homeService.getSchIdByRole(tchRole);
+
+        Role stdRole = roleService.getByRoleId(stdUpdateVO.getRoleId());
+        int schIdStd = homeService.getSchIdByRole(stdRole);
+        if (schId != schIdStd) {
+            return new Result<>(RespStatus.FAIL, "School not matched");
+        }
+
+        boolean success = studentService.updateStdInfo(stdUpdateVO);
+        return Result.createBoolResult(success, "Update successfully", "Update failed");
     }
 }
