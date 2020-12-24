@@ -109,6 +109,7 @@
       </if>
     </set>
     where event_id = #{eventId,jdbcType=INTEGER}
+        and proj_inst_id is not null;
   </update>
   <update id="updateByPrimaryKey" parameterType="com.ooad.xproject.entity.EventInst" >
     update event_insts
