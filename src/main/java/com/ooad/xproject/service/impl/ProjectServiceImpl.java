@@ -114,6 +114,7 @@ public class ProjectServiceImpl implements ProjectService {
                 if (projInstApplicant != null) {
                     res.reduceSuccess(1);
                     System.out.println("Fail in autoForming (already has a team)" + pair.toString());
+                    continue;
                 }
 
                 int affectedRowCnt = projectInstMapper.insertProjInstStdRT(pair.getFirst(), pair.getSecond(), null);

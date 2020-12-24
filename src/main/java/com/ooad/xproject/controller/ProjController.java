@@ -102,7 +102,7 @@ public class ProjController {
         }
 
         List<StudentProjDTO> stdProjDTOList = projService.getStdProjList(projId);
-        logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
+//        logger.info(String.format("getProjStdList -> %s", stdProjDTOList));
         return new Result<>(stdProjDTOList);
     }
 
@@ -114,7 +114,7 @@ public class ProjController {
         FormingBO formContext = new FormingBO();
         boolean success = formContext.setStrategy(autoFormingVO.getStrategy());
         if (!success) {
-            return new Result<>(RespStatus.FAIL, "No such strategy");
+            return new Result<>(RespStatus.FAIL, "No strategy named " + autoFormingVO.getStrategy());
         }
         formContext.setProjInstList(autoFormingVO.getProjInstList());
         formContext.setStdRoleIdList(autoFormingVO.getStdRoleIdList());
@@ -171,7 +171,7 @@ public class ProjController {
 
         List<StudentProjDTO> stdProjDTOList = projService.getStdProjList(projId);
         stdProjDTOList.removeIf(studentProjDTO -> studentProjDTO.getProjInstId() != null);
-        logger.info(String.format("getUngroupedStudents -> %s", stdProjDTOList));
+//        logger.info(String.format("getUngroupedStudents -> %s", stdProjDTOList));
         return new Result<>(stdProjDTOList);
     }
 
