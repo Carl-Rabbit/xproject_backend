@@ -57,5 +57,7 @@ public interface ProjInstService {
 
     String confirmBatchTch(int[] projInstIdList, boolean isForce);
 
+    String cancelBatchTch(int[] projInstIdList);
+
     List<GradeDTO> getTeamRecordInstListStd(int stdRoleId, int rcdId);
 }
