@@ -7,6 +7,7 @@ import com.ooad.xproject.mapper.SubmissionMapper;
 import com.ooad.xproject.service.SubmissionInstService;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,6 +27,9 @@ public class SubmissionInstServiceImpl implements SubmissionInstService {
         SubmissionInst sbmInst = submissionInstMapper.selectBySbmIdAndProjInstId(submissionInst.getSbmId(), submissionInst.getProjInstId());
         if (sbmInst == null) {
             Submission sbm = submissionMapper.selectByPrimaryKey(submissionInst.getSbmId());
+            if(sbm.getDueTime().before(new Date(System.currentTimeMillis()))){
+                return 0;
+            }
             sbmInst = new SubmissionInst();
             sbmInst.setSbmId(submissionInst.getSbmId());
             sbmInst.setProjInstId(submissionInst.getProjInstId());

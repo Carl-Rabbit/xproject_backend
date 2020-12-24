@@ -198,7 +198,7 @@ public class FileController {
         submissionInst.setSubmitterId(role.getRoleId());
         submissionInst.setAttachments(attachment.toString());
         if (submissionInstService.upsertSubmissionInst(submissionInst) == 0) {
-            return new Result<>(RespStatus.FAIL, "No chance left");
+            return new Result<>(RespStatus.FAIL, "Submission denied");
         }
         File studentDir = fileService.getOrCreateStudentDir(submissionInst);
 
