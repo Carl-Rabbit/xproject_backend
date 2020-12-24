@@ -1,5 +1,6 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.dto.SbmDTO;
 import com.ooad.xproject.dto.StudentProjDTO;
@@ -76,14 +77,14 @@ public class SubmissionController {
             return new Result<>(RespStatus.FAIL, "Project is not accessible");
         }
 
-        SubmissionInst sbmInst = sbmService.getSbmInstByStdRoleIdAndSbmId(role.getRoleId(), sbmId);
-        if (sbmInst == null) {
-            return new Result<>("No submission inst found", null);
+        SvResult<SubmissionInst> svResult = sbmService.getSbmInstByStdRoleIdAndSbmId(role.getRoleId(), sbmId);
+        if (svResult.getData() == null) {
+            return new Result<>(svResult.getMsg(), null);
         }
         Student submitter = studentService.getStudentByRoleId(role.getRoleId());
 
         SbmInstVO sbmInstVO = SbmInstVO.builder()
-                .submissionInst(sbmInst)
+                .submissionInst(svResult.getData())
                 .submitter(submitter)
                 .build();
         return new Result<>(sbmInstVO);
