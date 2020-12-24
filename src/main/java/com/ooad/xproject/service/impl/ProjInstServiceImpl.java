@@ -104,6 +104,7 @@ public class ProjInstServiceImpl implements ProjInstService {
     @Transactional
     @Override
     public SvResult<Boolean> confirmProjInst(int projInstId, boolean isForce) {
+
         if (!isForce) {
             // check proj inst validate
             SvResult<Boolean> svResult = checkProjInst(projInstId);
@@ -112,7 +113,15 @@ public class ProjInstServiceImpl implements ProjInstService {
             }
         }
 
-        ProjectInst record = new ProjectInst();
+        ProjectInst record = projectInstMapper.selectByPrimaryKey(projInstId);
+
+        if (record == null) {
+            return new SvResult<>("No such team", false);
+        }
+        if (record.getStatus().equals(Confirm.name())) {
+            return new SvResult<>("Already confirmed", false);
+        }
+
         record.setProjInstId(projInstId);
         record.setStatus(Confirm.toString());
         int affectedRowCnt = projectInstMapper.updateByPrimaryKeySelective(record);
