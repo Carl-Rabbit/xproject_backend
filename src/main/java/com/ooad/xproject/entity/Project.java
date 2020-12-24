@@ -23,6 +23,10 @@ public class Project {
 
     private String projSettings;
 
+    private Boolean stdJoin;
+
+    private Boolean tchJoin;
+
     public Integer getProjId() {
         return projId;
     }
@@ -101,5 +105,21 @@ public class Project {
 
     public void setProjSettings(String projSettings) {
         this.projSettings = projSettings == null ? null : projSettings.trim();
+    }
+
+    public Boolean getStdJoin() {
+        return stdJoin;
+    }
+
+    public void setStdJoin(Boolean stdJoin) {
+        this.stdJoin = stdJoin;
+    }
+
+    public Boolean getTchJoin() {
+        return tchJoin;
+    }
+
+    public void setTchJoin(Boolean tchJoin) {
+        this.tchJoin = tchJoin;
     }
 }
