@@ -187,7 +187,7 @@ public class HomePageController {
             Student student = studentService.getStudentByRoleId(roleId);
             return new Result<>(student.getPayload());
         } else {
-            return new Result<>(RespStatus.SUCCESS);
+            return new Result<>("{}");
         }
     }
 }
