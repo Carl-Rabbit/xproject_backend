@@ -171,4 +171,9 @@ public class ProjectServiceImpl implements ProjectService {
             return project.getStdJoin();
         }
     }
+
+    @Override
+    public boolean deleteProject(int projId) {
+        return projectMapper.deleteByPrimaryKey(projId) == 1;
+    }
 }

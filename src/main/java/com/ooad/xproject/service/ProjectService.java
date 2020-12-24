@@ -50,4 +50,6 @@ public interface ProjectService {
     boolean canJoin(Role role, int projId);
 
     boolean canJoin(Role role, Project project);
+
+    boolean deleteProject(int projId);
 }

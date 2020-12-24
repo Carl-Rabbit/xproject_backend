@@ -17,6 +17,7 @@ public class StudentProjDTO {
 
     private String groupMark;
     private Integer projInstId;
+    private String teamName;
     private String topicStr;
     private String status;
 }

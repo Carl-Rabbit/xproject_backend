@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.ooad.xproject.constant.ProjInstStatus.Confirm;
@@ -111,7 +109,7 @@ public class ProjInstServiceImpl implements ProjInstService {
             // check proj inst validate
             SvResult<Boolean> svResult = checkProjInst(projInstId, isTeacher);
             if (!svResult.getData()) {
-                System.out.println("Team " + projInstId + " check failed");
+                System.out.println("Team " + projInstId + " check failed.");
                 return svResult;
             }
         }
@@ -143,31 +141,33 @@ public class ProjInstServiceImpl implements ProjInstService {
         ProjSettingsBO settings = JSON.parseObject(project.getProjSettings(), ProjSettingsBO.class);
 
         // check recruit system
-        if (!settings.isUseRecruitSystem() && !isTeacher) {
+        if (settings.getUseRecruitSystem() != null && !settings.getUseRecruitSystem() && !isTeacher) {
             return new SvResult<>("Recruit system is not open now", false);
         }
 
         List<StudentProjDTO> stdProjDTOList = projectInstMapper.selectStdProjDTOByProjInstId(projInstId);
 
         // check size
-        if (stdProjDTOList.size() > settings.getMaxSize()) {
-            String msg = String.format("Your team is over-sized. Current: %d. Max size: %d",
-                    stdProjDTOList.size(), settings.getMaxSize());
-            return new SvResult<>(msg, false);
-        } else if (stdProjDTOList.size() < settings.getMinSize()) {
-            String msg = String.format("Your team has no enough members. Current: %d. Min size: %d",
-                stdProjDTOList.size(), settings.getMinSize());
-            return new SvResult<>(msg, false);
+        if (settings.getMinSize() != null && settings.getMaxSize() != null) {
+            if (stdProjDTOList.size() > settings.getMaxSize()) {
+                String msg = String.format("Team over-sized. Current: %d. Max size: %d",
+                        stdProjDTOList.size(), settings.getMaxSize());
+                return new SvResult<>(msg, false);
+            } else if (stdProjDTOList.size() < settings.getMinSize()) {
+                String msg = String.format("No enough members. Current: %d. Min size: %d",
+                        stdProjDTOList.size(), settings.getMinSize());
+                return new SvResult<>(msg, false);
+            }
         }
 
         // check due time
-        if (settings.getDueTime().after(new Date(System.currentTimeMillis()))
+        if (settings.getDueTime() != null && settings.getDueTime().after(new Date(System.currentTimeMillis()))
                 && !isTeacher) {
-            return new SvResult<>("Recruit time out", false);
+            return new SvResult<>("Pass due time", false);
         }
 
         // check group mark
-        if (!stdProjDTOList.isEmpty() && !settings.isAllowCrossMark()) {
+        if (settings.getAllowCrossMark() != null && !stdProjDTOList.isEmpty() && !settings.getAllowCrossMark()) {
             String groupMark = stdProjDTOList.get(0).getGroupMark();
             for (int i = 1; i < stdProjDTOList.size(); i++) {
                 if (!groupMark.equals(stdProjDTOList.get(i).getGroupMark())) {
@@ -518,6 +518,7 @@ public class ProjInstServiceImpl implements ProjInstService {
     @Override
     public String confirmBatchTch(int[] projInstIdList, boolean isForce) {
         List<Integer> successList = new ArrayList<>();
+        Set<String> tipSet = new HashSet<>();
         for (int projInstId : projInstIdList) {
             SvResult<Boolean> svResult = confirmProjInst(projInstId, isForce, true);
             if (svResult.getData()) {
@@ -532,11 +533,20 @@ public class ProjInstServiceImpl implements ProjInstService {
             } else {
                 // false
                 System.out.printf("postTeamConfirm -> Fail to confirm projInst %d%nReason: %s", projInstId, svResult.getMsg());
+                tipSet.add(svResult.getMsg());
             }
         }
+
+        StringBuilder sb = new StringBuilder();
+        for (String s : tipSet) {
+            sb.append("<br/>").append(s);
+        }
+
         int successCnt = successList.size();
-        String message = String.format("Confirm %d teams. Total %d.", successCnt,
-                projInstIdList.length);
+        String message = String.format("Confirm %d teams. Total %d.%s", successCnt,
+                projInstIdList.length,
+                (successCnt == projInstIdList.length) ? "" : ("Reason:" + sb.toString()));
+
         return message;
     }
 
