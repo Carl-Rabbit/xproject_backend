@@ -161,5 +161,5 @@ from messages
       left join roles as c on messages.creator_role_id = c.role_id
         join students as s1 on c.role_id = s1.role_id
       left join roles as h on messages.handler_role_id = h.role_id
-        join students as s2 on h.role_id = s2.role_id
-    where proj_inst_id = #{projInstId}
+        left join students as s2 on h.role_id = s2.role_id
+    where proj_inst_id = 9

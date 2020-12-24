@@ -6,6 +6,8 @@ public enum MsgType {
     JoinFail,
     Quit,
     Invite,
+    InviteSuccess,
+    InviteFail,
     Null;
 
     public static MsgType getRoleType(String code) {
