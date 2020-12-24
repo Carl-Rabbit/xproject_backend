@@ -135,4 +135,9 @@ public class ProjectServiceImpl implements ProjectService {
     public boolean isAccessible(int roleId, int projId) {
         return projectMapper.selectExistByRoleIdAndProjId(roleId, projId);
     }
+
+    @Override
+    public boolean canJoin(Role role, int projId) {
+        return false;
+    }
 }
