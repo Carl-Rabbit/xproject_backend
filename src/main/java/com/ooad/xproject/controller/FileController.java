@@ -128,23 +128,22 @@ public class FileController {
         Role role = roleService.getByUsername(username);
 
         Teacher teacher = teacherService.getTeacherByRoleId(role.getRoleId());
+        importStudentAc(teacher, studentImportBOList);
 
-        int successCnt = 0;
+        int successCnt = 1;
+        return new Result<>(RespStatus.SUCCESS, "upload success", successCnt);
+    }
+
+    @Async
+    public void importStudentAc(Teacher teacher, List<StudentImportBO> studentImportBOList){
         for (StudentImportBO studentImportBO :
                 studentImportBOList) {
             SvResult<Role> svResult = studentService.creatRoleAndStudent(teacher.getSchId(), studentImportBO);
             if (svResult.getData() != null) {
-                boolean success = permissionService.appendPmsRoleToNewRole(svResult.getData());
-                if (success) {
-                    successCnt++;
-                }
+                permissionService.appendPmsRoleToNewRole(svResult.getData());
             }
         }
-        RespStatus status = (successCnt == 0) ? RespStatus.FAIL : RespStatus.SUCCESS;
-        String msg = (successCnt == 0) ? "Create Student Account fail" : "Create Student Account done";
-        return new Result<>(status, msg, successCnt);
     }
-
 
     @PostMapping("api/teacher/records/excel")
     public Result<Integer> postRecordUnitImportFromExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
@@ -157,11 +156,16 @@ public class FileController {
 //        System.out.println(filePath);
         List<RecordUnitBO> recordUnitBOList = excelService.readRecordUnitBO(filePath);
 
-        int successCnt = 0;
+        importRecordUnit(projId, recordUnitBOList);
+        return new Result<>(RespStatus.SUCCESS, "import success", 1);
+    }
+
+    @Async
+    public void importRecordUnit(int projId, List<RecordUnitBO> recordUnitBOList) {
+
         for (RecordUnitBO recordUnitBO : recordUnitBOList) {
             RecordInst recordInst = recordService.getRecordInstByUnit(recordUnitBO, projId);
             if (recordInst != null) {
-                ++successCnt;
                 RecordInst recordInst1 = recordInstMapper.selectByRcdIdAndRoleId(recordInst.getRcdId(), recordInst.getRoleId());
                 if (recordInst1 == null) {
                     recordInst.setComments(recordUnitBO.getComments());
@@ -174,10 +178,6 @@ public class FileController {
                 }
             }
         }
-        boolean check = (successCnt == 0);
-        RespStatus status = (check) ? RespStatus.FAIL : RespStatus.SUCCESS;
-        String msg = (check) ? "Upsert record fail" : "Upsert record done";
-        return new Result<>(status, msg, successCnt);
     }
 
     @PostMapping("api/teacher/project/student/excel")
@@ -190,12 +190,15 @@ public class FileController {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "projInput.xlsx");
 //        System.out.println(filePath);
         List<StudentClassBO> studentClassBOList = excelService.readStudentClassBO(filePath);
+        importProjStd(projId, studentClassBOList);
+        return new Result<>(RespStatus.SUCCESS, "upload success", 1);
+    }
 
-        int successCnt = 0;
+    @Async
+    public void importProjStd(int projId, List<StudentClassBO> studentClassBOList){
         for (StudentClassBO studentClassBO : studentClassBOList) {
             Student student = studentService.getStudentByStdNo(studentClassBO.getStdNo());
             if (student != null) {
-                ++successCnt;
                 List<Integer> prrIdList = projectMapper.selectByProjAndRole(projId, student.getRoleId());
                 if (prrIdList.size() == 0) {
                     projectMapper.insertProjectRoleRT(projId, student.getRoleId(), studentClassBO.getClsMark());
@@ -204,10 +207,6 @@ public class FileController {
                 }
             }
         }
-        boolean check = (successCnt == 0);
-        RespStatus status = (check) ? RespStatus.FAIL : RespStatus.SUCCESS;
-        String msg = (check) ? "Upsert student to project fail" : "Upsert student to project done";
-        return new Result<>(status, msg, successCnt);
     }
 
     @PostMapping("api/student/submission/upload")

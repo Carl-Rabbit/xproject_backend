@@ -77,9 +77,6 @@
     </trim>
   </insert>
   <insert id="insertRecordInst" parameterType="com.ooad.xproject.entity.RecordInst">
-    <selectKey keyProperty="rcdInstId" order="AFTER" resultType="java.lang.Integer">
-      Postgres
-    </selectKey>
     insert into record_insts (rcd_id, role_id, modified_time,
     content, comments)
     values (#{rcdId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, now(),
