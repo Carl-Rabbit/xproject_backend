@@ -138,6 +138,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public boolean canJoin(Role role, int projId) {
-        return false;
+        return true;
     }
 }
