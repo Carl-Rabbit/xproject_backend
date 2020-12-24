@@ -61,7 +61,7 @@ public class MessageFactory {
 
         msg.setProjId(projId);
 
-        msg.setCreatorRoleId(handlerRoleId);
+        msg.setCreatorRoleId(applicantRoleId);
         msg.setHandlerRoleId(handlerRoleId);
         msg.setRoleId(applicantRoleId);
 
