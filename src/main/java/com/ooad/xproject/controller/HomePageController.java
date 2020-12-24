@@ -3,6 +3,7 @@ package com.ooad.xproject.controller;
 import com.alibaba.fastjson.JSON;
 import com.ooad.xproject.bo.CommentBO;
 import com.ooad.xproject.constant.RespStatus;
+import com.ooad.xproject.constant.RoleType;
 import com.ooad.xproject.dto.StudentDTO;
 import com.ooad.xproject.entity.Project;
 import com.ooad.xproject.entity.Role;
@@ -182,8 +183,11 @@ public class HomePageController {
     @ResponseBody
     @GetMapping("api/all/comments/roleId")
     public Result<?> getCommentsByRoleId(@RequestParam("roleId") int roleId) {
-        Student student = studentService.getStudentByRoleId(roleId);
-
-        return new Result<>(student.getPayload());
+        if (roleService.getByRoleId(roleId).getRoleType().matches("Student")) {
+            Student student = studentService.getStudentByRoleId(roleId);
+            return new Result<>(student.getPayload());
+        } else {
+            return new Result<>(RespStatus.SUCCESS);
+        }
     }
 }
