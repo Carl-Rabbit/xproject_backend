@@ -33,6 +33,8 @@ public class TeacherServiceImpl implements TeacherService {
         Teacher teacher = teacherMapper.selectByRoleId(role.getRoleId());
 
         teacher.setEmail(acInfoTchUpdateVO.getEmail());
+        teacher.setTchName(acInfoTchUpdateVO.getTchName());
+        teacher.setTchNo(acInfoTchUpdateVO.getTchNo());
 
         int affectedRowCnt = teacherMapper.updateByPrimaryKeySelective(teacher);
 
