@@ -121,7 +121,7 @@ public class AccountController {
 
     @ResponseBody
     @PostMapping("api/student/review/teammates")
-    public Result<?> postReviewToTeammates(@RequestParam("stdComments") StdCommentsVO stdCommentsVOS) {
+    public Result<?> postReviewToTeammates(@RequestBody StdCommentsVO stdCommentsVOS) {
         int successCnt = 0;
         int[] tarRoleIds = stdCommentsVOS.getTarRoleIds();
         String[] comments = stdCommentsVOS.getComments();
