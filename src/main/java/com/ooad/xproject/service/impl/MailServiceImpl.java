@@ -1,15 +1,16 @@
 package com.ooad.xproject.service.impl;
 
-import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.service.MailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Async
 @Service
 public class MailServiceImpl implements MailService {
 
@@ -23,13 +24,14 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public SvResult<Boolean> sendSimpleMail(String to, String subject, String content) {
+    public void sendSimpleMail(String to, String subject, String content) {
         if (to == null || "".equals(to)) {
             System.out.println("Null mail");
-            return new SvResult<>("Null mail", false);
+            return;
         }
         if (isFakeMail(to)) {
-            return new SvResult<>("Fake mail", false);
+            System.out.println("Fake mail");
+            return;
         }
 
         SimpleMailMessage message = new SimpleMailMessage();
@@ -42,14 +44,12 @@ public class MailServiceImpl implements MailService {
             mailSender.send(message);
         } catch (MailException e) {
             e.printStackTrace();
-            return new SvResult<>(e.getMessage(), false);
         }
-
-        return new SvResult<>("Send success", true);
+        System.out.println("Send finished");
     }
 
     @Override
-    public SvResult<Boolean> sendSimpleMail(String to, String subject, String content, String... cc) {
+    public void sendSimpleMail(String to, String subject, String content, String... cc) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);
         message.setTo(to);
@@ -61,31 +61,18 @@ public class MailServiceImpl implements MailService {
             mailSender.send(message);
         } catch (MailException e) {
             e.printStackTrace();
-            return new SvResult<>(e.getMessage(), false);
         }
 
-        return new SvResult<>("Send success", true);
+        System.out.println("Send finished");
     }
 
     @Override
-    public SvResult<Integer> sendMailToStudent(List<String> mailList, String subject, String content) {
+    public void sendMailToStudent(List<String> mailList, String subject, String content) {
         int successCnt = 0;
         for (String to : mailList) {
-            if (to == null || "".equals(to)) {
-                System.out.println("Null mail");
-                continue;
-            }
-            if (isFakeMail(to)) {
-                continue;
-            }
-            SvResult<Boolean> svResult = sendSimpleMail(to, subject, content);
-            if (svResult.getData()) {
-                successCnt += 1;
-            } else {
-                System.out.println("Send mail failed. " + svResult.getMsg());
-            }
+            sendSimpleMail(to, subject, content);
         }
-        return new SvResult<>("Send to all", successCnt);
+        System.out.println("Send to all, successCnt = " + successCnt);
     }
 
     private boolean isFakeMail(String mail) {
