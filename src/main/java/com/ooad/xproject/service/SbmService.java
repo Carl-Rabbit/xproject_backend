@@ -16,4 +16,6 @@ public interface SbmService {
     boolean modifySubmission(Submission sbm);
 
     SubmissionInst getSbmInstByStdRoleIdAndSbmId(int roleId, int sbmId);
+
+    Submission getSbmBySbmId(int sbmId);
 }

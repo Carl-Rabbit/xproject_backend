@@ -54,4 +54,9 @@ public class SbmServiceImpl implements SbmService {
         ProjectInst projInst = projInstMapper.selectPIByProjIdAndStdRoleId(sbm.getProjId(), roleId);
         return sbmInstMapper.selectBySbmIdAndProjInstId(sbmId, projInst.getProjInstId());
     }
+
+    @Override
+    public Submission getSbmBySbmId(int sbmId) {
+        return submissionMapper.selectByPrimaryKey(sbmId);
+    }
 }
