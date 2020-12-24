@@ -54,7 +54,7 @@ class ExcelServiceImplTest {
     @Test
     void generateRecordUnitList() {
         String filePath = "C:\\Users\\BCS\\Desktop\\Testcase\\testImport\\OOADGrade.xlsx";
-        List<RecordUnitBO> recordUnitList = projectService.getRecordUnitList(1);
+        List<RecordUnitBO> recordUnitList = projectService.getRecordUnitList(7);
 
         excelService.generate(recordUnitList, filePath);
     }

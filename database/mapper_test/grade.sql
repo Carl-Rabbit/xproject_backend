@@ -107,4 +107,16 @@ where ri.rcd_id in (1, 2);
 
 select count(*) = 1 as exist
 from project_role_rt
-where role_id = 5 and proj_id = 1
+where role_id = 5 and proj_id = 1;
+
+
+select rcd.rcd_name, s.std_no, s.std_name, content, rcd.type,comments
+from records rcd
+    join project_role_rt prr on rcd.proj_id = prr.proj_id
+    join students s on prr.role_id = s.role_id
+    left join record_insts ri on rcd.rcd_id = ri.rcd_id and ri.role_id = s.role_id
+where rcd.proj_id = 7;
+
+update students
+set payload = '{}'
+where true

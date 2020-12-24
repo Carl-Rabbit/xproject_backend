@@ -118,9 +118,8 @@ public class FileController {
         return fileService.download(request, realPath, userAgent, "output.xlsx", inline);
     }
 
-    @Async
     @PostMapping("api/teacher/students/excel")
-    public void postStudentAcCreationFromExcel(@RequestParam("file") MultipartFile file) {
+    public Result<Integer> postStudentAcCreationFromExcel(@RequestParam("file") MultipartFile file) {
         String filePath = fileService.upload(file, fileConfig.getInputRoot(), "stdInput.xlsx");
 //        System.out.println(filePath);
         List<StudentImportBO> studentImportBOList = excelService.readStudentImportBO(filePath);
@@ -143,15 +142,15 @@ public class FileController {
         }
         RespStatus status = (successCnt == 0) ? RespStatus.FAIL : RespStatus.SUCCESS;
         String msg = (successCnt == 0) ? "Create Student Account fail" : "Create Student Account done";
+        return new Result<>(status, msg, successCnt);
     }
 
 
-    @Async
     @PostMapping("api/teacher/records/excel")
-    public void postRecordUnitImportFromExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
+    public Result<Integer> postRecordUnitImportFromExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
         // check project accessible
         if (!projService.isAccessible(projId)) {
-            return;
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
         }
 
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "recInput.xlsx");
@@ -178,14 +177,14 @@ public class FileController {
         boolean check = (successCnt == 0);
         RespStatus status = (check) ? RespStatus.FAIL : RespStatus.SUCCESS;
         String msg = (check) ? "Upsert record fail" : "Upsert record done";
+        return new Result<>(status, msg, successCnt);
     }
 
-    @Async
     @PostMapping("api/teacher/project/student/excel")
-    public void postProjStdExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
+    public Result<Integer> postProjStdExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
         // check project accessible
         if (!projService.isAccessible(projId)) {
-            return;
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
         }
 
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "projInput.xlsx");
@@ -208,6 +207,7 @@ public class FileController {
         boolean check = (successCnt == 0);
         RespStatus status = (check) ? RespStatus.FAIL : RespStatus.SUCCESS;
         String msg = (check) ? "Upsert student to project fail" : "Upsert student to project done";
+        return new Result<>(status, msg, successCnt);
     }
 
     @PostMapping("api/student/submission/upload")

@@ -16,11 +16,11 @@
     <result column="tch_join" jdbcType="BIT" property="tchJoin" />
   </resultMap>
   <sql id="Base_Column_List">
-    proj_id, sch_id, creator_id, create_time, proj_name, course_name, term, description, 
+    proj_id, sch_id, creator_id, create_time, proj_name, course_name, term, description,
     topics, proj_settings, std_join, tch_join
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from projects
     where proj_id = #{projId,jdbcType=INTEGER}
@@ -31,13 +31,13 @@
   </delete>
   <insert id="insert" parameterType="com.ooad.xproject.entity.Project"
           useGeneratedKeys="true" keyColumn="proj_id" keyProperty="projId">
-    insert into projects (sch_id, creator_id, create_time, 
-      proj_name, course_name, term, 
-      description, topics, proj_settings, 
+    insert into projects (sch_id, creator_id, create_time,
+      proj_name, course_name, term,
+      description, topics, proj_settings,
       std_join, tch_join)
-    values (#{schId,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{projName,jdbcType=VARCHAR}, #{courseName,jdbcType=VARCHAR}, #{term,jdbcType=VARCHAR}, 
-      #{description,jdbcType=VARCHAR}, #{topics,jdbcType=VARCHAR}, #{projSettings,jdbcType=VARCHAR}, 
+    values (#{schId,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+      #{projName,jdbcType=VARCHAR}, #{courseName,jdbcType=VARCHAR}, #{term,jdbcType=VARCHAR},
+      #{description,jdbcType=VARCHAR}, #{topics,jdbcType=VARCHAR}, #{projSettings,jdbcType=VARCHAR},
       #{stdJoin,jdbcType=BIT}, #{tchJoin,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.ooad.xproject.entity.Project"
@@ -201,8 +201,9 @@
     <select id="selectRecordUnitByProjId" resultType="com.ooad.xproject.bo.RecordUnitBO">
         select rcd.rcd_name, s.std_no, s.std_name, content grade, rcd.type, ri.comments
         from records rcd
-                 join record_insts ri on rcd.rcd_id = ri.rcd_id
-                 join students s on ri.role_id = s.role_id
+                 join project_role_rt prr on rcd.proj_id = prr.proj_id
+                 join students s on prr.role_id = s.role_id
+                 left join record_insts ri on rcd.rcd_id = ri.rcd_id and ri.role_id = s.role_id
         where rcd.proj_id = #{pid};
     </select>
     <select id="selectByProjAndRole" resultType="java.lang.Integer">
