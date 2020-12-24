@@ -197,11 +197,11 @@
     messages.*,
     c.role_type as crt_role_type,
     c.username as crt_username,
-    c.std_name as crt_std_name,
+    s1.std_name as crt_std_name,
     c.icon_url as crt_icon_url,
     h.role_type as hdl_role_type,
     h.username as hdl_username,
-    h.std_name as hdl_std_name,
+    s2.std_name as hdl_std_name,
     h.icon_url as hdl_icon_url
   </sql>
   <select id="selectDTOByProject" resultType="com.ooad.xproject.dto.MessageDTO">
@@ -209,7 +209,9 @@
     <include refid="MsgDTO_Column_List"/>
     from messages
       left join roles as c on messages.creator_role_id = c.role_id
+      join students as s1 on c.role_id = s1.role_id
       left join roles as h on messages.handler_role_id = h.role_id
+      join students as s2 on h.role_id = s2.role_id
     where proj_id = #{projId} and messages.role_id = #{roleId}
   </select>
   <select id="selectDTOByProjInst" resultType="com.ooad.xproject.dto.MessageDTO">
@@ -217,7 +219,9 @@
     <include refid="MsgDTO_Column_List"/>
     from messages
       left join roles as c on messages.creator_role_id = c.role_id
+      join students as s1 on c.role_id = s1.role_id
       left join roles as h on messages.handler_role_id = h.role_id
+      join students as s2 on h.role_id = s2.role_id
     where proj_inst_id = #{projInstId}
   </select>
 </mapper>
