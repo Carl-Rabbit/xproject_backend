@@ -110,7 +110,7 @@
     update record_insts
     set rcd_id = #{rcdId,jdbcType=INTEGER},
       role_id = #{roleId,jdbcType=INTEGER},
-      modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      modified_time = now(),
       content = #{content,jdbcType=VARCHAR},
       comments = #{comments,jdbcType=VARCHAR},
       modified_role_id = #{modifiedRoleId,jdbcType=INTEGER}
