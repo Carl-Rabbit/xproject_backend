@@ -76,7 +76,7 @@ public class ProjInstController {
 
         List<StudentDTO> studentList = projInstService.getStudentDTOByProjInstId(projInstId);
         TeamVO teamVO = TeamVO.createFrom(projectInst, studentList);
-        logger.info(String.format("getTeamDetail -> %s", teamVO));
+//        logger.info(String.format("getTeamDetail -> %s", teamVO));
         return new Result<>(teamVO);
     }
 
@@ -125,7 +125,7 @@ public class ProjInstController {
         List<StudentDTO> studentList = projInstService.getStudentDTOByProjInstId(projInst.getProjInstId());
         TeamVO teamVO = TeamVO.createFrom(projInst, studentList);
 
-        logger.info(String.format("getTeamDetail -> %s", projInst));
+//        logger.info(String.format("getTeamDetail -> %s", projInst));
         return new Result<>(teamVO);
     }
 
