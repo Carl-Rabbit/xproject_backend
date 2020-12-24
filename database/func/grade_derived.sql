@@ -127,5 +127,39 @@ from (with rcd_temp as (
 
 
 
+    select std_name, pi.proj_id, group_mark
+    from students as std
+      join roles r on std.role_id = r.role_id
+      join project_role_rt as prr on std.role_id = prr.role_id
+      left join proj_inst_student_rt as pisr on pisr.std_role_id = r.role_id and pisr.proj_inst_id = 9
+      left join project_insts pi on pisr.proj_inst_id = pi.proj_inst_id
+--     where pi.proj_inst_id = 9;
 
 
+select
+    std_id, r.role_id, username, std_name, std_no, std_class, std.flags, sch_id, email, r.icon_url, pi.proj_inst_id, topic_str, pi.status
+
+from project_insts as pi
+    join proj_inst_student_rt pisr on pi.proj_inst_id = pisr.proj_inst_id
+    join roles r on pisr.std_role_id = r.role_id
+    join students as std on r.role_id = std.role_id
+    join project_role_rt prr on r.role_id = prr.role_id and prr.proj_id = pi.proj_id
+where pi.proj_inst_id = 9;
+
+
+select
+messages.*,
+    c.role_type as crt_role_type,
+    c.username as crt_username,
+    s1.std_name as crt_std_name,
+    c.icon_url as crt_icon_url,
+    h.role_type as hdl_role_type,
+    h.username as hdl_username,
+    s2.std_name as hdl_std_name,
+    h.icon_url as hdl_icon_url
+from messages
+      left join roles as c on messages.creator_role_id = c.role_id
+        join students as s1 on c.role_id = s1.role_id
+      left join roles as h on messages.handler_role_id = h.role_id
+        join students as s2 on h.role_id = s2.role_id
+    where proj_inst_id = #{projInstId}
