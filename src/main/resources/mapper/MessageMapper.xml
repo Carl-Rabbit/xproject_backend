@@ -197,9 +197,11 @@
     messages.*,
     c.role_type as crt_role_type,
     c.username as crt_username,
+    c.std_name as crt_std_name,
     c.icon_url as crt_icon_url,
     h.role_type as hdl_role_type,
     h.username as hdl_username,
+    h.std_name as hdl_std_name,
     h.icon_url as hdl_icon_url
   </sql>
   <select id="selectDTOByProject" resultType="com.ooad.xproject.dto.MessageDTO">

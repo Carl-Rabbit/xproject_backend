@@ -23,11 +23,13 @@ public class MessageDTO {
 
     private String crtRoleType;
     private String crtUsername;
+    private String crtStdName;
 //    private Date crtRegisterTime;
     private String crtIconUrl;
 
     private String hdlRoleType;
     private String hdlUsername;
+    private String hdlStdName;
 //    private Date hdlRegisterTime;
     private String hdlIconUrl;
 }
