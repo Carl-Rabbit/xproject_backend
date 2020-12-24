@@ -66,4 +66,23 @@ public class MessageFactory {
 
         return msg;
     }
+
+    public static Message createInviteReplyMsg(Integer projId, Integer projInstId,
+                                               Integer handlerRoleId, boolean accepted) {
+        Message msg = new Message();
+
+        msg.setProjId(projId);
+        msg.setProjInstId(projInstId);
+
+        MsgType type = accepted ? MsgType.InviteSuccess : MsgType.InviteFail;
+        msg.setType(type.name());
+        msg.setTitle(titleMap.get(type));
+
+        msg.setCreatorRoleId(handlerRoleId);
+        msg.setHandlerRoleId(handlerRoleId);
+        msg.setConfirmed(false);
+        msg.setDecided(false);
+
+        return msg;
+    }
 }

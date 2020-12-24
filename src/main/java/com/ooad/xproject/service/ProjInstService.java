@@ -51,6 +51,8 @@ public interface ProjInstService {
 
     SvResult<Boolean> applyTeamReply(Integer roleId, ApplyReplyParamVO applyReplyParamVO);
 
+    SvResult<Boolean> inviteTeamReply(Integer roleId, ApplyReplyParamVO applyReplyParamVO);
+
     List<GradeDTO> getTeamRecordInstList(int projInstId, int rcdId);
 
     String confirmBatchTch(int[] projInstIdList, boolean isForce);

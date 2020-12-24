@@ -171,6 +171,28 @@ public class ProjInstController {
         return new Result<>(svResult.getMsg(), svResult.getData());
     }
 
+    // reuse paramVO
+    @ResponseBody
+    @PostMapping("api/student/team/reply/invite")
+    public Result<?> postReplyInvite(@RequestBody ApplyReplyParamVO applyReplyParamVO) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        Message message = messageService.getMessageByMsgId(applyReplyParamVO.getMsgId());
+
+        // check project accessible
+        if (!projService.isAccessible(message.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
+        // not to check projInst
+
+        // check projInst status in service
+
+        SvResult<Boolean> svResult = projInstService.inviteTeamReply(role.getRoleId(), applyReplyParamVO);
+        return new Result<>(svResult.getMsg(), svResult.getData());
+    }
+
     @ResponseBody
     @PostMapping("api/all/team/creation")
     public Result<Integer> postTeamCreation(@RequestBody ProjInstCreationVO projInstCreationVO) {

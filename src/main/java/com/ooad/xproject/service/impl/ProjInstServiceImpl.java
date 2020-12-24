@@ -397,6 +397,89 @@ public class ProjInstServiceImpl implements ProjInstService {
         }
     }
 
+    @Transactional
+    @Override
+    public SvResult<Boolean> inviteTeamReply(Integer roleId, ApplyReplyParamVO applyReplyParamVO) {
+        try {
+            Message msg = msgMapper.selectByPrimaryKey(applyReplyParamVO.getMsgId());
+            if (msg.getDecided()) {
+                return new SvResult<>("This message has been processed", false);
+            }
+
+            // change the basic message info
+            msg.setDecided(true);
+            msg.setContent(applyReplyParamVO.getMessage());
+            msg.setResult(applyReplyParamVO.isAccepted() ? "Accept" : "Reject");
+            msg.setHandlerRoleId(roleId);
+
+            // check team
+            // can use projId in msg here
+            ProjectInst projInst = projectInstMapper.selectByPrimaryKey(msg.getProjInstId());
+            if (projInst.getStatus().equals(Confirm.name())) {
+                // is confirmed
+                msg.setResult("Fail to join");
+            }
+
+            // update message
+            int affectedRowCnt = msgMapper.updateByPrimaryKey(msg);
+            if (affectedRowCnt == 1) {
+                if (!applyReplyParamVO.isAccepted()) {
+                    // reject
+
+                    // send message
+                    Message rejectMsg = MessageFactory.createInviteReplyMsg(projInst.getProjId(),
+                            projInst.getProjInstId(), roleId, false);
+                    msgMapper.insertSelective(rejectMsg);
+
+                    // send email
+                    Student applicant = studentMapper.selectByRoleId(msg.getCreatorRoleId());
+                    mailService.sendSimpleMail(applicant.getEmail(), "[XProject] A student has rejected to join the team",
+                            "A student has rejected to join the team\r\n" +
+                                    "This automatic notification message was sent by Xproject");
+                    return new SvResult<>("Application rejected", true);
+                }
+            } else {
+                return new SvResult<>("Error occur when update message", false);
+            }
+
+            if (projInst.getStatus().equals(Confirm.name())) {
+                // send message
+                Message rejectMsg = MessageFactory.createInviteReplyMsg(projInst.getProjId(),
+                        projInst.getProjInstId(), roleId, false);
+                msgMapper.insertSelective(rejectMsg);
+
+                return new SvResult<>("Application reject. Team is confirmed", true);
+            }
+
+            affectedRowCnt = projectInstMapper.insertProjInstStdRT(msg.getProjInstId(), msg.getCreatorRoleId(), "Join");
+
+            if (affectedRowCnt != 0) {
+                // send message
+                Message acceptMsg = MessageFactory.createInviteReplyMsg(projInst.getProjId(),
+                        projInst.getProjInstId(), roleId, true);
+                msgMapper.insertSelective(acceptMsg);
+
+                // send email to all members
+                System.out.println("Send email to all members");
+                List<StudentDTO> stdList = this.getStudentDTOByProjInstId(projInst.getProjInstId());
+                List<String> mailList = stdList.stream().map(StudentDTO::getEmail).collect(Collectors.toList());
+                mailService.sendMailToStudent(mailList, "[XProject] A student has been invited to join to your team",
+                        "A student has been invited to join to your team" +
+                                "This automatic notification message was sent by Xproject");
+
+                return new SvResult<>("Application accepted", true);
+            } else {
+                return new SvResult<>("Error occur when update team info", false);
+            }
+
+        } catch (Exception e) {
+            // roll back
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            e.printStackTrace();
+            return new SvResult<>("Error occur", false);
+        }
+    }
+
     @Override
     public List<GradeDTO> getTeamRecordInstList(int projInstId, int rcdId) {
         return recordInstMapper.selectByProjInstIdAndRcdId(projInstId, rcdId);
