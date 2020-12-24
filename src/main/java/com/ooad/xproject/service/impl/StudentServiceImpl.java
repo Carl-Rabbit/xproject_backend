@@ -162,4 +162,19 @@ public class StudentServiceImpl implements StudentService {
     public Student getStudentByStdNo(String stdNo) {
         return studentMapper.selectByStdNo(stdNo);
     }
+
+    @Override
+    public boolean appendStdPayload(int stdId, String payload) {
+        Student student = studentMapper.selectByPrimaryKey(stdId);
+
+        if (student == null) {
+            return false;
+        }
+        String pl = student.getPayload();
+        if(pl == null)
+            pl = "";
+        pl += payload + ";";
+        student.setPayload(pl);
+        return studentMapper.updateByPrimaryKey(student) != 0;
+    }
 }

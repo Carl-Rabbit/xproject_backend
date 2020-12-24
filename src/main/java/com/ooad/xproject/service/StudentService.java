@@ -38,4 +38,6 @@ public interface StudentService {
     SvResult<Role> creatRoleAndStudent(int schId, StudentImportBO studentImportBO);
 
     Student getStudentByStdNo(String stdNo);
+
+    boolean appendStdPayload(int stdId, String payload);
 }

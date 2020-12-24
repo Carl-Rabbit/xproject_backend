@@ -118,4 +118,15 @@ public class AccountController {
             return new Result<>(RespStatus.FAIL);
         }
     }
+
+    @ResponseBody
+    @PostMapping("api/student/review/teammates")
+    public Result<?> postReviewToTeammates(@RequestParam("tarRoleId") int tarRoleId, @RequestParam("comment") String comment) {
+        boolean success = studentService.appendStdPayload(tarRoleId, comment);
+        if (success) {
+            return new Result<>(RespStatus.SUCCESS);
+        } else {
+            return new Result<>(RespStatus.FAIL);
+        }
+    }
 }
