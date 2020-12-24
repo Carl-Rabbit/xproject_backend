@@ -11,17 +11,17 @@ import java.sql.Timestamp;
 public class ProjSettingsBO {
 
     @JSONField(name="use_recruit", ordinal=0)
-    private boolean useRecruitSystem;
+    private Boolean useRecruitSystem;
 
     @JSONField(name="min_size", ordinal=1)
-    private int minSize;
+    private Integer minSize;
 
     @JSONField(name="max_size", ordinal=2)
-    private int maxSize;
+    private Integer maxSize;
 
     @JSONField(name="due_time", ordinal=3, format="yyyy-MM-dd HH:mm:ss")
     private Timestamp dueTime;
 
     @JSONField(name="allow_cross_mark", ordinal=4)
-    private boolean allowCrossMark;
+    private Boolean allowCrossMark;
 }
