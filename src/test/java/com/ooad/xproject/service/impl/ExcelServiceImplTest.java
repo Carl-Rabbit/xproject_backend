@@ -53,7 +53,7 @@ class ExcelServiceImplTest {
 
     @Test
     void generateRecordUnitList() {
-        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\input\\testImport\\OOADGrade.xlsx";
+        String filePath = "C:\\Users\\BCS\\Desktop\\Testcase\\testImport\\OOADGrade.xlsx";
         List<RecordUnitBO> recordUnitList = projectService.getRecordUnitList(1);
 
         excelService.generate(recordUnitList, filePath);
@@ -62,7 +62,7 @@ class ExcelServiceImplTest {
     @Test
     void generateStudentImportBOList() {
 
-        String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\input\\testImport\\StudentAcImport.xlsx";
+        String filePath = "C:\\Users\\BCS\\Desktop\\Testcase\\testImport\\StudentAcImport.xlsx";
         int clsFrom = 80, clsTo = 85; // 10 ~ 99
         int stdFrom = 10, stdTo = 70; // 10 ~ 99
 
@@ -90,13 +90,16 @@ class ExcelServiceImplTest {
         FileConfig fileConfig = new FileConfig();
         String filePath = "C:\\Users\\BCS\\Desktop\\Testcase\\testImport\\studentClassImport.xlsx";
         List<StudentClassBO> studentClassBOList = new ArrayList<>();
-        String cls = "Lab 7";
-        int roleFrom = 10, roleTo = 11;
-        for (int i = roleFrom; i <= roleTo; ++i) {
-            StudentClassBO studentClassBO = new StudentClassBO();
-            studentClassBO.setClsMark(cls);
-            studentClassBO.setStdNo("118170" + i);
-            studentClassBOList.add(studentClassBO);
+        int clsFrom = 80, clsTo = 81; // 10 ~ 99
+        int stdFrom = 10, stdTo = 70; // 10 ~ 99
+        for (int lab = clsFrom; lab <= clsTo; ++lab) {
+            for (int i = stdFrom; i <= stdTo; ++i) {
+                String stdId = "1181" + lab + i;
+                StudentClassBO studentClassBO = new StudentClassBO();
+                studentClassBO.setClsMark("Lab " + lab % 10);
+                studentClassBO.setStdNo(stdId);
+                studentClassBOList.add(studentClassBO);
+            }
         }
 
         excelService.generate(studentClassBOList, filePath);
@@ -170,7 +173,6 @@ class ExcelServiceImplTest {
         String msg = (check) ? "Upsert record fail" : "Upsert record done";
         System.out.println(new Result<>(status, msg, successCnt).toString());
     }
-
 
 
     @Test
