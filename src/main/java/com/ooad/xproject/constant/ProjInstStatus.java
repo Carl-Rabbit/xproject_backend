@@ -1,7 +1,7 @@
 package com.ooad.xproject.constant;
 
 public enum ProjInstStatus {
-    Row,
+    Raw,
     Confirm,
     Dissolve
 }

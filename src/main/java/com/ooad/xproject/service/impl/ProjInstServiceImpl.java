@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.ooad.xproject.constant.ProjInstStatus.Confirm;
+import static com.ooad.xproject.constant.ProjInstStatus.Raw;
 
 @Service
 public class ProjInstServiceImpl implements ProjInstService {
@@ -168,6 +169,27 @@ public class ProjInstServiceImpl implements ProjInstService {
         }
 
         return new SvResult<>("", true);
+    }
+
+    private SvResult<Boolean> cancelProjInst(int projInstId) {
+        ProjectInst record = projectInstMapper.selectByPrimaryKey(projInstId);
+
+        if (record == null) {
+            return new SvResult<>("No such team", false);
+        }
+        if (record.getStatus().equals(Raw.name())) {
+            return new SvResult<>("Already raw", false);
+        }
+
+        record.setProjInstId(projInstId);
+        record.setStatus(Raw.toString());
+        int affectedRowCnt = projectInstMapper.updateByPrimaryKeySelective(record);
+
+        if (affectedRowCnt == 1) {
+            return new SvResult<>("Cancel successfully", true);
+        } else {
+            return new SvResult<>("Cancel failed", false);
+        }
     }
 
     @Override
@@ -506,6 +528,31 @@ public class ProjInstServiceImpl implements ProjInstService {
         }
         int successCnt = successList.size();
         String message = String.format("Confirm %d teams. Total %d.", successCnt,
+                projInstIdList.length);
+        return message;
+    }
+
+    @Override
+    public String cancelBatchTch(int[] projInstIdList) {
+        List<Integer> successList = new ArrayList<>();
+        for (int projInstId : projInstIdList) {
+            SvResult<Boolean> svResult = cancelProjInst(projInstId);
+            if (svResult.getData()) {
+                // true
+                successList.add(projInstId);
+                // send email
+                List<StudentDTO> stdList = this.getStudentDTOByProjInstId(projInstId);
+                List<String> mailList = stdList.stream().map(StudentDTO::getEmail).collect(Collectors.toList());
+                mailService.sendMailToStudent(mailList, "[XProject] Your team status has been canceled by teacher",
+                        "Your team has been confirmed by teacher\r\n" +
+                                "This automatic notification message was sent by Xproject");
+            } else {
+                // false
+                System.out.printf("postTeamConfirm -> Fail to cancel projInst %d%n", projInstId);
+            }
+        }
+        int successCnt = successList.size();
+        String message = String.format("Cancel %d teams. Total %d.", successCnt,
                 projInstIdList.length);
         return message;
     }

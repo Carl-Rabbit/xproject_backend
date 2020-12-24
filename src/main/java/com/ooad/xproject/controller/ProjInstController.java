@@ -277,7 +277,7 @@ public class ProjInstController {
 
     @ResponseBody
     @PostMapping("api/all/team/confirm")
-    public Result<?> postTeamConfirm(@RequestBody TeamConfirmParamVO teamConfirmParamVO) {
+    public Result<?> postTeamConfirmation(@RequestBody TeamConfirmParamVO teamConfirmParamVO) {
         Role role = roleService.getByUsername(RoleUtils.getUsername());
 
         // not to check access
@@ -297,6 +297,32 @@ public class ProjInstController {
         } else {
             String message = projInstService.confirmBatchTch(teamConfirmParamVO.getProjInstIdList(),
                     teamConfirmParamVO.isForce());
+            return new Result<>(message);
+        }
+    }
+
+    // reuse
+    @ResponseBody
+    @PostMapping("api/teacher/team/cancel")
+    public Result<?> postTeamCancel(@RequestBody TeamConfirmParamVO teamConfirmParamVO) {
+        Role role = roleService.getByUsername(RoleUtils.getUsername());
+
+        // not to check access
+
+        if (RoleType.Student.match(role.getRoleType())) {
+            int projInstId = teamConfirmParamVO.getProjInstIdList()[0];
+            SvResult<Boolean> svResult = projInstService.confirmProjInst(projInstId, false);
+            if (svResult.getData()) {
+                // send email to all members
+                List<StudentDTO> stdList = projInstService.getStudentDTOByProjInstId(projInstId);
+                List<String> mailList = stdList.stream().map(StudentDTO::getEmail).collect(Collectors.toList());
+                mailService.sendMailToStudent(mailList, "[XProject] Your team status has been canceled by teacher",
+                        "Your team status has been canceled by teacher\r\n" +
+                                "This automatic notification message was sent by Xproject");
+            }
+            return new Result<>(svResult.getMsg(), svResult.getData() ? 1 : 0);
+        } else {
+            String message = projInstService.cancelBatchTch(teamConfirmParamVO.getProjInstIdList());
             return new Result<>(message);
         }
     }
