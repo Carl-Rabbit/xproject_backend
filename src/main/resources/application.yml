@@ -40,8 +40,8 @@ logging:
 ooad:
   file:
     path:
-      upload-root: "C:\\Users\\泫泫\\Desktop\\xproject_backend\\business\\submission"
-      download-root: "C:\\Users\\泫泫\\Desktop\\XProject_backend\\xproject_backend\\business"
-      output-root: "C:\\Users\\泫泫\\Desktop\\xproject_backend\\business\\output"
-      input-root: "C:\\Users\\泫泫\\Desktop\\XProject_backend\\xproject_backend\\business\\input"
-      resource-root: "C:\\Users\\泫泫\\Desktop\\xproject_backend\\business\\resource"
+      upload-root: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\submission"
+      download-root: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\business"
+      output-root: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output"
+      input-root: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\input"
+      resource-root: "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\resource"
