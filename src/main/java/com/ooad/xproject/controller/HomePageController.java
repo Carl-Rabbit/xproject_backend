@@ -150,7 +150,7 @@ public class HomePageController {
     }
 
     @ResponseBody
-    @GetMapping("api/teacher/student/info/update")
+    @PostMapping("api/teacher/student/info/update")
     public Result<?> postUpdateStudentInfo(@RequestBody StdUpdateVO stdUpdateVO) {
         logger.info("postUpdateStudentInfo");
 
