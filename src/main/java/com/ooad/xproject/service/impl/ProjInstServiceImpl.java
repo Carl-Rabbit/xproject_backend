@@ -539,7 +539,7 @@ public class ProjInstServiceImpl implements ProjInstService {
 
         StringBuilder sb = new StringBuilder();
         for (String s : tipSet) {
-            sb.append("<br\\>").append(s);
+            sb.append("<br/>").append(s);
         }
 
         int successCnt = successList.size();

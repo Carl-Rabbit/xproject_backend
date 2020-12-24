@@ -200,6 +200,18 @@ public class ProjController {
     }
 
     @ResponseBody
+    @PostMapping("api/teacher/project/delete")
+    public Result<?> postDeleteProject(@RequestParam("projId") int projId) {
+        // check project accessible
+        if (!projService.isAccessible(projId)) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
+        boolean success = projService.deleteProject(projId);
+        return Result.createBoolResult(success, "Delete project successfully", "Delete project failed");
+    }
+
+    @ResponseBody
     @PostMapping("api/teacher/project/add/std")
     public Result<?> postAddStdIntoProj(@RequestBody ProjAddStdVO projAddStdVO) {
 
