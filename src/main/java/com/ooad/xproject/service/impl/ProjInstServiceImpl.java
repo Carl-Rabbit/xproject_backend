@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -157,6 +158,12 @@ public class ProjInstServiceImpl implements ProjInstService {
             String msg = String.format("Your team has no enough members. Current: %d. Min size: %d",
                 stdProjDTOList.size(), settings.getMinSize());
             return new SvResult<>(msg, false);
+        }
+
+        // check due time
+        if (settings.getDueTime().after(new Date(System.currentTimeMillis()))
+                && !isTeacher) {
+            return new SvResult<>("Recruit time out", false);
         }
 
         // check group mark
@@ -524,7 +531,7 @@ public class ProjInstServiceImpl implements ProjInstService {
                                 "This automatic notification message was sent by Xproject");
             } else {
                 // false
-                System.out.printf("postTeamConfirm -> Fail to confirm projInst %d%n", projInstId);
+                System.out.printf("postTeamConfirm -> Fail to confirm projInst %d%nReason: %s", projInstId, svResult.getMsg());
             }
         }
         int successCnt = successList.size();
