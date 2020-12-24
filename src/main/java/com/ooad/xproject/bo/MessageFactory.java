@@ -15,10 +15,10 @@ public class MessageFactory {
         titleMap.put(MsgType.Apply, "apply to join your team");
         titleMap.put(MsgType.JoinSuccess, "successfully joined your team");
         titleMap.put(MsgType.JoinFail, "has been refused to join your team");
-        titleMap.put(MsgType.Quit, "was invited to join your team");
+        titleMap.put(MsgType.Quit, "quited from your team");
         titleMap.put(MsgType.Invite, "invited you to join his/her team");
-        titleMap.put(MsgType.InviteSuccess, "was agreed to join your team");
-        titleMap.put(MsgType.InviteFail, "was rejected to join your team");
+        titleMap.put(MsgType.InviteSuccess, "agreed to join your team");
+        titleMap.put(MsgType.InviteFail, "rejected to join your team");
     }
 
     public static Message createInviteMessage(int creatorRoleId, ProjectInst projInst, int inviteStdRoleId) {
