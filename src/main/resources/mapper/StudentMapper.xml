@@ -12,54 +12,12 @@
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="skills" jdbcType="VARCHAR" property="skills" />
     <result column="bio" jdbcType="VARCHAR" property="bio" />
+    <result column="payload" jdbcType="VARCHAR" property="payload" />
   </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
   <sql id="Base_Column_List">
-    std_id, role_id, std_name, std_no, std_class, flags, sch_id, email, skills, bio
+    std_id, role_id, std_name, std_no, std_class, flags, sch_id, email, skills, bio, 
+    payload
   </sql>
-  <select id="selectByExample" parameterType="com.ooad.xproject.entity.StudentExample" resultMap="BaseResultMap">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    'false' as QUERYID,
-    <include refid="Base_Column_List" />
-    from students
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -74,10 +32,12 @@
           useGeneratedKeys="true" keyProperty="stdId" keyColumn="std_id">
     insert into students (role_id, std_name, std_no,
       std_class, flags, sch_id, 
-      email, skills, bio)
+      email, skills, bio, 
+      payload)
     values (#{roleId,jdbcType=INTEGER}, #{stdName,jdbcType=VARCHAR}, #{stdNo,jdbcType=CHAR}, 
       #{stdClass,jdbcType=CHAR}, #{flags,jdbcType=VARCHAR}, #{schId,jdbcType=INTEGER}, 
-      #{email,jdbcType=VARCHAR}, #{skills,jdbcType=VARCHAR}, #{bio,jdbcType=VARCHAR})
+      #{email,jdbcType=VARCHAR}, #{skills,jdbcType=VARCHAR}, #{bio,jdbcType=VARCHAR}, 
+      #{payload,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ooad.xproject.entity.Student"
           useGeneratedKeys="true" keyProperty="stdId" keyColumn="std_id">
@@ -110,6 +70,9 @@
       <if test="bio != null">
         bio,
       </if>
+      <if test="payload != null">
+        payload,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="roleId != null">
@@ -138,6 +101,9 @@
       </if>
       <if test="bio != null">
         #{bio,jdbcType=VARCHAR},
+      </if>
+      <if test="payload != null">
+        #{payload,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -171,6 +137,9 @@
       <if test="bio != null">
         bio = #{bio,jdbcType=VARCHAR},
       </if>
+      <if test="payload != null">
+        payload = #{payload,jdbcType=VARCHAR},
+      </if>
     </set>
     where std_id = #{stdId,jdbcType=INTEGER}
   </update>
@@ -184,7 +153,8 @@
       sch_id = #{schId,jdbcType=INTEGER},
       email = #{email,jdbcType=VARCHAR},
       skills = #{skills,jdbcType=VARCHAR},
-      bio = #{bio,jdbcType=VARCHAR}
+      bio = #{bio,jdbcType=VARCHAR},
+      payload = #{payload,jdbcType=VARCHAR}
     where std_id = #{stdId,jdbcType=INTEGER}
   </update>
 
@@ -233,7 +203,7 @@
   </sql>
   <select id="selectProjStudents" resultType="com.ooad.xproject.dto.StudentProjDTO">
     select
-    <include refid="StudentProjDTO_Column_List"/>
+    <include refid="StudentProjDTO_Column_List" />
     from students as std
       join roles r on std.role_id = r.role_id
       join project_role_rt as prr on std.role_id = prr.role_id

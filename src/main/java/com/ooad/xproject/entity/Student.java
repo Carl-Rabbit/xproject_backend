@@ -21,6 +21,8 @@ public class Student {
 
     private String bio;
 
+    private String payload;
+
     public Integer getStdId() {
         return stdId;
     }
@@ -99,5 +101,13 @@ public class Student {
 
     public void setBio(String bio) {
         this.bio = bio == null ? null : bio.trim();
+    }
+
+    public String getPayload() {
+        return payload;
+    }
+
+    public void setPayload(String payload) {
+        this.payload = payload == null ? null : payload.trim();
     }
 }
