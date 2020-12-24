@@ -256,6 +256,14 @@ public class ProjInstServiceImpl implements ProjInstService {
     public SvResult<Boolean> applyTeam(Integer roleId, ApplyTeamParamVO atpVO) {
         int projInstId = atpVO.getProjInstId();
         List<StudentDTO> teamMemList = projectInstMapper.selectStudentByProjInstId(projInstId);
+
+        ProjectInst projInst = projectInstMapper.selectByPrimaryKey(projInstId);
+        int projId = projInst.getProjId();
+        ProjectInst projInstApplicant = projectInstMapper.selectPIByProjIdAndStdRoleId(projId, roleId);
+        if (projInstApplicant != null) {
+            return new SvResult<>("Apply failed. You already have a team", false);
+        }
+
         if (teamMemList.isEmpty()) {
             // add this role directly
             System.out.printf("%d, %d", projInstId, roleId);
@@ -274,7 +282,6 @@ public class ProjInstServiceImpl implements ProjInstService {
             }
 
         } else {
-            ProjectInst projInst = projectInstMapper.selectByPrimaryKey(projInstId);
             Message msg = MessageFactory.createApplyTeamMsg(projInst, roleId, atpVO.getMessage());
             msgMapper.insertSelective(msg);
 

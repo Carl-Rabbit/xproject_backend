@@ -104,7 +104,18 @@ public class ProjectServiceImpl implements ProjectService {
     public SvResult<FormingResultBO> autoForming(FormingBO formingBO) {
         FormingResultBO res = formingBO.executeForming();
         for (Pair<Integer, Integer> pair : res.getMatchList()) {
+            int projInstId = pair.getFirst();
+            int stdRoleId = pair.getSecond();
             try {
+                // check team status
+                ProjectInst projInst = projectInstMapper.selectByPrimaryKey(projInstId);
+                int projId = projInst.getProjId();
+                ProjectInst projInstApplicant = projectInstMapper.selectPIByProjIdAndStdRoleId(projId, stdRoleId);
+                if (projInstApplicant != null) {
+                    res.reduceSuccess(1);
+                    System.out.println("Fail in autoForming (already has a team)" + pair.toString());
+                }
+
                 int affectedRowCnt = projectInstMapper.insertProjInstStdRT(pair.getFirst(), pair.getSecond(), null);
                 if (affectedRowCnt == 0) {
                     res.reduceSuccess(1);
