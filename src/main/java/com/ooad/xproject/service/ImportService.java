@@ -8,7 +8,7 @@ import com.ooad.xproject.entity.Teacher;
 import java.util.List;
 
 public interface ImportService {
-    void importRecordUnit(int projId, List<RecordUnitBO> recordUnitBOList);
+    void importRecordUnit(int modifier, int projId, List<RecordUnitBO> recordUnitBOList);
 
     void importStudentAc(Teacher teacher, List<StudentImportBO> studentImportBOList);
 

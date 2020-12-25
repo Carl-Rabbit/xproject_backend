@@ -149,6 +149,8 @@ public class FileController {
 
     @PostMapping("api/teacher/records/excel")
     public Result<Integer> postRecordUnitImportFromExcel(@RequestParam("files") MultipartFile[] files, @RequestParam("projId") Integer projId) {
+
+        Role role = roleService.getByUsername(RoleUtils.getUsername());
         // check project accessible
         if (!projService.isAccessible(projId)) {
             return new Result<>(RespStatus.FAIL, "Project is not accessible");
@@ -157,7 +159,7 @@ public class FileController {
         String filePath = fileService.upload(files[0], fileConfig.getInputRoot(), "recInput.xlsx");
 //        System.out.println(filePath);
         List<RecordUnitBO> recordUnitBOList = excelService.readRecordUnitBO(filePath);
-        importService.importRecordUnit(projId, recordUnitBOList);
+        importService.importRecordUnit(role.getRoleId(), projId, recordUnitBOList);
 //        System.out.println("uploaded");
         return new Result<>(RespStatus.SUCCESS, "import success", 1);
     }

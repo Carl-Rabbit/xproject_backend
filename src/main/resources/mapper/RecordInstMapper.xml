@@ -78,9 +78,9 @@
   </insert>
   <insert id="insertRecordInst" parameterType="com.ooad.xproject.entity.RecordInst">
     insert into record_insts (rcd_id, role_id, modified_time,
-    content, comments)
+    content, comments, modified_role_id)
     values (#{rcdId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, now(),
-    #{content,jdbcType=VARCHAR}, #{comments,jdbcType=VARCHAR})
+    #{content,jdbcType=VARCHAR}, #{comments,jdbcType=VARCHAR}, #{modified_role_id,jdbcType=INTEGER})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.ooad.xproject.entity.RecordInst">
     update record_insts
@@ -120,7 +120,8 @@
       update record_insts
       set modified_time = now(),
           content = #{content,jdbcType=VARCHAR},
-          comments = #{comments,jdbcType=VARCHAR}
+          comments = #{comments,jdbcType=VARCHAR},
+        modified_role_id = #{modifiedRoleId,jdbcType=INTEGER}
       where rcd_inst_id = #{rcdInstId,jdbcType=INTEGER}
   </update>
 

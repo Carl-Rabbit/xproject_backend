@@ -63,7 +63,7 @@ public class ImportServiceImpl implements ImportService {
     }
 
     @Override
-    public void importRecordUnit(int projId, List<RecordUnitBO> recordUnitBOList) {
+    public void importRecordUnit(int modifier, int projId, List<RecordUnitBO> recordUnitBOList) {
 
         for (RecordUnitBO recordUnitBO : recordUnitBOList) {
             RecordInst recordInst = recordService.getRecordInstByUnit(recordUnitBO, projId);
@@ -72,10 +72,12 @@ public class ImportServiceImpl implements ImportService {
                 if (recordInst1 == null) {
                     recordInst.setComments(recordUnitBO.getComments());
                     recordInst.setContent(recordUnitBO.getGrade());
+                    recordInst.setModifiedRoleId(modifier);
                     recordInstMapper.insertRecordInst(recordInst);
                 } else {
                     recordInst1.setComments(recordUnitBO.getComments());
                     recordInst1.setContent(recordUnitBO.getGrade());
+                    recordInst1.setModifiedRoleId(modifier);
                     recordInstMapper.updateRecordInst(recordInst1);
                 }
             }

@@ -90,7 +90,7 @@ class ExcelServiceImplTest {
         FileConfig fileConfig = new FileConfig();
         String filePath = "C:\\Users\\BCS\\Desktop\\Testcase\\testImport\\studentClassImport.xlsx";
         List<StudentClassBO> studentClassBOList = new ArrayList<>();
-        int clsFrom = 80, clsTo = 81; // 10 ~ 99
+        int clsFrom = 80, clsTo = 84; // 10 ~ 99
         int stdFrom = 10, stdTo = 70; // 10 ~ 99
         for (int lab = clsFrom; lab <= clsTo; ++lab) {
             for (int i = stdFrom; i <= stdTo; ++i) {
