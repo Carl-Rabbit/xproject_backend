@@ -205,11 +205,10 @@
     select
     <include refid="StudentProjDTO_Column_List" />
     from students as std
-      join roles r on std.role_id = r.role_id
-      join project_role_rt as prr on std.role_id = prr.role_id
-      left join proj_inst_student_rt as pisr on pisr.std_role_id = r.role_id
-      left join project_insts pi on pisr.proj_inst_id = pi.proj_inst_id
-    where prr.proj_id = #{projId};
+    join roles r on std.role_id = r.role_id
+    join project_role_rt as prr on std.role_id = prr.role_id and prr.proj_id = #{projId}
+    left join proj_inst_student_rt as pisr on pisr.std_role_id = r.role_id
+    left join project_insts pi on pisr.proj_inst_id = pi.proj_inst_id and pi.proj_id = #{projId};
   </select>
     <select id="selectByStdNo" resultType="com.ooad.xproject.entity.Student">
       select *
