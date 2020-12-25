@@ -93,11 +93,13 @@ public class RecordServiceImpl implements RecordService {
                 recordInst.setRoleId(grade.getRoleId());
                 recordInst.setContent(grade.getContent());
                 recordInst.setComments(grade.getComments());
+                recordInst.setModifiedRoleId(roleId);
                 affectedRowCnt = recordInstMapper.insertSelective(recordInst);
                 rcdInstUpdateRetVO.incrCreate();
             } else {
                 // update it
                 grade.copyToRecordInst(recordInst);
+                recordInst.setModifiedRoleId(roleId);
                 affectedRowCnt = recordInstMapper.updateByPrimaryKey(recordInst);
                 rcdInstUpdateRetVO.incrModify();
             }

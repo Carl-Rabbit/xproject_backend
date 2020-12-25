@@ -60,6 +60,15 @@ public class EATaskServiceImpl implements EATaskService {
     public SvResult<Boolean> applyEventInst(int eventInstId, Integer projInstId) {
         EventInst eventInst = eventInstMapper.selectByPrimaryKey(eventInstId);
 
+        if (eventInst == null) {
+            return new SvResult<>("No such event inst", false);
+        }
+
+        EventArrangeTask eaTask = eaTaskMapper.selectByPrimaryKey(eventInst.getEaTaskId());
+        if (eaTask.getDueTime().before(new Date(System.currentTimeMillis()))) {
+            return new SvResult<>("Due time has been passed", false);
+        }
+
         boolean isArranged = checkTeamArrangeState(eventInst.getEaTaskId(), projInstId);
         if (isArranged) {
             return new SvResult<>("Can only apply one event inst", false);
@@ -71,7 +80,7 @@ public class EATaskServiceImpl implements EATaskService {
         eventInst.setProjInstId(projInstId);
         boolean success = eventInstMapper.updateByPrimaryKeySelective(eventInst) == 1;
 
-        return new SvResult<>("Apply finished", success);
+        return new SvResult<>(success ? "Apply success" : "Apply failed", success);
     }
 
     @Override
