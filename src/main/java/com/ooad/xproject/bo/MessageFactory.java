@@ -89,4 +89,22 @@ public class MessageFactory {
 
         return msg;
     }
+
+    public static Message createQuitMessage(ProjectInst projectInst, Integer roleId) {
+        Message msg = new Message();
+
+        msg.setProjId(projectInst.getProjId());
+        msg.setProjInstId(projectInst.getProjInstId());
+
+        MsgType type = MsgType.Quit;
+        msg.setType(type.name());
+        msg.setTitle(titleMap.get(type));
+
+        msg.setCreatorRoleId(roleId);
+        msg.setHandlerRoleId(roleId);
+        msg.setConfirmed(false);
+        msg.setDecided(false);
+
+        return msg;
+    }
 }

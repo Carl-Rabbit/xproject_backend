@@ -1,5 +1,6 @@
 package com.ooad.xproject.controller;
 
+import com.ooad.xproject.bo.MessageFactory;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.constant.RoleType;
@@ -367,6 +368,10 @@ public class ProjInstController {
             mailService.sendSimpleMail(std.getEmail(), "[XProject] You are quit from the team",
                     "You are quit from the team\r\n" +
                             "This automatic notification message was sent by Xproject");
+
+            Message msg = MessageFactory.createQuitMessage(projectInst, role.getRoleId());
+            messageService.createMessage(msg);
+
             return new Result<>("Quit successfully");
         } else {
             return new Result<>(RespStatus.FAIL, "Quit failed");
