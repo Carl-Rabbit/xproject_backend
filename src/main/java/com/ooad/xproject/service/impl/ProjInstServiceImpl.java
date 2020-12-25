@@ -140,12 +140,23 @@ public class ProjInstServiceImpl implements ProjInstService {
 
         ProjSettingsBO settings = JSON.parseObject(project.getProjSettings(), ProjSettingsBO.class);
 
+        List<StudentProjDTO> stdProjDTOList = projectInstMapper.selectStdProjDTOByProjInstId(projInstId);
+        // check group mark
+        if ((settings == null || settings.getAllowCrossMark() == null || !settings.getAllowCrossMark())
+                && !stdProjDTOList.isEmpty()) {
+            String groupMark = stdProjDTOList.get(0).getGroupMark();
+            for (int i = 1; i < stdProjDTOList.size(); i++) {
+                if (!groupMark.equals(stdProjDTOList.get(i).getGroupMark())) {
+                    return new SvResult<>("Across group is not allowed", false);
+                }
+            }
+        }
+
         // check recruit system
-        if (settings.getUseRecruitSystem() != null && !settings.getUseRecruitSystem() && !isTeacher) {
+        if (settings == null || (settings.getUseRecruitSystem() != null && !settings.getUseRecruitSystem() && !isTeacher)) {
             return new SvResult<>("Recruit system is not open now", false);
         }
 
-        List<StudentProjDTO> stdProjDTOList = projectInstMapper.selectStdProjDTOByProjInstId(projInstId);
 
         // check size
         if (settings.getMinSize() != null && settings.getMaxSize() != null) {
@@ -164,16 +175,6 @@ public class ProjInstServiceImpl implements ProjInstService {
         if (settings.getDueTime() != null && settings.getDueTime().after(new Date(System.currentTimeMillis()))
                 && !isTeacher) {
             return new SvResult<>("Pass due time", false);
-        }
-
-        // check group mark
-        if (settings.getAllowCrossMark() != null && !stdProjDTOList.isEmpty() && !settings.getAllowCrossMark()) {
-            String groupMark = stdProjDTOList.get(0).getGroupMark();
-            for (int i = 1; i < stdProjDTOList.size(); i++) {
-                if (!groupMark.equals(stdProjDTOList.get(i).getGroupMark())) {
-                    return new SvResult<>("Across group is not allowed", false);
-                }
-            }
         }
 
         return new SvResult<>("ProjInst is valid", true);
