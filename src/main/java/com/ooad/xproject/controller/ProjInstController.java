@@ -107,7 +107,7 @@ public class ProjInstController {
 
     @ResponseBody
     @PostMapping("api/teacher/team/change")
-    public Result<?> postEditedTeamInfo(@RequestBody ProjInstUpdateTchVO projInstUpdateTchVO) {
+    public Result<?> postEditedTeamTchInfo(@RequestBody ProjInstUpdateTchVO projInstUpdateTchVO) {
         String username = RoleUtils.getUsername();
         Role role = roleService.getByUsername(username);
 
