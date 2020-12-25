@@ -27,4 +27,6 @@ public interface ExcelService {
     SvResult<String> exportRecordUnitByProjId(Integer projId);
 
     SvResult<String> exportTeamByProjId(Integer projId);
+
+    SvResult<String> exportEventInst(Integer eaId);
 }

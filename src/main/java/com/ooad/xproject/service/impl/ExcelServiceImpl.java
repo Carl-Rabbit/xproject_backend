@@ -2,6 +2,7 @@ package com.ooad.xproject.service.impl;
 
 import com.ooad.xproject.bo.*;
 import com.ooad.xproject.config.FileConfig;
+import com.ooad.xproject.service.EATaskService;
 import com.ooad.xproject.service.ExcelService;
 import com.ooad.xproject.service.ProjectService;
 import org.apache.poi.ss.usermodel.*;
@@ -25,9 +26,12 @@ public class ExcelServiceImpl implements ExcelService {
 
     private final ProjectService projectService;
 
-    public ExcelServiceImpl(FileConfig fileConfig, ProjectService projectService) {
+    private final EATaskService eaTaskService;
+
+    public ExcelServiceImpl(FileConfig fileConfig, ProjectService projectService, EATaskService eaTaskService) {
         this.fileConfig = fileConfig;
         this.projectService = projectService;
+        this.eaTaskService = eaTaskService;
     }
 
     //    objectList: List of data
@@ -228,6 +232,13 @@ public class ExcelServiceImpl implements ExcelService {
         String filePath = fileConfig.getOutputRoot() + "\\" + "output.xlsx";
         List<TeamBO> recordUnitList = projectService.getTeamList(projId);
         return generate(recordUnitList, filePath);
+    }
+
+    @Override
+    public SvResult<String> exportEventInst(Integer eaId) {
+        String filePath = fileConfig.getOutputRoot() + "\\" + "output.xlsx";
+        List<EventInstBO> eventInstBOS = eaTaskService.getEventInstBOList(eaId);
+        return generate(eventInstBOS, filePath);
     }
 
     Workbook readWorkbook(String filePath) {

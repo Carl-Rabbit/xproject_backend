@@ -1,5 +1,6 @@
 package com.ooad.xproject.service.impl;
 
+import com.ooad.xproject.bo.EventInstBO;
 import com.ooad.xproject.bo.EventIntervalAlgo;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.entity.EventArrangeTask;
@@ -47,6 +48,11 @@ public class EATaskServiceImpl implements EATaskService {
     @Override
     public List<EventInst> getEventInstList(int eaTaskId) {
         return eventInstMapper.selectByEATaskId(eaTaskId);
+    }
+
+    @Override
+    public List<EventInstBO> getEventInstBOList(int eaTaskId) {
+        return eventInstMapper.selectInstBOByEATaskId(eaTaskId);
     }
 
     @Transactional

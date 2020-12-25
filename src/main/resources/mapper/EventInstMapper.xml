@@ -133,4 +133,11 @@
       from event_insts
       where ea_task_id = #{eaTaskId} and proj_inst_id = #{projInstId}
     </select>
+    <select id="selectInstBOByEATaskId" resultType="com.ooad.xproject.bo.EventInstBO">
+      select ei.date, ei.week, ei.start_time, ei.end_time, ei.status, pi.team_name team
+      from event_insts as ei
+        join project_insts pi on ei.proj_inst_id = pi.proj_inst_id
+      where ei.ea_task_id = #{eaTaskId}
+order by ei.start_time;
+    </select>
 </mapper>

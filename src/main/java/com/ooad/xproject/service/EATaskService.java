@@ -1,5 +1,6 @@
 package com.ooad.xproject.service;
 
+import com.ooad.xproject.bo.EventInstBO;
 import com.ooad.xproject.bo.SvResult;
 import com.ooad.xproject.entity.EventArrangeTask;
 import com.ooad.xproject.entity.EventInst;
@@ -16,6 +17,8 @@ public interface EATaskService {
     boolean deleteEATask(int eaTaskId);
 
     List<EventInst> getEventInstList(int eaTaskId);
+
+    List<EventInstBO> getEventInstBOList(int eaTaskId);
 
     SvResult<Boolean> applyEventInst(int eventInstId, Integer projInstId);
 

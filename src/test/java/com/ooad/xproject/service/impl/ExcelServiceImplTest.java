@@ -6,8 +6,6 @@ import com.ooad.xproject.constant.RespStatus;
 import com.ooad.xproject.entity.*;
 import com.ooad.xproject.mapper.ProjectMapper;
 import com.ooad.xproject.mapper.RecordInstMapper;
-import com.ooad.xproject.mapper.ResourceMapper;
-import com.ooad.xproject.mapper.SchoolMapper;
 import com.ooad.xproject.service.*;
 import com.ooad.xproject.vo.Result;
 import org.junit.jupiter.api.Test;
@@ -17,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,6 +47,9 @@ class ExcelServiceImplTest {
 
     @Autowired
     private FileConfig fileConfig;
+
+    @Autowired
+    private EATaskService eaTaskService;
 
     @Test
     void generateRecordUnitList() {
@@ -110,7 +110,7 @@ class ExcelServiceImplTest {
         Admin admin = new Admin();
         admin.setAdminId(1);
         admin.setRoleId(1);
-        ExcelServiceImpl excelService = new ExcelServiceImpl(fileConfig, projectService);
+        ExcelServiceImpl excelService = new ExcelServiceImpl(fileConfig, projectService, eaTaskService);
 
         String[] strings = excelService.getField(admin.getClass());
         System.out.println(Arrays.toString(strings));
@@ -118,7 +118,7 @@ class ExcelServiceImplTest {
 
     @Test
     void importExcel() {
-        ExcelServiceImpl excelService = new ExcelServiceImpl(fileConfig, projectService);
+        ExcelServiceImpl excelService = new ExcelServiceImpl(fileConfig, projectService, eaTaskService);
         String filePath = "C:\\BCSpace\\JetProjects\\JavaProject\\xproject_backend\\business\\output\\output.xlsx";
         List<StudentImportBO> studentImportBOList = excelService.readStudentImportBO(filePath);
         System.out.println(studentImportBOList.toString());
@@ -220,5 +220,11 @@ class ExcelServiceImplTest {
 
 
 //        upload(file, filePath, file.getName());
+    }
+
+    @Test
+    void exportEventInst() {
+        SvResult<String> svResult = excelService.exportEventInst(11);
+        System.out.println(svResult.getData());
     }
 }

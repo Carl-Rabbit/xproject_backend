@@ -119,6 +119,17 @@ public class FileController {
         return fileService.download(request, realPath, userAgent, "output.xlsx", inline);
     }
 
+    @GetMapping("api/teacher/event/export")
+    public ResponseEntity<byte[]> getEventInstExcel(HttpServletRequest request, @RequestParam("eaId") Integer eaId
+            , @RequestHeader("user-agent") String userAgent
+            , @RequestParam(required = false, defaultValue = "false") boolean inline) {
+
+        SvResult<String> svResult = excelService.exportEventInst(eaId);
+
+        String realPath = svResult.getData();
+        return fileService.download(request, realPath, userAgent, "output.xlsx", inline);
+    }
+
     @PostMapping("api/teacher/students/excel")
     public Result<Integer> postStudentAcCreationFromExcel(@RequestParam("file") MultipartFile file) {
         String filePath = fileService.upload(file, fileConfig.getInputRoot(), "stdInput.xlsx");

@@ -1,5 +1,6 @@
 package com.ooad.xproject.mapper;
 
+import com.ooad.xproject.bo.EventInstBO;
 import com.ooad.xproject.entity.EventInst;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +23,6 @@ public interface EventInstMapper {
     List<EventInst> selectByEATaskId(int eaTaskId);
 
     int countApplyNum(int eaTaskId, int projInstId);
+
+    List<EventInstBO> selectInstBOByEATaskId(int eaTaskId);
 }
