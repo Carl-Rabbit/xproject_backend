@@ -106,6 +106,28 @@ public class ProjInstController {
     }
 
     @ResponseBody
+    @PostMapping("api/teacher/team/change")
+    public Result<?> postEditedTeamInfo(@RequestBody ProjInstUpdateTchVO projInstUpdateTchVO) {
+        String username = RoleUtils.getUsername();
+        Role role = roleService.getByUsername(username);
+
+        ProjectInst projectInst = projInstService.getProjectInst(projInstUpdateTchVO.getProjInstId());
+
+        if (projectInst == null) {
+            return new Result<>(RespStatus.FAIL, "No team");
+        }
+
+        // check project accessible
+        if (!projService.isAccessible(role.getRoleId(), projectInst.getProjId())) {
+            return new Result<>(RespStatus.FAIL, "Project is not accessible");
+        }
+
+        projInstUpdateTchVO.copyToProjInst(projectInst);
+        boolean success = projInstService.updateProjInst(projectInst);
+        return Result.createBoolResult(success, "Update successfully", "Update failed");
+    }
+
+    @ResponseBody
     @GetMapping("api/student/team/detail")
     public Result<?> getMyTeamDetail(@RequestParam(value="projId") int projId) {
         String username = RoleUtils.getUsername();
